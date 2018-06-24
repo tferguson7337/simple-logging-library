@@ -9,13 +9,10 @@ namespace SLL
     template <class T>
     class LoggerConfig : public virtual ILoggerConfig<T>
     {
-        /// Class-local typedef
-        typedef unsigned long long LogOptMask;
-
     private:
         std::basic_string<T> mLogFile;
         std::vector<LogColor> mVerbosityColors;
-        LogOptMask mOptionMask;
+        LoggerOption mOptionMask;
         VerbosityLevel mVerbosityThreshold;
 
         void ValidateVerbosityLevel(const VerbosityLevel, const std::string&) const;

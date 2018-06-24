@@ -21,7 +21,7 @@ namespace SLL
     {
         if ( lvl < VerbosityLevel::INFO || lvl >= VerbosityLevel::MAX )
         {
-            throw std::invalid_argument(f + " - Invalid verbosity level (" + std::to_string((size_t)lvl) + ").");
+            throw std::invalid_argument(f + " - Invalid verbosity level (" + std::to_string(static_cast<std::underlying_type_t<VerbosityLevel>>(lvl)) + ").");
         }
     }
 
@@ -31,7 +31,7 @@ namespace SLL
     {
         if ( color < LogColor::WHITE || color >= LogColor::MAX )
         {
-            throw std::invalid_argument(f + " - Invalid log color (" + std::to_string((size_t)color) + ").");
+            throw std::invalid_argument(f + " - Invalid log color (" + std::to_string(static_cast<std::underlying_type_t<LogColor>>(color)) + ").");
         }
     }
 
@@ -41,7 +41,7 @@ namespace SLL
     {
         if ( opt < LoggerOption::LogToStdout || opt >= LoggerOption::MAX )
         {
-            throw std::invalid_argument(f + " - Invalid logger option (" + std::to_string((size_t)opt) + ").");
+            throw std::invalid_argument(f + " - Invalid logger option (" + std::to_string(static_cast<std::underlying_type_t<LoggerOption>>(opt)) + ").");
         }
     }
 
@@ -50,8 +50,8 @@ namespace SLL
     // Default Ctor
     template <class T>
     LoggerConfig<T>::LoggerConfig( ) :
-        mVerbosityColors((size_t)VerbosityLevel::MAX, LogColor::WHITE),
-        mOptionMask(0),
+        mVerbosityColors(static_cast<size_t>(VerbosityLevel::MAX), LogColor::WHITE),
+        mOptionMask(LoggerOption::NONE),
         mVerbosityThreshold(VerbosityLevel::INFO)
     {
 
@@ -107,7 +107,7 @@ namespace SLL
     {
         ValidateVerbosityLevel(lvl, __FUNCTION__);
 
-        return mVerbosityColors[(size_t)lvl];
+        return mVerbosityColors[static_cast<size_t>(lvl)];
     }
 
     // Getter - VerbosityThreshold Setting
@@ -133,7 +133,7 @@ namespace SLL
         ValidateLogColor(color, __FUNCTION__);
         ValidateVerbosityLevel(lvl, __FUNCTION__);
 
-        mVerbosityColors[(size_t)lvl] = color;
+        mVerbosityColors[static_cast<size_t>(lvl)] = color;
     }
 
     // Setter - Set Minimum VerbosityThreshold
@@ -167,7 +167,7 @@ namespace SLL
     {
         ValidateLoggerOption(opt, __FUNCTION__);
 
-        mOptionMask = (LogOptMask)opt;
+        mOptionMask |= opt;
     }
 
     // Public Method - Disable LoggerOption
@@ -176,7 +176,7 @@ namespace SLL
     {
         ValidateLoggerOption(opt, __FUNCTION__);
 
-        mOptionMask = (LogOptMask)opt;
+        mOptionMask &= ~opt;
     }
 
     // Public Method - Check if LoggerOption is Enabled
@@ -185,7 +185,7 @@ namespace SLL
     {
         ValidateLoggerOption(opt, __FUNCTION__);
 
-        return ((LogOptMask)opt & mOptionMask);
+        return (mOptionMask & opt) == opt;
     }
 
 }
