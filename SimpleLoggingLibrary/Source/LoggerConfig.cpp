@@ -162,6 +162,7 @@ namespace SLL
     /// PUBLIC METHODS \\\
 
     // Public Method - Enable LoggerOption
+    // If opt contains more than one option, all are enabled.
     template <class T>
     void LoggerConfig<T>::Enable(const LoggerOption opt)
     {
@@ -171,6 +172,7 @@ namespace SLL
     }
 
     // Public Method - Disable LoggerOption
+    // If opt contains more than one option, all are disabled.
     template <class T>
     void LoggerConfig<T>::Disable(const LoggerOption opt)
     {
@@ -180,6 +182,8 @@ namespace SLL
     }
 
     // Public Method - Check if LoggerOption is Enabled
+    // If opt contains more than one option, this will return
+    // true only if all options are enabled.
     template <class T>
     bool LoggerConfig<T>::OptionEnabled(const LoggerOption opt) const
     {
