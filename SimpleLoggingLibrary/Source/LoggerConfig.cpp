@@ -1,7 +1,7 @@
 // Class Declaration
 #include <LoggerConfig.h>
 
-// Enum Definitions
+// Enum Class Definitions
 #include <LogColor.h>
 #include <LoggerOption.h>
 #include <VerbosityLevel.h>
