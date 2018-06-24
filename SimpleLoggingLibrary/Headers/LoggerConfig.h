@@ -6,67 +6,6 @@
 
 namespace SLL
 {
-    // Logging options that can be enabled/disabled.
-    enum class LoggerOption
-    {
-        LogToStdout         = 1 << 0,
-        LogToFile           = 1 << 1,
-        LogColor            = 1 << 2, 
-        LogVerbosityLevel   = 1 << 3,
-        LogTimestamp        = 1 << 4,
-        LogThreadID         = 1 << 5,
-        LogSynchronize      = 1 << 6,
-
-        // MAX CAP
-        MAX
-    };
-
-    // Various message-type categories.
-    enum class VerbosityLevel
-    {
-        // Standard log message.
-        INFO = 0,
-
-        // Noteworthy, yet expected behavior.
-        WARN,
-
-        // Erroneous behavior.
-        ERROR,
-
-        // Behavior leading to unrecoverable state. 
-        FATAL,
-
-        // MAX CAP
-        MAX
-    };
-
-    // Various console-output colors.
-    enum class LogColor
-    {
-        // Basic shades
-        WHITE = 0,
-        LIGHT_GREY,
-        GREY,
-        DARK_GREY,
-        BLACK,
-
-        // Basic Spectrum
-        DARK_RED,
-        RED,
-        ORANGE,
-        YELLOW,
-        YELLOW_GREEN,
-        GREEN,
-        CYAN,
-        BLUE,
-        VIOLET,
-        PURPLE,
-
-        // MAX CAP
-        MAX
-    };
-
-
     template <class T>
     class LoggerConfig : public virtual ILoggerConfig<T>
     {

@@ -1,4 +1,10 @@
+// Class Declaration
 #include <LoggerConfig.h>
+
+// Enum Definitions
+#include <LogColor.h>
+#include <LoggerOption.h>
+#include <VerbosityLevel.h>
 
 /// Explicit Template Instantiations \\\
 

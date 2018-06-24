@@ -5,9 +5,9 @@
 namespace SLL
 {
     /// Forward Declarations
-    enum class LoggerOption;
-    enum class VerbosityLevel;
-    enum class LogColor;
+    enum class LoggerOption : size_t;
+    enum class VerbosityLevel : size_t;
+    enum class LogColor : size_t;
     template <class T> class LoggerConfig;
 
     /// LoggerConfig Interface \\\
