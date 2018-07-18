@@ -3,7 +3,7 @@
 namespace SLL
 {
     // Various console-output colors.
-    enum class LogColor : size_t
+    enum class Color : size_t
     {
         // Basic Shades
         WHITE = 0,

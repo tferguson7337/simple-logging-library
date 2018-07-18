@@ -19,14 +19,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Headers\LogColor.h" />
-    <ClInclude Include="Headers\LoggerConfig.h" />
-    <ClInclude Include="Headers\LoggerOption.h" />
+    <ClInclude Include="Common\Headers\Types.h" />
+    <ClInclude Include="Common\Headers\Uncopyable.h" />
+    <ClInclude Include="Common\Headers\Unmovable.h" />
+    <ClInclude Include="Common\Headers\StringUtil.hpp" />
+    <ClInclude Include="Headers\Color.h" />
+    <ClInclude Include="Headers\ConfigPackage.h" />
+    <ClInclude Include="Headers\OptionFlag.h" />
     <ClInclude Include="Headers\VerbosityLevel.h" />
-    <ClInclude Include="Interfaces\ILoggerConfig.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\LoggerConfig.cpp" />
+    <ClCompile Include="Source\ConfigPackage.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -84,13 +87,13 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)lib\</OutDir>
     <IntDir>BuildArtifacts\$(PlatformTarget)\$(Configuration)\</IntDir>
-    <TargetName>$(ProjectName)D$(PlatformArchitecture)</TargetName>
+    <TargetName>SLLD$(PlatformArchitecture)</TargetName>
     <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <TargetName>$(ProjectName)D$(PlatformArchitecture)</TargetName>
+    <TargetName>SLLD$(PlatformArchitecture)</TargetName>
     <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <OutDir>$(SolutionDir)lib\</OutDir>
@@ -100,13 +103,13 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)lib\</OutDir>
     <IntDir>BuildArtifacts\$(PlatformTarget)\$(Configuration)\</IntDir>
-    <TargetName>$(ProjectName)$(PlatformArchitecture)</TargetName>
+    <TargetName>SLL$(PlatformArchitecture)</TargetName>
     <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <TargetName>$(ProjectName)$(PlatformArchitecture)</TargetName>
+    <TargetName>SLL$(PlatformArchitecture)</TargetName>
     <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <OutDir>$(SolutionDir)lib\</OutDir>
@@ -121,7 +124,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <EnablePREfast>true</EnablePREfast>
-      <AdditionalIncludeDirectories>$(ProjectDir)Headers;$(ProjectDir)Interfaces;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Common\Headers\;$(ProjectDir)Headers\;$(ProjectDir)Headers\Interfaces\;</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -138,7 +141,7 @@
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <EnablePREfast>true</EnablePREfast>
-      <AdditionalIncludeDirectories>$(ProjectDir)Headers;$(ProjectDir)Interfaces;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Common\Headers\;$(ProjectDir)Headers\;$(ProjectDir)Headers\Interfaces\;</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -157,7 +160,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <EnablePREfast>true</EnablePREfast>
-      <AdditionalIncludeDirectories>$(ProjectDir)Headers;$(ProjectDir)Interfaces;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Common\Headers\;$(ProjectDir)Headers\;$(ProjectDir)Headers\Interfaces\;</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -178,7 +181,7 @@
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <EnablePREfast>true</EnablePREfast>
-      <AdditionalIncludeDirectories>$(ProjectDir)Headers;$(ProjectDir)Interfaces;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Common\Headers\;$(ProjectDir)Headers\;$(ProjectDir)Headers\Interfaces\;</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>

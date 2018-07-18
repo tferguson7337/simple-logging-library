@@ -16,26 +16,38 @@
     <Filter Include="Interfaces">
       <UniqueIdentifier>{e5a7838e-4bcb-40f8-8b81-bbe37d971734}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{c287c8b7-f4bc-4529-a740-2b71afc9144e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Interfaces\ILoggerConfig.h">
-      <Filter>Interfaces</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\LoggerConfig.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\LoggerOption.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Headers\VerbosityLevel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\LogColor.h">
+    <ClInclude Include="Common\Headers\Types.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Headers\Uncopyable.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Headers\Unmovable.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Headers\StringUtil.hpp">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\ConfigPackage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\OptionFlag.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Color.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\LoggerConfig.cpp">
+    <ClCompile Include="Source\ConfigPackage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

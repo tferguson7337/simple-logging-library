@@ -14,7 +14,7 @@ namespace SLL
         // Erroneous behavior.
         ERROR,
 
-        // Behavior leading to unrecoverable state. 
+        // Erroneous behavior leading to unrecoverable state. 
         FATAL,
 
         // MAX CAP
