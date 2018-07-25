@@ -8,7 +8,7 @@ namespace SLL
     // Private Helper - Validate VerbosityLevel
     void ConfigPackage::ValidateVerbosityLevel(const VerbosityLevel lvl, const std::string& f) const
     {
-        if ( lvl < VerbosityLevel::INFO || lvl >= VerbosityLevel::MAX )
+        if ( lvl < VerbosityLevel::BEGIN || lvl >= VerbosityLevel::MAX )
         {
             throw std::invalid_argument(f + " - Invalid verbosity level (" + std::to_string(static_cast<std::underlying_type_t<VerbosityLevel>>(lvl)) + ").");
         }
@@ -17,7 +17,7 @@ namespace SLL
     // Private Helper - Validate Color
     void ConfigPackage::ValidateColor(const Color color, const std::string& f) const
     {
-        if ( color < Color::WHITE || color >= Color::MAX )
+        if ( color < Color::BEGIN || color >= Color::MAX )
         {
             throw std::invalid_argument(f + " - Invalid log color (" + std::to_string(static_cast<std::underlying_type_t<Color>>(color)) + ").");
         }
@@ -26,7 +26,7 @@ namespace SLL
     // Private Helper - Validate OptionFlag
     void ConfigPackage::ValidateOptionFlag(const OptionFlag opt, const std::string& f) const
     {
-        if ( opt < OptionFlag::LogToStdout || opt >= OptionFlag::MAX )
+        if ( opt < OptionFlag::BEGIN || opt >= OptionFlag::MAX )
         {
             throw std::invalid_argument(f + " - Invalid logger option (" + std::to_string(static_cast<std::underlying_type_t<OptionFlag>>(opt)) + ").");
         }
