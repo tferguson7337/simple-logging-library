@@ -18,6 +18,13 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Headers\OptionFlagTests.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\OptionFlagTests.cpp" />
+    <ClCompile Include="Source\RunTests.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{354D0627-9291-4D3D-A1F5-C62A6C9A812C}</ProjectGuid>
@@ -98,8 +105,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\SimpleLoggingLibrary\Common\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\Interfaces\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\SimpleLoggingLibrary\Common\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\Interfaces\;$(ProjectDir)SUTL\Headers;$(ProjectDir)SUTL\Headers\Interfaces;$(ProjectDir)Headers</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -107,6 +115,16 @@
       <AdditionalDependencies>SLLD$(PlatformArchitecture).lib;SUTLD$(PlatformArchitecture).lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(ProjectDir)..\SimpleLoggingLibrary\lib\;$(ProjectDir)SUTL\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>$(TargetPath)</Command>
+      <Message>Running the Unit Tests...</Message>
+    </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>echo.</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>dummyfile</Outputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -116,8 +134,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\SimpleLoggingLibrary\Common\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\Interfaces\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\SimpleLoggingLibrary\Common\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\Interfaces\;$(ProjectDir)SUTL\Headers;$(ProjectDir)SUTL\Headers\Interfaces;$(ProjectDir)Headers</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -125,6 +144,16 @@
       <AdditionalDependencies>SLLD$(PlatformArchitecture).lib;SUTLD$(PlatformArchitecture).lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(ProjectDir)..\SimpleLoggingLibrary\lib\;$(ProjectDir)SUTL\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>$(TargetPath)</Command>
+      <Message>Running the Unit Tests...</Message>
+    </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>echo.</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>dummyfile</Outputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -136,8 +165,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\SimpleLoggingLibrary\Common\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\Interfaces\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\SimpleLoggingLibrary\Common\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\Interfaces\;$(ProjectDir)SUTL\Headers;$(ProjectDir)SUTL\Headers\Interfaces;$(ProjectDir)Headers</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -147,6 +177,16 @@
       <AdditionalDependencies>SLL$(PlatformArchitecture).lib;SUTL$(PlatformArchitecture).lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(ProjectDir)..\SimpleLoggingLibrary\lib\;$(ProjectDir)SUTL\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>$(TargetPath)</Command>
+      <Message>Running the Unit Tests...</Message>
+    </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>echo.</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>dummyfile</Outputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -158,8 +198,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\SimpleLoggingLibrary\Common\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\Interfaces\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\SimpleLoggingLibrary\Common\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\Interfaces\;$(ProjectDir)SUTL\Headers;$(ProjectDir)SUTL\Headers\Interfaces;$(ProjectDir)Headers</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -169,6 +210,16 @@
       <AdditionalDependencies>SLL$(PlatformArchitecture).lib;SUTL$(PlatformArchitecture).lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(ProjectDir)..\SimpleLoggingLibrary\lib\;$(ProjectDir)SUTL\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>$(TargetPath)</Command>
+      <Message>Running the Unit Tests...</Message>
+    </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>echo.</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>dummyfile</Outputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
