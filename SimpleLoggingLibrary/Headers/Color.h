@@ -52,12 +52,12 @@ namespace SLL
         /// Private Helper Methods \\\
 
         // Color String Getters
-        template <class T, std::enable_if_t<std::is_same_v<T, char> || std::is_same_v<T, wchar_t>>>
-        const std::basic_string<T>& GetColorString(const size_t);
+        template <class T, typename = std::enable_if_t<std::is_same_v<T, char> || std::is_same_v<T, wchar_t>>>
+        static const std::basic_string<T>& GetColorString(const size_t);
 
         // Color String Getter - char
-        template <char>
-        const std::basic_string<char>& GetColorString(const size_t i)
+        template <>
+        static const std::basic_string<char>& GetColorString<char>(const size_t i)
         {
             static const std::vector<std::basic_string<char>> colorStringsA
             {
@@ -90,8 +90,8 @@ namespace SLL
         }
 
         // Color String Getter - wchar_t
-        template <wchar_t>
-        const std::basic_string<wchar_t>& GetColorString(const size_t i)
+        template <>
+        static const std::basic_string<wchar_t>& GetColorString<wchar_t>(const size_t i)
         {
             static const std::vector<std::basic_string<wchar_t>> colorStringsW
             {
@@ -127,9 +127,9 @@ namespace SLL
 
         /// Public Methods \\\
 
-        ColorType ToScalar(Color c)
+        static ColorType ToScalar(Color c)
         {
-            if ( c >= Color::MAX )
+            if ( c > Color::MAX )
             {
                 throw std::invalid_argument(__FUNCTION__" - Invalid color argument (" + std::to_string(static_cast<ColorType>(c)) + ").");
             }
@@ -137,9 +137,14 @@ namespace SLL
             return static_cast<ColorType>(c);
         }
 
-        template <class T, std::enable_if_t<std::is_same_v<T, char> || std::is_same_v<T, wchar_t>>>
-        const std::basic_string<T>& ToString(Color c)
+        template <class T, typename = std::enable_if_t<std::is_same_v<T, char> || std::is_same_v<T, wchar_t>>>
+        static const std::basic_string<T>& ToString(Color c)
         {
+            if ( c >= Color::MAX )
+            {
+                throw std::invalid_argument(__FUNCTION__" - Invalid color argument (" + std::to_string(static_cast<ColorType>(c)) + ").");
+            }
+
             return GetColorString<T>(ToScalar(c));
         }
     };

@@ -32,7 +32,8 @@ namespace OptionFlagTests
     {
         // Conversion Tests
         UnitTestResult ToScalar( );
-        UnitTestResult ToString_Narrow( );
-        UnitTestResult ToString_Wide( );
+
+        template <class T, typename = std::enable_if_t<std::is_same_v<T, char> || std::is_same_v<T, wchar_t>>>
+        UnitTestResult ToString( );
     }
 }

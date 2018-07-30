@@ -19,11 +19,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Headers\ColorTests.h" />
     <ClInclude Include="Headers\OptionFlagTests.h" />
+    <ClInclude Include="Headers\VerbosityLevelTests.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\ColorTests.cpp" />
     <ClCompile Include="Source\OptionFlagTests.cpp" />
     <ClCompile Include="Source\RunTests.cpp" />
+    <ClCompile Include="Source\VerbosityLevelTests.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

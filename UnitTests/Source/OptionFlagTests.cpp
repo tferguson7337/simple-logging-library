@@ -37,8 +37,8 @@ namespace OptionFlagTests
 
             // Conversion Tests
             ConverterTests::ToScalar,
-            ConverterTests::ToString_Narrow,
-            ConverterTests::ToString_Wide,
+            ConverterTests::ToString<char>,
+            ConverterTests::ToString<wchar_t>
         };
 
         return testList;
@@ -248,9 +248,13 @@ namespace OptionFlagTests
             {
                 OptionFlagConverter::ToScalar(flag);
             }
-            catch ( const std::exception& )
+            catch ( const std::invalid_argument& )
             {
                 threw = true;
+            }
+            catch ( const std::exception& e )
+            {
+                SUTL_TEST_EXCEPTION(e.what( ));
             }
 
             SUTL_TEST_ASSERT(threw);
@@ -259,16 +263,17 @@ namespace OptionFlagTests
             SUTL_TEST_SUCCESS( );
         }
 
-        UnitTestResult ToString_Narrow( )
+        template <class T, typename>
+        inline UnitTestResult ToString( )
         {
-            std::basic_string<char> str;
+            std::basic_string<T> str;
             bool threw = false;
 
             for ( OptionFlag f = OptionFlag::NONE; f < OptionFlag::MAX; f = TYPETOFLAG(FLAGTOTYPE(f) + 1) )
             {
                 try
                 {
-                    str = OptionFlagConverter::ToString<char>(f);
+                    str = OptionFlagConverter::ToString<T>(f);
                     str.clear( );
                 }
                 catch ( const std::exception& e )
@@ -276,48 +281,19 @@ namespace OptionFlagTests
                     SUTL_TEST_EXCEPTION(e.what( ));
                 }
             }
-            
-            try
-            {
-                str = OptionFlagConverter::ToString<char>(OptionFlag::MAX);
-                str.clear( );
-            }
-            catch ( const std::exception& )
-            {
-                threw = true;
-            }
-
-            SUTL_TEST_ASSERT(threw);
-
-            /// Test Pass!
-            SUTL_TEST_SUCCESS( );
-        }
-
-        UnitTestResult ToString_Wide( )
-        {
-            std::basic_string<wchar_t> str;
-            bool threw = false;
-
-            for ( OptionFlag f = OptionFlag::NONE; f < OptionFlag::MAX; f = TYPETOFLAG(FLAGTOTYPE(f) + 1) )
-            {
-                try
-                {
-                    str = OptionFlagConverter::ToString<wchar_t>(f);
-                }
-                catch ( const std::exception& e )
-                {
-                    SUTL_TEST_EXCEPTION(e.what( ));
-                }
-            }
 
             try
             {
-                str = OptionFlagConverter::ToString<wchar_t>(OptionFlag::MAX);
+                str = OptionFlagConverter::ToString<T>(OptionFlag::MAX);
                 str.clear( );
             }
-            catch ( const std::exception& )
+            catch ( const std::invalid_argument& )
             {
                 threw = true;
+            }
+            catch ( const std::exception& e )
+            {
+                SUTL_TEST_EXCEPTION(e.what( ));
             }
 
             SUTL_TEST_ASSERT(threw);

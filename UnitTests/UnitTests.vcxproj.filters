@@ -17,12 +17,24 @@
     <ClInclude Include="Headers\OptionFlagTests.h">
       <Filter>Tests\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Headers\VerbosityLevelTests.h">
+      <Filter>Tests\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\ColorTests.h">
+      <Filter>Tests\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\RunTests.cpp">
       <Filter>Tests\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\OptionFlagTests.cpp">
+      <Filter>Tests\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\VerbosityLevelTests.cpp">
+      <Filter>Tests\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ColorTests.cpp">
       <Filter>Tests\Source Files</Filter>
     </ClCompile>
   </ItemGroup>

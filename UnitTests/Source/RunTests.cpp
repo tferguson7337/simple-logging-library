@@ -1,25 +1,32 @@
 // SUTL
 #include <UnitTestRunner.h>
 
-// Unit Tests
+// Enum Class Unit Tests
+#include <ColorTests.h>
 #include <OptionFlagTests.h>
+#include <VerbosityLevelTests.h>
 
-void GetUnitTests(UnitTestRunner<char>&);
-
-int main( )
-{
-    UnitTestRunner<char> utr("Simple-Logging-Library Unit Tests");
-
-    GetUnitTests(utr);
-
-    utr.RunUnitTests( );
-
-    utr.PrintTestLogs( );
-
-    return 0;
-}
 
 void GetUnitTests(UnitTestRunner<char>& utr)
 {
+    // Enum Class Tests
+    utr.AddUnitTests(ColorTests::GetTests( ));
     utr.AddUnitTests(OptionFlagTests::GetTests( ));
+    utr.AddUnitTests(VerbosityLevelTests::GetTests( ));
+}
+
+int main( )
+{
+    UnitTestRunner<char> utr("SLL Unit Tests");
+
+    // Get Tests
+    GetUnitTests(utr);
+
+    // Run Tests
+    utr.RunUnitTests( );
+
+    // Print Results
+    utr.PrintTestLogs( );
+
+    return 0;
 }

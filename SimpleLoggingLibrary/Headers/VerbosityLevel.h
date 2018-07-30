@@ -46,12 +46,12 @@ namespace SLL
         /// Private Helper Methods \\\
 
         // VerbosityLevel String Getters
-        template <class T, std::enable_if_t<std::is_same_v<T, char> || std::is_same_v<T, wchar_t>>>
-        const std::basic_string<T>& GetVerbosityLevelString(const size_t);
+        template <class T, typename = std::enable_if_t<std::is_same_v<T, char> || std::is_same_v<T, wchar_t>>>
+        static const std::basic_string<T>& GetVerbosityLevelString(const size_t);
 
         // VerbosityLevel String Getter - char
-        template <char>
-        const std::basic_string<char>& GetVerbosityLevelString(const size_t i)
+        template <>
+        static const std::basic_string<char>& GetVerbosityLevelString<char>(const size_t i)
         {
             static const std::vector<std::basic_string<char>> VerbosityLevelStringsA
             {
@@ -70,8 +70,8 @@ namespace SLL
         }
 
         // VerbosityLevel String Getter - wchar_t
-        template <wchar_t>
-        const std::basic_string<wchar_t>& GetVerbosityLevelString(const size_t i)
+        template <>
+        static const std::basic_string<wchar_t>& GetVerbosityLevelString<wchar_t>(const size_t i)
         {
             static const std::vector<std::basic_string<wchar_t>> VerbosityLevelStringsW
             {
@@ -91,9 +91,9 @@ namespace SLL
 
     public:
 
-        VerbosityLevelType ToScalar(VerbosityLevel lvl)
+        static VerbosityLevelType ToScalar(VerbosityLevel lvl)
         {
-            if ( lvl >= VerbosityLevel::MAX )
+            if ( lvl < VerbosityLevel::BEGIN || lvl > VerbosityLevel::MAX )
             {
                 throw std::invalid_argument(__FUNCTION__" - Invalid verbosity level argument (" + std::to_string(static_cast<VerbosityLevelType>(lvl)) + ").");
             }
@@ -101,9 +101,14 @@ namespace SLL
             return static_cast<VerbosityLevelType>(lvl);
         }
 
-        template <class T, std::enable_if_t<std::is_same_v<T, char> || std::is_same_v<T, wchar_t>>>
-        const std::basic_string<T>& VerbosityLevelToString(VerbosityLevel lvl)
+        template <class T, typename = std::enable_if_t<std::is_same_v<T, char> || std::is_same_v<T, wchar_t>>>
+        static const std::basic_string<T>& ToString(VerbosityLevel lvl)
         {
+            if ( lvl >= VerbosityLevel::MAX )
+            {
+                throw std::invalid_argument(__FUNCTION__" - Invalid verbosity level argument (" + std::to_string(static_cast<VerbosityLevelType>(lvl)) + ").");
+            }
+
             return GetVerbosityLevelString<T>(ToScalar(lvl));
         }
     };
