@@ -49,7 +49,7 @@ namespace SLL
 
         /// Setters \\\
 
-        void SetColor(const Color, const VerbosityLevel);
+        void SetColor(const VerbosityLevel, const Color);
         void SetVerbosityThreshold(const VerbosityLevel);
 
         template <class T>

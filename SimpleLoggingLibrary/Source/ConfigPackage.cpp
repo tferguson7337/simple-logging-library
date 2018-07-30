@@ -10,7 +10,7 @@ namespace SLL
     {
         if ( lvl < VerbosityLevel::BEGIN || lvl >= VerbosityLevel::MAX )
         {
-            throw std::invalid_argument(f + " - Invalid verbosity level (" + std::to_string(static_cast<std::underlying_type_t<VerbosityLevel>>(lvl)) + ").");
+            throw std::invalid_argument(f + " - Invalid verbosity level (" + std::to_string(static_cast<VerbosityLevelType>(lvl)) + ").");
         }
     }
 
@@ -19,7 +19,7 @@ namespace SLL
     {
         if ( color < Color::BEGIN || color >= Color::MAX )
         {
-            throw std::invalid_argument(f + " - Invalid log color (" + std::to_string(static_cast<std::underlying_type_t<Color>>(color)) + ").");
+            throw std::invalid_argument(f + " - Invalid log color (" + std::to_string(static_cast<ColorType>(color)) + ").");
         }
     }
 
@@ -28,7 +28,7 @@ namespace SLL
     {
         if ( opt < OptionFlag::BEGIN || opt >= OptionFlag::MAX )
         {
-            throw std::invalid_argument(f + " - Invalid logger option (" + std::to_string(static_cast<std::underlying_type_t<OptionFlag>>(opt)) + ").");
+            throw std::invalid_argument(f + " - Invalid logger option (" + std::to_string(static_cast<OptionFlagType>(opt)) + ").");
         }
     }
 
@@ -60,9 +60,9 @@ namespace SLL
     // Copy Assignment
     ConfigPackage& ConfigPackage::operator=(const ConfigPackage& src)
     {
-        mLogFile = src.mLogFile;
-        mVerbosityColors = src.mVerbosityColors;
-        mOptionMask = src.mOptionMask;
+        mLogFile            = src.mLogFile;
+        mVerbosityColors    = src.mVerbosityColors;
+        mOptionMask         = src.mOptionMask;
         mVerbosityThreshold = src.mVerbosityThreshold;
 
         return *this;
@@ -71,9 +71,9 @@ namespace SLL
     // Move Assignment
     ConfigPackage& ConfigPackage::operator=(ConfigPackage&& src)
     {
-        mLogFile = std::move(src.mLogFile);
-        mVerbosityColors = std::move(src.mVerbosityColors);
-        mOptionMask = src.mOptionMask;
+        mLogFile            = std::move(src.mLogFile);
+        mVerbosityColors    = std::move(src.mVerbosityColors);
+        mOptionMask         = src.mOptionMask;
         mVerbosityThreshold = src.mVerbosityThreshold;
 
         return *this;
@@ -104,7 +104,7 @@ namespace SLL
     /// SETTERS \\\
 
     // Setter - Log Color for VerbosityLevel
-    void ConfigPackage::SetColor(const Color color, const VerbosityLevel lvl)
+    void ConfigPackage::SetColor(const VerbosityLevel lvl, const Color color)
     {
         ValidateColor(color, __FUNCTION__);
         ValidateVerbosityLevel(lvl, __FUNCTION__);
