@@ -95,7 +95,7 @@ namespace SLL
         return mVerbosityThreshold;
     }
 
-    // Getter - Target Log File
+    // Getter - Target Log Filename
     const std::wstring& ConfigPackage::GetFile( ) const noexcept
     {
         return mLogFile;
@@ -118,6 +118,35 @@ namespace SLL
         ValidateVerbosityLevel(lvl, __FUNCTION__);
 
         mVerbosityThreshold = lvl;
+    }
+
+    // Setter ([C] Wide Conversion) - Set Target Log Filename
+    template <>
+    void ConfigPackage::SetFile<char>(const std::basic_string<char>& file)
+    {
+        mLogFile = StringUtil::ConvertAndCopy<wchar_t>(file);
+    }
+
+    // Setter ([M] Wide Conversion) - Set Target Log Filename
+    template <>
+    void ConfigPackage::SetFile<char>(std::basic_string<char>&& file)
+    {
+        mLogFile = StringUtil::ConvertAndCopy<wchar_t>(std::move(file));
+    }
+
+
+    // Setter (Copy) - Set Target Log Filename
+    template <>
+    void ConfigPackage::SetFile<wchar_t>(const std::basic_string<wchar_t>& file)
+    {
+        mLogFile = file;
+    }
+
+    // Setter (Move) - Set Target Log Filename
+    template <>
+    void ConfigPackage::SetFile<wchar_t>(std::basic_string<wchar_t>&& file)
+    {
+        mLogFile = std::move(file);
     }
 
     /// PUBLIC METHODS \\\
@@ -149,4 +178,12 @@ namespace SLL
 
         return (mOptionMask & opt) == opt;
     }
+
+    /// EXPLICIT TEMPLATE INSTANTIATION \\\
+
+    template void ConfigPackage::SetFile<char>(const std::basic_string<char>&);
+    template void ConfigPackage::SetFile<wchar_t>(const std::basic_string<wchar_t>&);
+
+    template void ConfigPackage::SetFile<char>(std::basic_string<char>&&);
+    template void ConfigPackage::SetFile<wchar_t>(std::basic_string<wchar_t>&&);
 }
