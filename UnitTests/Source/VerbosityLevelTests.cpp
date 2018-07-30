@@ -9,8 +9,9 @@ namespace VerbosityLevelTests
     using SLL::VerbosityLevelType;
 
     // Helper Macros
-#define VERBTOTYPE(v) (static_cast<VerbosityLevelType>(v))
-#define TYPETOVERB(t) (static_cast<VerbosityLevel>(t))
+#define VERB_TO_TYPE(v) (static_cast<VerbosityLevelType>(v))
+#define TYPE_TO_VERB(t) (static_cast<VerbosityLevel>(t))
+#define INCREMENT_VERB(v) (v = TYPE_TO_VERB(VERB_TO_TYPE(v) + 1))
 
     std::list<std::function<UnitTestResult(void)>> GetTests( )
     {
@@ -31,11 +32,11 @@ namespace VerbosityLevelTests
             VerbosityLevel v = VerbosityLevel::BEGIN;
             bool threw = false;
 
-            for ( ; v <= VerbosityLevel::MAX; v = TYPETOVERB(VERBTOTYPE(v) + 1) )
+            for ( ; v <= VerbosityLevel::MAX; INCREMENT_VERB(v) )
             {
                 try
                 {
-                    SUTL_TEST_ASSERT(VerbosityLevelConverter::ToScalar(v) == VERBTOTYPE(v));
+                    SUTL_TEST_ASSERT(VerbosityLevelConverter::ToScalar(v) == VERB_TO_TYPE(v));
                 }
                 catch ( const std::exception& e )
                 {
@@ -69,7 +70,7 @@ namespace VerbosityLevelTests
             VerbosityLevel v = VerbosityLevel::BEGIN;
             bool threw = false;
 
-            for ( ; v < VerbosityLevel::MAX; v = TYPETOVERB(VERBTOTYPE(v) + 1) )
+            for ( ; v < VerbosityLevel::MAX; INCREMENT_VERB(v) )
             {
                 try
                 {

@@ -9,8 +9,10 @@ namespace OptionFlagTests
     using SLL::OptionFlagConverter;
 
     // Helper Macros
-#define FLAGTOTYPE(f) (static_cast<OptionFlagType>(f))
-#define TYPETOFLAG(t) (static_cast<OptionFlag>(t))
+#define FLAG_TO_TYPE(f) (static_cast<OptionFlagType>(f))
+#define TYPE_TO_FLAG(t) (static_cast<OptionFlag>(t))
+#define INCREMENT_FLAG(f) (f = TYPE_TO_FLAG(FLAG_TO_TYPE(f) + 1))
+#define DECREMENT_FLAG(f) (f = TYPE_TO_FLAG(FLAG_TO_TYPE(f) - 1))
 
     std::list<std::function<UnitTestResult(void)>> GetTests( )
     {
@@ -48,9 +50,9 @@ namespace OptionFlagTests
 
     UnitTestResult BitwiseNot( )
     {
-        for ( OptionFlag f = OptionFlag::NONE; f < OptionFlag::MAX; f = TYPETOFLAG(FLAGTOTYPE(f) + 1) )
+        for ( OptionFlag f = OptionFlag::NONE; f < OptionFlag::MAX; INCREMENT_FLAG(f) )
         {
-            SUTL_TEST_ASSERT(~f == TYPETOFLAG(FLAGTOTYPE(OptionFlag::MAX) - FLAGTOTYPE(f) - 1));
+            SUTL_TEST_ASSERT(~f == TYPE_TO_FLAG(FLAG_TO_TYPE(OptionFlag::MAX) - FLAG_TO_TYPE(f) - 1));
         }
 
         /// Test Pass!
@@ -60,12 +62,12 @@ namespace OptionFlagTests
     UnitTestResult BitwiseOr( )
     {
         OptionFlag flag = OptionFlag::NONE;
-        for ( OptionFlag f = OptionFlag::BEGIN; f < OptionFlag::MAX; f = TYPETOFLAG(FLAGTOTYPE(f) + 1) )
+        for ( OptionFlag f = OptionFlag::BEGIN; f < OptionFlag::MAX; INCREMENT_FLAG(f) )
         {
             SUTL_TEST_ASSERT((flag | f) == f);
         }
 
-        flag = TYPETOFLAG(FLAGTOTYPE(OptionFlag::MAX) - 1);
+        flag = TYPE_TO_FLAG(FLAG_TO_TYPE(OptionFlag::MAX) - 1);
         SUTL_TEST_ASSERT((flag | OptionFlag::NONE) == flag);
 
         /// Test Pass!
@@ -74,8 +76,8 @@ namespace OptionFlagTests
 
     UnitTestResult BitwiseAnd( )
     {
-        OptionFlag flag = TYPETOFLAG(FLAGTOTYPE(OptionFlag::MAX) - 1);
-        for ( OptionFlag f = OptionFlag::BEGIN; f < OptionFlag::MAX; f = TYPETOFLAG(FLAGTOTYPE(f) + 1) )
+        OptionFlag flag = TYPE_TO_FLAG(FLAG_TO_TYPE(OptionFlag::MAX) - 1);
+        for ( OptionFlag f = OptionFlag::BEGIN; f < OptionFlag::MAX; INCREMENT_FLAG(f) )
         {
             SUTL_TEST_ASSERT((flag & f) == f);
         }
@@ -89,14 +91,14 @@ namespace OptionFlagTests
     UnitTestResult BitwiseXor( )
     {
         OptionFlag flag = OptionFlag::NONE;
-        for ( OptionFlag f = OptionFlag::BEGIN; f < OptionFlag::MAX; f = TYPETOFLAG(FLAGTOTYPE(f) + 1) )
+        for ( OptionFlag f = OptionFlag::BEGIN; f < OptionFlag::MAX; INCREMENT_FLAG(f) )
         {
             SUTL_TEST_ASSERT((flag ^ f) == f);
         }
 
-        flag = TYPETOFLAG(FLAGTOTYPE(OptionFlag::MAX) - 1);
+        flag = TYPE_TO_FLAG(FLAG_TO_TYPE(OptionFlag::MAX) - 1);
         SUTL_TEST_ASSERT((flag ^ OptionFlag::NONE) == flag);
-        SUTL_TEST_ASSERT((flag ^ TYPETOFLAG(FLAGTOTYPE(OptionFlag::MAX) - 1)) == OptionFlag::NONE);
+        SUTL_TEST_ASSERT((flag ^ TYPE_TO_FLAG(FLAG_TO_TYPE(OptionFlag::MAX) - 1)) == OptionFlag::NONE);
 
         /// Test Pass!
         SUTL_TEST_SUCCESS( );
@@ -108,14 +110,14 @@ namespace OptionFlagTests
     UnitTestResult BitwiseOrAssign( )
     {
         OptionFlag flag = OptionFlag::NONE;
-        for ( OptionFlag f = OptionFlag::BEGIN; f < OptionFlag::MAX; f = TYPETOFLAG(FLAGTOTYPE(f) + 1) )
+        for ( OptionFlag f = OptionFlag::BEGIN; f < OptionFlag::MAX; INCREMENT_FLAG(f) )
         {
             const OptionFlag oldFlag = flag;
             SUTL_TEST_ASSERT((flag |= f) == (oldFlag | f));
         }
 
         flag |= OptionFlag::NONE;
-        SUTL_TEST_ASSERT(flag == TYPETOFLAG(FLAGTOTYPE(OptionFlag::MAX) - 1));
+        SUTL_TEST_ASSERT(flag == TYPE_TO_FLAG(FLAG_TO_TYPE(OptionFlag::MAX) - 1));
 
         /// Test Pass!
         SUTL_TEST_SUCCESS( );
@@ -123,14 +125,14 @@ namespace OptionFlagTests
 
     UnitTestResult BitwiseAndAssign( )
     {
-        OptionFlag flag = TYPETOFLAG(FLAGTOTYPE(OptionFlag::MAX) - 1);
-        for ( OptionFlag f = TYPETOFLAG(FLAGTOTYPE(OptionFlag::MAX) - 1); f != OptionFlag::NONE; f = TYPETOFLAG(FLAGTOTYPE(f) - 1) )
+        OptionFlag flag = TYPE_TO_FLAG(FLAG_TO_TYPE(OptionFlag::MAX) - 1);
+        for ( OptionFlag f = TYPE_TO_FLAG(FLAG_TO_TYPE(OptionFlag::MAX) - 1); f != OptionFlag::NONE; DECREMENT_FLAG(f) )
         {
             const OptionFlag oldFlag = flag;
             SUTL_TEST_ASSERT((flag &= f) == (oldFlag & f));
         }
 
-        flag &= TYPETOFLAG(FLAGTOTYPE(OptionFlag::MAX) - 1);
+        flag &= TYPE_TO_FLAG(FLAG_TO_TYPE(OptionFlag::MAX) - 1);
         SUTL_TEST_ASSERT(flag == OptionFlag::NONE);
 
         /// Test Pass!
@@ -140,7 +142,7 @@ namespace OptionFlagTests
     UnitTestResult BitwiseXorAssign( )
     {
         OptionFlag flag = OptionFlag::NONE;
-        for ( OptionFlag f = OptionFlag::BEGIN; f < OptionFlag::MAX; f = TYPETOFLAG(FLAGTOTYPE(f) + 1) )
+        for ( OptionFlag f = OptionFlag::BEGIN; f < OptionFlag::MAX; INCREMENT_FLAG(f) )
         {
             const OptionFlag oldFlag = flag;
             SUTL_TEST_ASSERT((flag ^= f) == (oldFlag ^ f));
@@ -156,12 +158,12 @@ namespace OptionFlagTests
     UnitTestResult LeftShift( )
     {
         OptionFlag flag = OptionFlag::BEGIN;
-        OptionFlagType val = FLAGTOTYPE(OptionFlag::BEGIN) << 1;
+        OptionFlagType val = FLAG_TO_TYPE(OptionFlag::BEGIN) << 1;
         OptionFlagType s = 1;
 
         for ( ; (flag << s) < OptionFlag::MAX; s++, val <<= 1 )
         {
-            SUTL_TEST_ASSERT((flag << s) == TYPETOFLAG(val));
+            SUTL_TEST_ASSERT((flag << s) == TYPE_TO_FLAG(val));
         }
 
         SUTL_TEST_ASSERT((flag << s) == OptionFlag::MAX);
@@ -173,12 +175,12 @@ namespace OptionFlagTests
     UnitTestResult RightShift( )
     {
         OptionFlag flag = OptionFlag::MAX;
-        OptionFlagType val = FLAGTOTYPE(OptionFlag::MAX) >> 1;
+        OptionFlagType val = FLAG_TO_TYPE(OptionFlag::MAX) >> 1;
         OptionFlagType s = 1;
 
         for ( ; (flag >> s) > OptionFlag::NONE; s++, val >>= 1 )
         {
-            SUTL_TEST_ASSERT((flag >> s) == TYPETOFLAG(val));
+            SUTL_TEST_ASSERT((flag >> s) == TYPE_TO_FLAG(val));
         }
 
         SUTL_TEST_ASSERT((flag >> s) == OptionFlag::NONE);
@@ -193,11 +195,11 @@ namespace OptionFlagTests
     UnitTestResult LeftShiftAssign( )
     {
         OptionFlag flag = OptionFlag::BEGIN;
-        OptionFlagType val = FLAGTOTYPE(OptionFlag::BEGIN);
+        OptionFlagType val = FLAG_TO_TYPE(OptionFlag::BEGIN);
 
         for ( ; flag < OptionFlag::MAX; flag <<= 1, val <<= 1 )
         {
-            SUTL_TEST_ASSERT((flag) == TYPETOFLAG(val));
+            SUTL_TEST_ASSERT((flag) == TYPE_TO_FLAG(val));
         }
 
         SUTL_TEST_ASSERT((flag <<= 1) == OptionFlag::MAX);
@@ -209,11 +211,11 @@ namespace OptionFlagTests
     UnitTestResult RightShiftAssign( )
     {
         OptionFlag flag = OptionFlag::MAX;
-        OptionFlagType val = FLAGTOTYPE(OptionFlag::MAX);
+        OptionFlagType val = FLAG_TO_TYPE(OptionFlag::MAX);
 
         for ( ; flag > OptionFlag::NONE; flag >>= 1, val >>= 1 )
         {
-            SUTL_TEST_ASSERT((flag) == TYPETOFLAG(val));
+            SUTL_TEST_ASSERT((flag) == TYPE_TO_FLAG(val));
         }
 
         SUTL_TEST_ASSERT((flag >>= 1) == OptionFlag::NONE);
@@ -229,14 +231,14 @@ namespace OptionFlagTests
 
         UnitTestResult ToScalar( )
         {
-            OptionFlag flag = OptionFlag::NONE;
+            OptionFlag f = OptionFlag::NONE;
             bool threw = false;
 
-            for ( ; flag <= OptionFlag::MAX; flag = TYPETOFLAG(FLAGTOTYPE(flag) + 1) )
+            for ( ; f <= OptionFlag::MAX; INCREMENT_FLAG(f) )
             {
                 try
                 {
-                    SUTL_TEST_ASSERT(OptionFlagConverter::ToScalar(flag) == FLAGTOTYPE(flag));
+                    SUTL_TEST_ASSERT(OptionFlagConverter::ToScalar(f) == FLAG_TO_TYPE(f));
                 }
                 catch ( const std::exception& e )
                 {
@@ -246,7 +248,7 @@ namespace OptionFlagTests
 
             try
             {
-                OptionFlagConverter::ToScalar(flag);
+                OptionFlagConverter::ToScalar(f);
             }
             catch ( const std::invalid_argument& )
             {
@@ -269,7 +271,7 @@ namespace OptionFlagTests
             std::basic_string<T> str;
             bool threw = false;
 
-            for ( OptionFlag f = OptionFlag::NONE; f < OptionFlag::MAX; f = TYPETOFLAG(FLAGTOTYPE(f) + 1) )
+            for ( OptionFlag f = OptionFlag::NONE; f < OptionFlag::MAX; INCREMENT_FLAG(f) )
             {
                 try
                 {
