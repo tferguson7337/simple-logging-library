@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <vector>
+
 
 namespace SLL
 {
@@ -49,68 +49,14 @@ namespace SLL
         template <class T, typename = std::enable_if_t<std::is_same_v<T, char> || std::is_same_v<T, wchar_t>>>
         static const std::basic_string<T>& GetVerbosityLevelString(const size_t);
 
-        // VerbosityLevel String Getter - char
-        template <>
-        static const std::basic_string<char>& GetVerbosityLevelString<char>(const size_t i)
-        {
-            static const std::vector<std::basic_string<char>> VerbosityLevelStringsA
-            {
-                "INFO",
-                "WARN",
-                "ERROR",
-                "FATAL"
-            };
-
-            if ( i >= VerbosityLevelStringsA.size( ) )
-            {
-                throw std::range_error(__FUNCTION__" - Index argument out of bounds.  Index = " + std::to_string(i) + ", Max = " + std::to_string(VerbosityLevelStringsA.size( ) - 1));
-            }
-
-            return VerbosityLevelStringsA[i];
-        }
-
-        // VerbosityLevel String Getter - wchar_t
-        template <>
-        static const std::basic_string<wchar_t>& GetVerbosityLevelString<wchar_t>(const size_t i)
-        {
-            static const std::vector<std::basic_string<wchar_t>> VerbosityLevelStringsW
-            {
-                L"INFO",
-                L"WARN",
-                L"ERROR",
-                L"FATAL"
-            };
-
-            if ( i >= VerbosityLevelStringsW.size( ) )
-            {
-                throw std::range_error(__FUNCTION__" - Index argument out of bounds.  Index = " + std::to_string(i) + ", Max = " + std::to_string(VerbosityLevelStringsW.size( ) - 1));
-            }
-
-            return VerbosityLevelStringsW[i];
-        }
-
     public:
+        
+        // Returns underlying scalar type value of VerbosityLevel argument.
+        static VerbosityLevelType ToScalar(VerbosityLevel);
 
-        static VerbosityLevelType ToScalar(VerbosityLevel lvl)
-        {
-            if ( lvl < VerbosityLevel::BEGIN || lvl > VerbosityLevel::MAX )
-            {
-                throw std::invalid_argument(__FUNCTION__" - Invalid verbosity level argument (" + std::to_string(static_cast<VerbosityLevelType>(lvl)) + ").");
-            }
-
-            return static_cast<VerbosityLevelType>(lvl);
-        }
-
+        // Returns string name of VerbosityLevel argument.
         template <class T, typename = std::enable_if_t<std::is_same_v<T, char> || std::is_same_v<T, wchar_t>>>
-        static const std::basic_string<T>& ToString(VerbosityLevel lvl)
-        {
-            if ( lvl >= VerbosityLevel::MAX )
-            {
-                throw std::invalid_argument(__FUNCTION__" - Invalid verbosity level argument (" + std::to_string(static_cast<VerbosityLevelType>(lvl)) + ").");
-            }
-
-            return GetVerbosityLevelString<T>(ToScalar(lvl));
-        }
+        static const std::basic_string<T>& ToString(VerbosityLevel);
     };
 
     

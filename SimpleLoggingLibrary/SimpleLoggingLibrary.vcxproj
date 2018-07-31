@@ -29,7 +29,10 @@
     <ClInclude Include="Headers\VerbosityLevel.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Color.cpp" />
     <ClCompile Include="Source\ConfigPackage.cpp" />
+    <ClCompile Include="Source\OptionFlag.cpp" />
+    <ClCompile Include="Source\VerbosityLevel.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
