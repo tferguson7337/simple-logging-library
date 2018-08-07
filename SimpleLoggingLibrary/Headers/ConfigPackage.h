@@ -5,7 +5,7 @@
 #include <OptionFlag.h>
 #include <VerbosityLevel.h>
 
-// String Conversion
+// String Conversion and Macros
 #include <StringUtil.hpp>
 
 // STL
@@ -23,9 +23,6 @@ namespace SLL
     class ConfigPackage
     {
     private:
-        // Wide string for target log filename.
-        std::wstring mLogFile;
-
         // Color vector, mapped to verbosity levels.
         std::vector<Color> mVerbosityColors;
 
@@ -35,16 +32,19 @@ namespace SLL
         // Verbosity level to specifiy desired logging threshold.
         VerbosityLevel mVerbosityThreshold;
 
+        // Wide string for target log filename.
+        std::wstring mLogFile;
+
         /// Private Helper Methods \\\
 
         // Sanity checker for verbosity level arguments.
-        void ValidateVerbosityLevel(const VerbosityLevel, const std::string&) const;
+        static void ValidateVerbosityLevel(const VerbosityLevel, const std::string&);
 
         // Sanity checker for color arguments.
-        void ValidateColor(const Color, const std::string&) const;
+        static void ValidateColor(const Color, const std::string&);
 
         // Sanity check for option flag arguments.
-        void ValidateOptionFlag(const OptionFlag, const std::string&) const;
+        static void ValidateOptionFlag(const OptionFlag, const std::string&);
 
     public:
         /// Constructors \\\
@@ -76,6 +76,9 @@ namespace SLL
         // Returns configured color output for specified verbosity threshold.
         Color GetColor(const VerbosityLevel) const;
 
+        // Returns currently option flag mask representing currently enabled options.
+        OptionFlag GetOptionFlags( ) const noexcept;
+
         // Returns configured verbosity threshold.
         VerbosityLevel GetVerbosityThreshold( ) const noexcept;
 
@@ -91,11 +94,11 @@ namespace SLL
         void SetVerbosityThreshold(const VerbosityLevel);
 
         // Specifies file to log to [C].
-        template <class T, typename = std::enable_if_t<std::is_same_v<T, char> || std::is_same_v<T, wchar_t>>>
+        template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
         void SetFile(const std::basic_string<T>&);
 
         // Specifies file to log to [M].
-        template <class T, typename = std::enable_if_t<std::is_same_v<T, char> || std::is_same_v<T, wchar_t>>>
+        template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
         void SetFile(std::basic_string<T>&&);
 
         /// Public Methods \\\
@@ -106,9 +109,17 @@ namespace SLL
         // Disables specified logger functionality.
         void Disable(const OptionFlag);
 
+        // Wrapper For OptionsEnabledAll
+        bool OptionEnabled(const OptionFlag) const;
+
+        // Returns true if specified logger functionality is enabled.
+        // If argument specifies more than one option, this
+        // will only return true if one or more options are enabled.
+        bool OptionsEnabledAny(const OptionFlag) const;
+
         // Returns true if specified logger functionality is enabled.
         // If argument specifies more than one option, this 
         // will only return true if all options are enabled.
-        bool OptionEnabled(const OptionFlag) const;
+        bool OptionsEnabledAll(const OptionFlag) const;
     };
 }

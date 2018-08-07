@@ -20,11 +20,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Headers\ColorTests.h" />
+    <ClInclude Include="Headers\LoggerBaseTests.h" />
     <ClInclude Include="Headers\OptionFlagTests.h" />
     <ClInclude Include="Headers\VerbosityLevelTests.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\ColorTests.cpp" />
+    <ClCompile Include="Source\LoggerBaseTests.cpp" />
     <ClCompile Include="Source\OptionFlagTests.cpp" />
     <ClCompile Include="Source\RunTests.cpp" />
     <ClCompile Include="Source\VerbosityLevelTests.cpp" />
@@ -85,11 +87,13 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
+    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
+    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>

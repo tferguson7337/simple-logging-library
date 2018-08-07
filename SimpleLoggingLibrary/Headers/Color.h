@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Macros.h>
+
 #include <string>
 
 namespace SLL
@@ -7,24 +9,15 @@ namespace SLL
     // Various console-output colors.
     enum class Color : size_t
     {
-        // Basic Shades
-        WHITE = 0,
-        LIGHT_GREY,
-        GREY,
-        DARK_GREY,
-        BLACK,
-
         // Basic Colors
-        DARK_RED,
+        WHITE = 0,
         RED,
-        ORANGE,
-        YELLOW,
-        YELLOW_GREEN,
         GREEN,
-        CYAN,
+        YELLOW,
         BLUE,
-        VIOLET,
-        PURPLE,
+        MAGENTA,
+        CYAN,
+        BLACK,
 
         // MAX CAP
         MAX,
@@ -51,7 +44,7 @@ namespace SLL
         /// Private Helper Methods \\\
 
         // Color String Getters
-        template <class T, typename = std::enable_if_t<std::is_same_v<T, char> || std::is_same_v<T, wchar_t>>>
+        template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
         static const std::basic_string<T>& GetColorString(const size_t);
 
     public:
@@ -62,7 +55,7 @@ namespace SLL
         static ColorType ToScalar(Color);
 
         // Return string name of Color argument.
-        template <class T, typename = std::enable_if_t<std::is_same_v<T, char> || std::is_same_v<T, wchar_t>>>
+        template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
         static const std::basic_string<T>& ToString(Color);
     };
 }

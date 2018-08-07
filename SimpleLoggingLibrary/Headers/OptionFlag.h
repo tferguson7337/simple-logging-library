@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Macros.h>
+
 #include <string>
 
 namespace SLL
@@ -7,23 +9,36 @@ namespace SLL
     // Logging options that can be enabled/disabled.
     enum class OptionFlag : size_t
     {
-        // Logging Options
+        // NO SETTINGS
+        NONE = 0,
+
+        // Logging Options - Global Behavior
         LogToStdout         = 1 << 0,
         LogToFile           = 1 << 1,
         LogInColor          = 1 << 2,
-        LogVerbosityLevel   = 1 << 3,
+        LogSynchronous      = 1 << 3,
+
+        // Logging Options - Prefix Behavior
         LogTimestamp        = 1 << 4,
         LogThreadID         = 1 << 5,
-        LogSynchronous      = 1 << 6,
+        LogVerbosityLevel   = 1 << 6,
 
-        // NO SETTINGS
-        NONE                = 0,
-
-        // MIN CAP
+        // Enum Begin/Max
         BEGIN               = 1 << 0,
+        MAX                 = 1 << 7,
 
-        // MAX CAP
-        MAX                 = 1 << 7
+        // Behavior Begin
+        GLOBAL_BEGIN        = LogToStdout,
+        PREFIX_BEGIN        = LogTimestamp,
+
+        // Behavior End
+        GLOBAL_END          = PREFIX_BEGIN,
+        PREFIX_END          = MAX,
+
+        // Behavior Masks
+        ALL_MASK            = MAX - 1,
+        GLOBAL_MASK         = PREFIX_BEGIN - 1,
+        PREFIX_MASK         = ALL_MASK & ~GLOBAL_MASK,
     };
 
     /// BITWISE OPERATOR OVERLOADS \\\
@@ -83,15 +98,15 @@ namespace SLL
         /// Private Helper Methods \\\
 
         // OptionFlag String Getters
-        template <class T, typename = std::enable_if_t<std::is_same_v<T, char> || std::is_same_v<T, wchar_t>>>
+        template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
         static const std::basic_string<T>& GetOptionFlagString(const size_t);
 
         // OptionFlag::NONE String Getters
-        template <class T, typename = std::enable_if_t<std::is_same_v<T, char> || std::is_same_v<T, wchar_t>>>
+        template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
         static const std::basic_string<T>& GetEmptyMaskString( );
 
         // Separator Getters
-        template <class T, typename = std::enable_if_t<std::is_same_v<T, char> || std::is_same_v<T, wchar_t>>>
+        template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
         static const std::basic_string<T>& GetSeparator( );
 
     public:
@@ -101,7 +116,7 @@ namespace SLL
         // Returns underlying scalar type value of OptionFlag mask argument.
         static OptionFlagType ToScalar(OptionFlag);
 
-        template <class T, typename = std::enable_if_t<std::is_same_v<T, char> || std::is_same_v<T, wchar_t>>>
+        template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
         static std::basic_string<T> ToString(OptionFlag);
     };
 }

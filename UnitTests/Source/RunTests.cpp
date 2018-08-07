@@ -6,13 +6,19 @@
 #include <OptionFlagTests.h>
 #include <VerbosityLevelTests.h>
 
+// Logger Unit Tests
+#include <LoggerBaseTests.h>
+
 
 void GetUnitTests(UnitTestRunner<char>& utr)
 {
-    // Enum Class Tests
+    // Enum Class Unit Tests
     utr.AddUnitTests(ColorTests::GetTests( ));
     utr.AddUnitTests(OptionFlagTests::GetTests( ));
     utr.AddUnitTests(VerbosityLevelTests::GetTests( ));
+
+    // Logger Unit Tests
+    utr.AddUnitTests(LoggerBaseTests::GetTests( ));
 }
 
 int main( )

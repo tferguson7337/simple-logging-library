@@ -1,24 +1,36 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
+    <Filter Include="Logger Configuration">
+      <UniqueIdentifier>{1dbc343d-eb7a-483b-8194-f41ff0adad7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logger Configuration\Source Files">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Header Files">
+    <Filter Include="Logger Configuration\Header Files">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Interfaces">
-      <UniqueIdentifier>{e5a7838e-4bcb-40f8-8b81-bbe37d971734}</UniqueIdentifier>
     </Filter>
     <Filter Include="Common">
       <UniqueIdentifier>{c287c8b7-f4bc-4529-a740-2b71afc9144e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Logger">
+      <UniqueIdentifier>{11d51a19-5537-43c6-ab26-7ce364468537}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logger\Source Files">
+      <UniqueIdentifier>{3d002501-0507-4b0c-97fc-68e86964ff56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logger\Header Files">
+      <UniqueIdentifier>{9e37e087-f655-4a75-8460-fb755d621feb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logger\Interfaces">
+      <UniqueIdentifier>{e5a7838e-4bcb-40f8-8b81-bbe37d971734}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Headers\VerbosityLevel.h">
-      <Filter>Header Files</Filter>
+      <Filter>Logger Configuration\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Common\Headers\Types.h">
       <Filter>Common</Filter>
@@ -33,27 +45,42 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="Headers\ConfigPackage.h">
-      <Filter>Header Files</Filter>
+      <Filter>Logger Configuration\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Headers\OptionFlag.h">
-      <Filter>Header Files</Filter>
+      <Filter>Logger Configuration\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Headers\Color.h">
-      <Filter>Header Files</Filter>
+      <Filter>Logger Configuration\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Interfaces\ILogger.h">
+      <Filter>Logger\Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\LoggerBase.h">
+      <Filter>Logger\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Headers\Macros.h">
+      <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\ConfigPackage.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Logger Configuration\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Color.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Logger Configuration\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\VerbosityLevel.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Logger Configuration\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\OptionFlag.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Logger Configuration\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\FileLogger.cpp">
+      <Filter>Logger\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LoggerBase.cpp">
+      <Filter>Logger\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

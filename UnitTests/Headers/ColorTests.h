@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Macros.h>
+
 #include <functional>
 #include <list>
 
@@ -13,7 +15,7 @@ namespace ColorTests
     {
         UnitTestResult ToScalar( );
 
-        template <class T, typename = std::enable_if_t<std::is_same_v<T, char> || std::is_same_v<T, wchar_t>>>
+        template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
         UnitTestResult ToString( );
     }
 }

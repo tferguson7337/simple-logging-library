@@ -6,7 +6,7 @@ namespace SLL
     /// PRIVATE HELPERS \\\
 
     // Private Helper - Validate VerbosityLevel
-    void ConfigPackage::ValidateVerbosityLevel(const VerbosityLevel lvl, const std::string& f) const
+    void ConfigPackage::ValidateVerbosityLevel(const VerbosityLevel lvl, const std::string& f)
     {
         if ( lvl < VerbosityLevel::BEGIN || lvl >= VerbosityLevel::MAX )
         {
@@ -15,7 +15,7 @@ namespace SLL
     }
 
     // Private Helper - Validate Color
-    void ConfigPackage::ValidateColor(const Color color, const std::string& f) const
+    void ConfigPackage::ValidateColor(const Color color, const std::string& f)
     {
         if ( color < Color::BEGIN || color >= Color::MAX )
         {
@@ -24,7 +24,7 @@ namespace SLL
     }
 
     // Private Helper - Validate OptionFlag
-    void ConfigPackage::ValidateOptionFlag(const OptionFlag opt, const std::string& f) const
+    void ConfigPackage::ValidateOptionFlag(const OptionFlag opt, const std::string& f)
     {
         if ( opt < OptionFlag::BEGIN || opt >= OptionFlag::MAX )
         {
@@ -89,6 +89,11 @@ namespace SLL
         return mVerbosityColors[static_cast<size_t>(lvl)];
     }
 
+    OptionFlag ConfigPackage::GetOptionFlags( ) const noexcept
+    {
+        return mOptionMask;
+    }
+
     // Getter - VerbosityThreshold Setting
     VerbosityLevel ConfigPackage::GetVerbosityThreshold( ) const noexcept
     {
@@ -124,14 +129,14 @@ namespace SLL
     template <>
     void ConfigPackage::SetFile<char>(const std::basic_string<char>& file)
     {
-        mLogFile = StringUtil::ConvertAndCopy<wchar_t>(file);
+        mLogFile = StringUtil::ConvertAndCopy<wchar_t, char>(file);
     }
 
     // Setter ([M] Wide Conversion) - Set Target Log Filename
     template <>
     void ConfigPackage::SetFile<char>(std::basic_string<char>&& file)
     {
-        mLogFile = StringUtil::ConvertAndCopy<wchar_t>(std::move(file));
+        mLogFile = StringUtil::ConvertAndCopy<wchar_t, char>(std::move(file));
     }
 
 
@@ -169,14 +174,30 @@ namespace SLL
         mOptionMask &= ~opt;
     }
 
+    // Wrapper For OptionsEnabledAll
+    bool ConfigPackage::OptionEnabled(const OptionFlag opt) const
+    {
+        return OptionsEnabledAll(opt);
+    }
+
+    // Returns true if specified logger functionality is enabled.
+    // If argument specifies more than one option, this
+    // will only return true if one or more options are enabled.
+    bool ConfigPackage::OptionsEnabledAny(const OptionFlag opts) const
+    {
+        ValidateOptionFlag(opts, __FUNCTION__);
+
+        return (mOptionMask | opts) != OptionFlag::NONE;
+    }
+
     // Public Method - Check if OptionFlag is Enabled
     // If opt contains more than one option, this will return
     // true only if all options are enabled.
-    bool ConfigPackage::OptionEnabled(const OptionFlag opt) const
+    bool ConfigPackage::OptionsEnabledAll(const OptionFlag opts) const
     {
-        ValidateOptionFlag(opt, __FUNCTION__);
+        ValidateOptionFlag(opts, __FUNCTION__);
 
-        return (mOptionMask & opt) == opt;
+        return (mOptionMask & opts) == opts;
     }
 
     /// EXPLICIT TEMPLATE INSTANTIATION \\\

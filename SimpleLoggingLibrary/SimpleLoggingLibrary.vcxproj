@@ -19,18 +19,23 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Common\Headers\Macros.h" />
     <ClInclude Include="Common\Headers\Types.h" />
     <ClInclude Include="Common\Headers\Uncopyable.h" />
     <ClInclude Include="Common\Headers\Unmovable.h" />
     <ClInclude Include="Common\Headers\StringUtil.hpp" />
     <ClInclude Include="Headers\Color.h" />
     <ClInclude Include="Headers\ConfigPackage.h" />
+    <ClInclude Include="Headers\Interfaces\ILogger.h" />
+    <ClInclude Include="Headers\LoggerBase.h" />
     <ClInclude Include="Headers\OptionFlag.h" />
     <ClInclude Include="Headers\VerbosityLevel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Color.cpp" />
     <ClCompile Include="Source\ConfigPackage.cpp" />
+    <ClCompile Include="Source\FileLogger.cpp" />
+    <ClCompile Include="Source\LoggerBase.cpp" />
     <ClCompile Include="Source\OptionFlag.cpp" />
     <ClCompile Include="Source\VerbosityLevel.cpp" />
   </ItemGroup>
@@ -127,7 +132,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <EnablePREfast>true</EnablePREfast>
-      <AdditionalIncludeDirectories>$(ProjectDir)Common\Headers\;$(ProjectDir)Headers\;$(ProjectDir)Headers\Interfaces\;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Common\Headers\;$(ProjectDir)Headers\</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
@@ -145,7 +150,7 @@
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <EnablePREfast>true</EnablePREfast>
-      <AdditionalIncludeDirectories>$(ProjectDir)Common\Headers\;$(ProjectDir)Headers\;$(ProjectDir)Headers\Interfaces\;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Common\Headers\;$(ProjectDir)Headers\</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
@@ -165,9 +170,11 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <EnablePREfast>true</EnablePREfast>
-      <AdditionalIncludeDirectories>$(ProjectDir)Common\Headers\;$(ProjectDir)Headers\;$(ProjectDir)Headers\Interfaces\;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Common\Headers\;$(ProjectDir)Headers\</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -187,9 +194,11 @@
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <EnablePREfast>true</EnablePREfast>
-      <AdditionalIncludeDirectories>$(ProjectDir)Common\Headers\;$(ProjectDir)Headers\;$(ProjectDir)Headers\Interfaces\;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Common\Headers\;$(ProjectDir)Headers\</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

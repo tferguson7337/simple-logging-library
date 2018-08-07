@@ -23,11 +23,11 @@
     <ClInclude Include="Headers\ColorTests.h">
       <Filter>Tests\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Headers\LoggerBaseTests.h">
+      <Filter>Tests\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\RunTests.cpp">
-      <Filter>Tests\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\OptionFlagTests.cpp">
       <Filter>Tests\Source Files</Filter>
     </ClCompile>
@@ -37,5 +37,9 @@
     <ClCompile Include="Source\ColorTests.cpp">
       <Filter>Tests\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\LoggerBaseTests.cpp">
+      <Filter>Tests\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\RunTests.cpp" />
   </ItemGroup>
 </Project>
