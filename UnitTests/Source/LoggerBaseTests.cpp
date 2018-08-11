@@ -412,7 +412,7 @@ namespace LoggerBaseTests
         template <class T>
         UnitTestResult ThreadIDFormat( )
         {
-            std::unique_ptr<T[ ]> pFormat(StringUtil::ConvertAndCopy<T>("Test string, thread-id specifier %u."));
+            std::unique_ptr<T[ ]> pFormat(StringUtil::ConvertAndCopy<T>("Test string, thread-id specifier %X."));
             size_t len = 0;
             std::basic_ostringstream<char> tidStream;
 
@@ -421,7 +421,7 @@ namespace LoggerBaseTests
             unsigned long tid = static_cast<unsigned long>(atol(tidStream.str( ).c_str( )));
 
             size_t tidLen = 0;
-            for ( unsigned long t = tid; t != 0; t /= 10 )
+            for ( unsigned long t = tid; t != 0; t >>= 4 )
             {
                 tidLen++;
             }
@@ -435,7 +435,7 @@ namespace LoggerBaseTests
                 SUTL_TEST_EXCEPTION(e.what( ));
             }
 
-            SUTL_TEST_ASSERT(len == sizeof("Test string, thread-id specifier %u.") + tidLen - 2);
+            SUTL_TEST_ASSERT(len == sizeof("Test string, thread-id specifier %X.") + tidLen - 2);
 
             SUTL_TEST_SUCCESS( );
         }
@@ -664,12 +664,16 @@ namespace LoggerBaseTests
         template <class T>
         UnitTestResult ThreadIDFormat( )
         {
-            std::unique_ptr<T[ ]> f(StringUtil::ConvertAndCopy<T>("Test string, thread-ID specifier %lu."));
-            std::unique_ptr<T[ ]> expected(
-                StringUtil::ConvertAndCopy<T>((
-                    "Test string, thread-ID specifier " +
-                    std::to_string(Tester::ExtractThreadID(std::this_thread::get_id( ))) +
-                    ".").c_str( )));
+            auto HexTID = [ ] ( ) -> std::string
+            {
+                std::basic_ostringstream<char> oss;
+                oss << std::hex << std::uppercase;
+                oss << Tester::ExtractThreadID(std::this_thread::get_id( ));
+                return oss.str( );
+            };
+
+            std::unique_ptr<T[ ]> f(StringUtil::ConvertAndCopy<T>("Test string, thread-ID specifier %X."));
+            std::unique_ptr<T[ ]> expected(StringUtil::ConvertAndCopy<T>(("Test string, thread-ID specifier " + HexTID( ) + ".").c_str( )));
 
             std::unique_ptr<T[ ]> buf;
             size_t len = 0;
@@ -759,6 +763,21 @@ namespace LoggerBaseTests
         }
 
         template <class T>
+        bool IsHex(const T);
+
+        template <>
+        bool IsHex<char>(const char c)
+        {
+            return isalnum(c) != 0;
+        }
+
+        template <>
+        bool IsHex<wchar_t>(const wchar_t c)
+        {
+            return iswalnum(c) != 0;
+        }
+
+        template <class T>
         bool IsSpace(const T);
 
         template <>
@@ -839,7 +858,7 @@ namespace LoggerBaseTests
             size_t i = 4;
             while ( str[i] != T(']') )
             {
-                if ( !IsDigit<T>(str[i]) || str[i] == T('\0') )
+                if ( !IsHex<T>(str[i]) || str[i] == T('\0') )
                 {
                     return false;
                 }

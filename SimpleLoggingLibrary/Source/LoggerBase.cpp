@@ -34,7 +34,7 @@ namespace SLL
     template <>
     const std::basic_string<char>& LoggerBase::GetThreadIDFormat( )
     {
-        static const std::basic_string<char> threadIDFormatA = "TID[%u]  ";
+        static const std::basic_string<char> threadIDFormatA = "TID[%X]  ";
         return threadIDFormatA;
     }
 
@@ -42,7 +42,7 @@ namespace SLL
     template <>
     const std::basic_string<wchar_t>& LoggerBase::GetThreadIDFormat( )
     {
-        static const std::basic_string<wchar_t> threadIDFormatW = L"TID[%u]  ";
+        static const std::basic_string<wchar_t> threadIDFormatW = L"TID[%X]  ";
         return threadIDFormatW;
     }
 
