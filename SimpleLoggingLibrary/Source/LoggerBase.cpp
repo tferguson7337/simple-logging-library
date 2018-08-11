@@ -129,13 +129,12 @@ namespace SLL
 
     // Fills buffer with formatted string.  Expected to be used in conjunction with GetRequiredBufferLength( ) (narrow).
     template <>
-    void LoggerBase::StringPrintWrapper<char>(std::unique_ptr<char[ ]>& buf, const size_t bufLen, const char* pFormat, va_list pArgs)
+    std::unique_ptr<char[ ]> LoggerBase::StringPrintWrapper<char>(const size_t bufLen, const char* pFormat, va_list pArgs)
     {
-        if ( !buf )
-        {
-            throw std::invalid_argument(__FUNCTION__" - Invalid destination buffer (nullptr).");
-        }
-        else if ( bufLen == 0 )
+        std::unique_ptr<char[ ]> buf;
+        int writeLen = 0;
+
+        if ( bufLen == 0 )
         {
             throw std::invalid_argument(__FUNCTION__" - Invalid destination buffer length (" + std::to_string(bufLen) + ").");
         }
@@ -144,18 +143,40 @@ namespace SLL
             throw std::invalid_argument(__FUNCTION__" - Invalid format string (nullptr).");
         }
 
-        vsnprintf(buf.get( ), bufLen, pFormat, pArgs);
+        buf = std::make_unique<char[ ]>(bufLen);
+
+        writeLen = vsnprintf(buf.get( ), bufLen, pFormat, pArgs);
+
+        if ( writeLen < 0 )
+        {
+            throw std::runtime_error(
+                __FUNCTION__" - vsnprintf failed to print string to buffer.  Returned (" +
+                std::to_string(writeLen) +
+                ")."
+            );
+        }
+        else if ( writeLen != bufLen - 1 )
+        {
+            throw std::logic_error(
+                __FUNCTION__" - vsnprintf wrote " +
+                std::to_string(writeLen) +
+                " characters to buffer - expected " +
+                std::to_string(bufLen - 1) +
+                "."
+            );
+        }
+
+        return buf;
     }
 
     // Fills buffer with formatted string.  Expected to be used in conjunction with GetRequiredBufferLength( ) (wide).
     template <>
-    void LoggerBase::StringPrintWrapper<wchar_t>(std::unique_ptr<wchar_t[ ]>& buf, const size_t bufLen, const wchar_t* pFormat, va_list pArgs)
+    std::unique_ptr<wchar_t[ ]> LoggerBase::StringPrintWrapper<wchar_t>(const size_t bufLen, const wchar_t* pFormat, va_list pArgs)
     {
-        if ( !buf )
-        {
-            throw std::invalid_argument(__FUNCTION__" - Invalid destination buffer (nullptr).");
-        }
-        else if ( bufLen == 0 )
+        std::unique_ptr<wchar_t[ ]> buf;
+        int writeLen = 0;
+
+        if ( bufLen == 0 )
         {
             throw std::invalid_argument(__FUNCTION__" - Invalid destination buffer length (" + std::to_string(bufLen) + ").");
         }
@@ -164,7 +185,30 @@ namespace SLL
             throw std::invalid_argument(__FUNCTION__" - Invalid format string (nullptr).");
         }
 
-        vswprintf(buf.get( ), bufLen, pFormat, pArgs);
+        buf = std::make_unique<wchar_t[ ]>(bufLen);
+
+        writeLen = vswprintf(buf.get( ), bufLen, pFormat, pArgs);
+
+        if ( writeLen < 0 )
+        {
+            throw std::runtime_error(
+                __FUNCTION__" - vswprintf failed to print string to buffer.  Returned (" +
+                std::to_string(writeLen) +
+                ")."
+            );
+        }
+        else if ( writeLen != bufLen - 1 )
+        {
+            throw std::logic_error(
+                __FUNCTION__" - vswprintf wrote " +
+                std::to_string(writeLen) +
+                " characters to buffer - expected " +
+                std::to_string(bufLen - 1) +
+                "."
+            );
+        }
+
+        return buf;
     }
 
 ///
@@ -246,43 +290,47 @@ namespace SLL
         return prefixStrings;
     }
 
-    // Builds user's formatted log message.
+    // Builds user's formatted log message (w/ va_list).
     template <class T, typename>
-    std::unique_ptr<T[ ]> LoggerBase::BuildFormattedMessage(const T* pFormat, ...)
+    std::unique_ptr<T[ ]> LoggerBase::BuildFormattedMessage(const T* pFormat, va_list pArgs)
     {
-        std::unique_ptr<T[ ]> str;
         size_t reqBufLen = 0;
-        va_list pArgs;
 
         if ( !pFormat )
         {
             throw std::invalid_argument(__FUNCTION__" - Invalid format string (nullptr)");
         }
 
-        va_start(pArgs, pFormat);
-
-        if ( !pArgs )
-        {
-            throw std::runtime_error(__FUNCTION__" - Failed to get format string arguments.");
-        }
-
         reqBufLen = GetRequiredBufferLength<T>(pFormat, pArgs);
 
         if ( reqBufLen == 0 )
         {
-            va_end(pArgs);
             throw std::runtime_error(__FUNCTION__" - Failed to get required size for log message buffer.");
         }
 
-        str = std::make_unique<T[ ]>(reqBufLen);
-        StringPrintWrapper<T>(str, reqBufLen, pFormat, pArgs);
+        return StringPrintWrapper<T>(reqBufLen, pFormat, pArgs);
+    }
+
+    // Build user's formatted log message (w/o va_list).
+    template <class T, typename>
+    std::unique_ptr<T[ ]> LoggerBase::BuildFormattedMessage(const T* pFormat, ...)
+    {
+        std::unique_ptr<T[ ]> str;
+        va_list pArgs;
+
+        va_start(pArgs, pFormat);
+
+        try
+        {
+            str = BuildFormattedMessage<T>(pFormat, pArgs);
+        }
+        catch ( const std::exception& )
+        {
+            va_end(pArgs);
+            throw;
+        }
 
         va_end(pArgs);
-
-        if ( !str )
-        {
-            throw std::runtime_error(__FUNCTION__" - Failed to build formatted string.");
-        }
 
         return str;
     }
@@ -305,6 +353,6 @@ namespace SLL
     template std::vector<std::unique_ptr<wchar_t[ ]>> LoggerBase::BuildMessagePrefixes<wchar_t>(const VerbosityLevel&, const std::thread::id&) const;
 
     // Build Formatted String
-    template std::unique_ptr<char[ ]> LoggerBase::BuildFormattedMessage<char>(const char*, ...);
-    template std::unique_ptr<wchar_t[ ]> LoggerBase::BuildFormattedMessage<wchar_t>(const wchar_t*, ...);
+    template std::unique_ptr<char[ ]> LoggerBase::BuildFormattedMessage<char>(const char*, va_list);
+    template std::unique_ptr<wchar_t[ ]> LoggerBase::BuildFormattedMessage<wchar_t>(const wchar_t*, va_list);
 }

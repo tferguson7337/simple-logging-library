@@ -63,7 +63,7 @@ namespace SLL
 
         // Will build format-string with arguments, filling the passed buffer.
         template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
-        static void StringPrintWrapper(std::unique_ptr<T[ ]>&, const size_t, const T*, va_list);
+        static std::unique_ptr<T[ ]> StringPrintWrapper(const size_t, const T*, va_list);
 
     protected:
 
@@ -95,12 +95,16 @@ namespace SLL
         template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
         std::vector<std::unique_ptr<T[ ]>> BuildMessagePrefixes(const VerbosityLevel& lvl, const std::thread::id& tid) const;
 
+        // Build user's formatted log message (w/ va_list).
+        template<class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
+        static std::unique_ptr<T[ ]> BuildFormattedMessage(const T* pFormat, va_list args);
+
     public:
 
-        /// Common Public Helper Method \\\
+        /// Common Public Helper Methods \\\
 
-        // Build user's formatted log message.
-        template<class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
+        // Build user's formatted log message (w/o va_list).
+        template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
         static std::unique_ptr<T[ ]> BuildFormattedMessage(const T* pFormat, ...);
 
         /// Common Getter \\\

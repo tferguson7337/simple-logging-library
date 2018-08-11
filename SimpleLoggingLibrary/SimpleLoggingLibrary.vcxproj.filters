@@ -62,6 +62,9 @@
     <ClInclude Include="Common\Headers\Macros.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="Headers\FileLogger.h">
+      <Filter>Logger\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\ConfigPackage.cpp">

@@ -52,9 +52,6 @@ namespace LoggerBaseTests
             /// String Print Wrapper Tests \\\
 
             // Negative Tests
-            StringPrintWrapperTests::EmptyBuffer<char>,
-            StringPrintWrapperTests::EmptyBuffer<wchar_t>,
-
             StringPrintWrapperTests::ZeroLength<char>,
             StringPrintWrapperTests::ZeroLength<wchar_t>,
 
@@ -477,38 +474,14 @@ namespace LoggerBaseTests
         /// Negative Tests \\\
 
         template <class T>
-        UnitTestResult EmptyBuffer( )
+        UnitTestResult ZeroLength( )
         {
             bool threw = false;
             std::unique_ptr<T[ ]> buf;
 
             try
             {
-                Tester::StringPrintWrapper<T>(buf, 1, StringUtil::ConvertAndCopy<T>("").get( ));
-            }
-            catch ( const std::invalid_argument& )
-            {
-                threw = true;
-            }
-            catch ( const std::exception& e )
-            {
-                SUTL_TEST_EXCEPTION(e.what( ));
-            }
-
-            SUTL_TEST_ASSERT(threw);
-
-            SUTL_TEST_SUCCESS( );
-        }
-
-        template <class T>
-        UnitTestResult ZeroLength( )
-        {
-            bool threw = false;
-            std::unique_ptr<T[ ]> buf(std::make_unique<T[ ]>(1));
-
-            try
-            {
-                Tester::StringPrintWrapper<T>(buf, 0, StringUtil::ConvertAndCopy<T>("").get( ));
+                buf = Tester::StringPrintWrapper<T>(0, StringUtil::ConvertAndCopy<T>("").get( ));
             }
             catch ( const std::invalid_argument& )
             {
@@ -528,12 +501,11 @@ namespace LoggerBaseTests
         UnitTestResult NoFormat( )
         {
             bool threw = false;
-            size_t len = 1;
-            std::unique_ptr<T[ ]> buf(std::make_unique<T[ ]>(len));
+            std::unique_ptr<T[ ]> buf;
 
             try
             {
-                Tester::StringPrintWrapper<T>(buf, len, nullptr);
+                buf = Tester::StringPrintWrapper<T>(1, nullptr);
             }
             catch ( const std::invalid_argument& )
             {
@@ -556,6 +528,7 @@ namespace LoggerBaseTests
         UnitTestResult NoArgs( )
         {
             std::unique_ptr<T[ ]> f(StringUtil::ConvertAndCopy<T>("Test string, no format specifiers."));
+            const std::unique_ptr<T[ ]>& expected = f;
             std::unique_ptr<T[ ]> buf;
             size_t len = 0;
 
@@ -570,21 +543,14 @@ namespace LoggerBaseTests
 
             try
             {
-                buf = std::make_unique<T[ ]>(len);
-            }
-            catch ( const std::exception& e )
-            {
-                SUTL_SETUP_EXCEPTION(e.what( ));
-            }
-
-            try
-            {
-                Tester::StringPrintWrapper(buf, len, f.get( ));
+                buf = Tester::StringPrintWrapper<T>(len, f.get( ));
             }
             catch ( const std::exception& e )
             {
                 SUTL_TEST_EXCEPTION(e.what( ));
             }
+
+            SUTL_TEST_ASSERT(memcmp(expected.get( ), buf.get( ), len * sizeof(T)) == 0);
 
             SUTL_TEST_SUCCESS( );
         }
@@ -594,11 +560,12 @@ namespace LoggerBaseTests
         UnitTestResult IntegralArgs( )
         {
             std::unique_ptr<T[ ]> f(StringUtil::ConvertAndCopy<T>("Test string, integral specifiers %d %zu."));
+            const std::unique_ptr<T[ ]> expected(StringUtil::ConvertAndCopy<T>("Test string, integral specifiers -250 1073741824."));
             std::unique_ptr<T[ ]> buf;
             size_t len = 0;
 
-            int arg1 = -250;
-            size_t arg2 = static_cast<size_t>(1) << 30;
+            const int arg1 = -250;
+            const size_t arg2 = static_cast<size_t>(1) << 30;
 
             try
             {
@@ -611,21 +578,14 @@ namespace LoggerBaseTests
 
             try
             {
-                buf = std::make_unique<T[ ]>(len);
-            }
-            catch ( const std::exception& e )
-            {
-                SUTL_SETUP_EXCEPTION(e.what( ));
-            }
-
-            try
-            {
-                Tester::StringPrintWrapper(buf, len, f.get( ), arg1, arg2);
+                buf = Tester::StringPrintWrapper<T>(len, f.get( ), arg1, arg2);
             }
             catch ( const std::exception& e )
             {
                 SUTL_TEST_EXCEPTION(e.what( ));
             }
+
+            SUTL_TEST_ASSERT(memcmp(expected.get( ), buf.get( ), len * sizeof(T)) == 0);
 
             SUTL_TEST_SUCCESS( );
         }
@@ -634,11 +594,12 @@ namespace LoggerBaseTests
         template <class T>
         UnitTestResult FloatingArgs( )
         {
-            std::unique_ptr<T[ ]> f(StringUtil::ConvertAndCopy<T>("Test string, floating-point specifiers %2.2f %1.5."));
+            std::unique_ptr<T[ ]> f(StringUtil::ConvertAndCopy<T>("Test string, floating-point specifiers %2.2f %1.5f."));
+            const std::unique_ptr<T[ ]> expected(StringUtil::ConvertAndCopy<T>("Test string, floating-point specifiers 1.30 10000000000.00000."));
             std::unique_ptr<T[ ]> buf;
             size_t len = 0;
 
-            double arg1 = 1.295;
+            double arg1 = 1.296;
             long double arg2 = std::powl(10, 10);
 
             try
@@ -652,21 +613,14 @@ namespace LoggerBaseTests
 
             try
             {
-                buf = std::make_unique<T[ ]>(len);
-            }
-            catch ( const std::exception& e )
-            {
-                SUTL_SETUP_EXCEPTION(e.what( ));
-            }
-
-            try
-            {
-                Tester::StringPrintWrapper(buf, len, f.get( ), arg1, arg2);
+                buf = Tester::StringPrintWrapper<T>(len, f.get( ), arg1, arg2);
             }
             catch ( const std::exception& e )
             {
                 SUTL_TEST_EXCEPTION(e.what( ));
             }
+
+            SUTL_TEST_ASSERT(memcmp(expected.get( ), buf.get( ), len * sizeof(T)) == 0);
 
             SUTL_TEST_SUCCESS( );
         }
@@ -675,12 +629,13 @@ namespace LoggerBaseTests
         template <class T>
         UnitTestResult StringArgs( )
         {
-            std::unique_ptr<T[ ]> f(StringUtil::ConvertAndCopy<T>("Test string, string specifiers %s %s."));
+            std::unique_ptr<T[ ]> f(StringUtil::ConvertAndCopy<T>("Test string, string specifiers %s %ls."));
+            std::unique_ptr<T[ ]> expected(StringUtil::ConvertAndCopy<T>("Test string, string specifiers Test string #1 \"Test string #2\"."));
             std::unique_ptr<T[ ]> buf;
             size_t len = 0;
 
             std::unique_ptr<T[ ]> arg1(StringUtil::ConvertAndCopy<T>("Test string #1"));
-            std::unique_ptr<wchar_t[ ]> arg2(StringUtil::ConvertAndCopy<wchar_t>("Test string #2"));
+            std::unique_ptr<wchar_t[ ]> arg2(StringUtil::ConvertAndCopy<wchar_t>("\"Test string #2\""));
 
             try
             {
@@ -693,21 +648,14 @@ namespace LoggerBaseTests
 
             try
             {
-                buf = std::make_unique<T[ ]>(len);
-            }
-            catch ( const std::exception& e )
-            {
-                SUTL_SETUP_EXCEPTION(e.what( ));
-            }
-
-            try
-            {
-                Tester::StringPrintWrapper(buf, len, f.get( ), arg1.get( ), arg2.get( ));
+                buf = Tester::StringPrintWrapper<T>(len, f.get( ), arg1.get( ), arg2.get( ));
             }
             catch ( const std::exception& e )
             {
                 SUTL_TEST_EXCEPTION(e.what( ));
             }
+
+            SUTL_TEST_ASSERT(memcmp(expected.get( ), buf.get( ), len * sizeof(T)) == 0);
 
             SUTL_TEST_SUCCESS( );
         }
@@ -717,13 +665,15 @@ namespace LoggerBaseTests
         UnitTestResult ThreadIDFormat( )
         {
             std::unique_ptr<T[ ]> f(StringUtil::ConvertAndCopy<T>("Test string, thread-ID specifier %lu."));
+            std::unique_ptr<T[ ]> expected(
+                StringUtil::ConvertAndCopy<T>((
+                    "Test string, thread-ID specifier " +
+                    std::to_string(Tester::ExtractThreadID(std::this_thread::get_id( ))) +
+                    ".").c_str( )));
+
             std::unique_ptr<T[ ]> buf;
             size_t len = 0;
-            unsigned long tid = 0;
-
-            std::basic_stringstream<char> tidStream;
-            tidStream << std::this_thread::get_id( );
-            tid = static_cast<unsigned long>(std::atol(tidStream.str( ).c_str( )));
+            unsigned long tid = Tester::ExtractThreadID(std::this_thread::get_id( ));
 
             try
             {
@@ -736,21 +686,14 @@ namespace LoggerBaseTests
 
             try
             {
-                buf = std::make_unique<T[ ]>(len);
-            }
-            catch ( const std::exception& e )
-            {
-                SUTL_SETUP_EXCEPTION(e.what( ));
-            }
-
-            try
-            {
-                Tester::StringPrintWrapper(buf, len, f.get( ), tid);
+                buf = Tester::StringPrintWrapper<T>(len, f.get( ), tid);
             }
             catch ( const std::exception& e )
             {
                 SUTL_TEST_EXCEPTION(e.what( ));
             }
+
+            SUTL_TEST_ASSERT(memcmp(expected.get( ), buf.get( ), len * sizeof(T)) == 0);
 
             SUTL_TEST_SUCCESS( );
         }
@@ -766,6 +709,9 @@ namespace LoggerBaseTests
             for ( SLL::VerbosityLevel lvl = SLL::VerbosityLevel::BEGIN; lvl != SLL::VerbosityLevel::MAX; INCREMENT_VERBOSITY(lvl) )
             {
                 const std::basic_string<T> verbosityLevelString(SLL::VerbosityLevelConverter::ToString<T>(lvl));
+                const std::unique_ptr<T[ ]> expected(
+                    StringUtil::ConvertAndCopy<T>(
+                    ("Test string, verbosity-level specifier " + SLL::VerbosityLevelConverter::ToString<char>(lvl) + ".").c_str( )));
 
                 try
                 {
@@ -778,21 +724,14 @@ namespace LoggerBaseTests
 
                 try
                 {
-                    buf = std::make_unique<T[ ]>(len);
-                }
-                catch ( const std::exception& e )
-                {
-                    SUTL_SETUP_EXCEPTION(e.what( ));
-                }
-
-                try
-                {
-                    Tester::StringPrintWrapper(buf, len, f.get( ), verbosityLevelString.c_str( ));
+                    buf = Tester::StringPrintWrapper<T>(len, f.get( ), verbosityLevelString.c_str( ));
                 }
                 catch ( const std::exception& e )
                 {
                     SUTL_TEST_EXCEPTION(e.what( ));
                 }
+
+                SUTL_TEST_ASSERT(memcmp(expected.get( ), buf.get( ), len * sizeof(T)) == 0);
             }
 
             SUTL_TEST_SUCCESS( );

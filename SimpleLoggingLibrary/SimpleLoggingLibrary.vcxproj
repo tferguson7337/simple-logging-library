@@ -26,6 +26,7 @@
     <ClInclude Include="Common\Headers\StringUtil.hpp" />
     <ClInclude Include="Headers\Color.h" />
     <ClInclude Include="Headers\ConfigPackage.h" />
+    <ClInclude Include="Headers\FileLogger.h" />
     <ClInclude Include="Headers\Interfaces\ILogger.h" />
     <ClInclude Include="Headers\LoggerBase.h" />
     <ClInclude Include="Headers\OptionFlag.h" />

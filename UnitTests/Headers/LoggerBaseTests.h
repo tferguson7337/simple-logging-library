@@ -64,9 +64,6 @@ namespace LoggerBaseTests
         /// Negative Tests \\\
 
         template <class T>
-        UnitTestResult EmptyBuffer( );
-
-        template <class T>
         UnitTestResult ZeroLength( );
 
         template <class T>
@@ -209,6 +206,12 @@ namespace SLL
                 return LoggerBase::GetVerbosityLevelFormat<T>( );
             }
 
+            // Extract Thread ID
+            static unsigned long ExtractThreadID(const std::thread::id& tid)
+            {
+                return LoggerBase::ExtractThreadID(tid);
+            }
+
             // Get Local Time String
             template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
             static std::basic_string<T> GetLocalTime( )
@@ -252,13 +255,16 @@ namespace SLL
 
             // Will build format-string with arguments, filling the passed buffer.
             template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
-            static void StringPrintWrapper(std::unique_ptr<T[ ]>& buf, const size_t len, const T* f, ...)
+            static std::unique_ptr<T[ ]> StringPrintWrapper(const size_t len, const T* f, ...)
             {
+                std::unique_ptr<T[ ]> str;
                 va_list a;
+
                 va_start(a, f);
+
                 try
                 {
-                    LoggerBase::StringPrintWrapper(buf, len, f, a);
+                    str = LoggerBase::StringPrintWrapper<T>(len, f, a);
                 }
                 catch ( const std::invalid_argument& )
                 {
@@ -272,6 +278,8 @@ namespace SLL
                 }
 
                 va_end(a);
+
+                return str;
             }
 
             /// LoggerBase Non-Static Wrappers \\\

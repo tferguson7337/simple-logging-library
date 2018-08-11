@@ -88,22 +88,30 @@
     <OutDir>$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
     <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
+    <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
     <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
+    <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
+    <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
+    <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -116,6 +124,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)..\SimpleLoggingLibrary\Common\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\Interfaces\;$(ProjectDir)SUTL\Headers;$(ProjectDir)SUTL\Headers\Interfaces;$(ProjectDir)Headers</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <EnablePREfast>true</EnablePREfast>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -145,6 +154,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)..\SimpleLoggingLibrary\Common\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\Interfaces\;$(ProjectDir)SUTL\Headers;$(ProjectDir)SUTL\Headers\Interfaces;$(ProjectDir)Headers</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <EnablePREfast>true</EnablePREfast>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -176,6 +186,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)..\SimpleLoggingLibrary\Common\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\Interfaces\;$(ProjectDir)SUTL\Headers;$(ProjectDir)SUTL\Headers\Interfaces;$(ProjectDir)Headers</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <EnablePREfast>true</EnablePREfast>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -209,6 +220,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)..\SimpleLoggingLibrary\Common\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\Interfaces\;$(ProjectDir)SUTL\Headers;$(ProjectDir)SUTL\Headers\Interfaces;$(ProjectDir)Headers</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <EnablePREfast>true</EnablePREfast>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
