@@ -8,6 +8,7 @@
 
 // Logger Unit Tests
 #include <LoggerBaseTests.h>
+#include <FileLoggerTests.h>
 
 
 void GetUnitTests(UnitTestRunner<char>& utr)
@@ -19,6 +20,7 @@ void GetUnitTests(UnitTestRunner<char>& utr)
 
     // Logger Unit Tests
     utr.AddUnitTests(LoggerBaseTests::GetTests( ));
+    utr.AddUnitTests(FileLoggerTests::GetTests( ));
 }
 
 int main( )

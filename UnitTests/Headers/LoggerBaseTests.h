@@ -21,7 +21,7 @@ namespace LoggerBaseTests
     UnitTestResult GetTimeFormat( );
     UnitTestResult GetThreadIDFormat( );
     UnitTestResult GetVerbosityLevelFormat( );
-    
+
     // Build Time Prefix Tests
     UnitTestResult GetLocalTime( );
     UnitTestResult BuildTimePrefix( );
@@ -57,7 +57,7 @@ namespace LoggerBaseTests
         template <class T>
         UnitTestResult VerbosityLevelFormat( );
     }
-    
+
     // String Print Wrapper Tests
     namespace StringPrintWrapperTests
     {
@@ -102,7 +102,7 @@ namespace LoggerBaseTests
 
         template <class T>
         UnitTestResult NoOptions( );
-        
+
         template <class T>
         UnitTestResult TimeOnly( );
 
@@ -149,153 +149,149 @@ namespace LoggerBaseTests
     }
 }
 
-
-namespace SLL
+namespace LoggerBaseTests
 {
-    namespace LoggerBaseTests
+    ///
+    //
+    //  Class   - LoggerBaseTester
+    //
+    //  Purpose - Friend of LoggerBase, exposes non-public methods for testing.
+    //
+    ///
+    class Tester final : public ::SLL::LoggerBase
     {
-        ///
-        //
-        //  Class   - LoggerBaseTester
-        //
-        //  Purpose - Friend of LoggerBase, exposes non-public methods for testing.
-        //
-        ///
-        class Tester final : public LoggerBase
-        {
-            Tester(const Tester&) = delete;
-            Tester(Tester&&) = delete;
-            Tester& operator=(const Tester&) = delete;
-            Tester& operator=(Tester&&) = delete;
+        Tester(const Tester&) = delete;
+        Tester(Tester&&) = delete;
+        Tester& operator=(const Tester&) = delete;
+        Tester& operator=(Tester&&) = delete;
 
-        public:
-            /// Constructors \\\
+    public:
+        /// Constructors \\\
             
-            explicit Tester(const ConfigPackage& cp) :
-                LoggerBase(cp)
-            { }
+        explicit Tester(const SLL::ConfigPackage& cp) :
+            LoggerBase(cp)
+        { }
 
-            explicit Tester(ConfigPackage&& cp) noexcept :
-                LoggerBase(std::move(cp))
-            { }
+        explicit Tester(SLL::ConfigPackage&& cp) noexcept :
+            LoggerBase(std::move(cp))
+        { }
 
-            /// Destructors \\\
+        /// Destructors \\\
 
-            virtual ~Tester( ) = default;
+        virtual ~Tester( ) = default;
 
-            /// LoggerBase Static Wrappers \\\
+        /// LoggerBase Static Wrappers \\\
 
-            // Prefix - Timestamp Format Getter (std::put_time Format)
-            template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
-            static const std::basic_string<T>& GetTimeFormat( )
+        // Prefix - Timestamp Format Getter (std::put_time Format)
+        template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
+        static const std::basic_string<T>& GetTimeFormat( )
+        {
+            return SLL::LoggerBase::GetTimeFormat<T>( );
+        }
+
+        // Prefix - Thread ID Format Getter
+        template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
+        static const std::basic_string<T>& GetThreadIDFormat( )
+        {
+            return SLL::LoggerBase::GetThreadIDFormat<T>( );
+        }
+
+        // Prefix - VerbosityLevel Format Getter
+        template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
+        static const std::basic_string<T>& GetVerbosityLevelFormat( )
+        {
+            return LoggerBase::GetVerbosityLevelFormat<T>( );
+        }
+
+        // Extract Thread ID
+        static unsigned long ExtractThreadID(const std::thread::id& tid)
+        {
+            return LoggerBase::ExtractThreadID(tid);
+        }
+
+        // Get Local Time String
+        template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
+        static std::basic_string<T> GetLocalTime( )
+        {
+            return LoggerBase::GetLocalTime<T>( );
+        }
+
+        // Build Time Prefix String
+        template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
+        static std::unique_ptr<T[ ]> BuildTimePrefix( )
+        {
+            return LoggerBase::BuildTimePrefix<T>( );
+        }
+
+        // Returns required length of buffer to hold built format-string
+        // that would be built using format and arguments.
+        template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
+        static size_t GetRequiredBufferLength(const T* f, ...)
+        {
+            size_t l = 0;
+            va_list a;
+            va_start(a, f);
+            try
             {
-                return LoggerBase::GetTimeFormat<T>( );
+                l = LoggerBase::GetRequiredBufferLength<T>(f, a);
             }
-
-            // Prefix - Thread ID Format Getter
-            template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
-            static const std::basic_string<T>& GetThreadIDFormat( )
+            catch ( const std::invalid_argument& )
             {
-                return LoggerBase::GetThreadIDFormat<T>( );
-            }
-
-            // Prefix - VerbosityLevel Format Getter
-            template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
-            static const std::basic_string<T>& GetVerbosityLevelFormat( )
-            {
-                return LoggerBase::GetVerbosityLevelFormat<T>( );
-            }
-
-            // Extract Thread ID
-            static unsigned long ExtractThreadID(const std::thread::id& tid)
-            {
-                return LoggerBase::ExtractThreadID(tid);
-            }
-
-            // Get Local Time String
-            template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
-            static std::basic_string<T> GetLocalTime( )
-            {
-                return LoggerBase::GetLocalTime<T>( );
-            }
-
-            // Build Time Prefix String
-            template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
-            static std::unique_ptr<T[ ]> BuildTimePrefix( )
-            {
-                return LoggerBase::BuildTimePrefix<T>( );
-            }
-
-            // Returns required length of buffer to hold built format-string
-            // that would be built using format and arguments.
-            template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
-            static size_t GetRequiredBufferLength(const T* f, ...)
-            {
-                size_t l = 0;
-                va_list a;
-                va_start(a, f);
-                try
-                {
-                    l = LoggerBase::GetRequiredBufferLength<T>(f, a);
-                }
-                catch ( const std::invalid_argument& )
-                {
-                    va_end(a);
-                    throw;
-                }
-                catch ( const std::exception& )
-                {
-                    va_end(a);
-                    throw;
-                }
-                 
                 va_end(a);
-                return l;
+                throw;
             }
-
-            // Will build format-string with arguments, filling the passed buffer.
-            template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
-            static std::unique_ptr<T[ ]> StringPrintWrapper(const size_t len, const T* f, ...)
+            catch ( const std::exception& )
             {
-                std::unique_ptr<T[ ]> str;
-                va_list a;
-
-                va_start(a, f);
-
-                try
-                {
-                    str = LoggerBase::StringPrintWrapper<T>(len, f, a);
-                }
-                catch ( const std::invalid_argument& )
-                {
-                    va_end(a);
-                    throw;
-                }
-                catch ( const std::exception& )
-                {
-                    va_end(a);
-                    throw;
-                }
-
                 va_end(a);
-
-                return str;
+                throw;
             }
 
-            /// LoggerBase Non-Static Wrappers \\\
+            va_end(a);
+            return l;
+        }
 
-            // Wrapper for BuildMessagePrefixes.
-            template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
-            std::vector<std::unique_ptr<T[ ]>> BuildMessagePrefixes(const VerbosityLevel& lvl, const std::thread::id& tid) const
+        // Will build format-string with arguments, filling the passed buffer.
+        template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
+        static std::unique_ptr<T[ ]> StringPrintWrapper(const size_t len, const T* f, ...)
+        {
+            std::unique_ptr<T[ ]> str;
+            va_list a;
+
+            va_start(a, f);
+
+            try
             {
-                return LoggerBase::BuildMessagePrefixes<T>(lvl, tid);
+                str = LoggerBase::StringPrintWrapper<T>(len, f, a);
+            }
+            catch ( const std::invalid_argument& )
+            {
+                va_end(a);
+                throw;
+            }
+            catch ( const std::exception& )
+            {
+                va_end(a);
+                throw;
             }
 
-            // Dummy Flush method to satisfy ILogger interface.
-            void Flush( )
-            {
-                __noop;
-            }
-        };
-    }
+            va_end(a);
+
+            return str;
+        }
+
+        /// LoggerBase Non-Static Wrappers \\\
+
+        // Wrapper for BuildMessagePrefixes.
+        template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
+        std::vector<std::unique_ptr<T[ ]>> BuildMessagePrefixes(const SLL::VerbosityLevel& lvl, const std::thread::id& tid) const
+        {
+            return LoggerBase::BuildMessagePrefixes<T>(lvl, tid);
+        }
+
+        // Dummy Flush method to satisfy ILogger interface.
+        void Flush( )
+        {
+            __noop;
+        }
+    };
 }

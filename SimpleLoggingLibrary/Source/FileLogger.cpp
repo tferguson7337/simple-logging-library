@@ -225,14 +225,20 @@ namespace SLL
             );
         }
 
-        // Don't log if message level is below the threshold.
+        // Ensure we have a valid format string.
+        if ( !pFormat )
+        {
+            throw std::invalid_argument(__FUNCTION__ " - Invalid format string (nullptr).");
+        }
+
+        // Don't log if message level is below the configured verbosity threshold.
         if ( lvl < GetConfig( ).GetVerbosityThreshold( ) )
         {
             return true;
         }
 
         // Check if the file stream is still open and in a good state, attempt to recover if not.
-        if ( !(mFileStream.is_open( ) || mFileStream.good( )) && !RestoreFileStream( ) )
+        if ( !(mFileStream.is_open( ) && mFileStream.good( )) && !RestoreFileStream( ) )
         {
             return false;
         }
@@ -249,7 +255,7 @@ namespace SLL
             va_end(pArgs);
         }
         
-        // If the message is important enough, flush contents to file now.
+        // If the message is important enough, attempt to flush contents to file now.
         if ( lvl >= VerbosityLevel::WARN )
         {
             Flush( );

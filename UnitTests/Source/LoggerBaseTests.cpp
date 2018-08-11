@@ -5,7 +5,7 @@
 namespace LoggerBaseTests
 {
     using SLL::LoggerBase;
-    using SLL::LoggerBaseTests::Tester;
+    using ::LoggerBaseTests::Tester;
 
 #define INCREMENT_VERBOSITY(v) (v = static_cast<SLL::VerbosityLevel>(static_cast<SLL::VerbosityLevelType>(v) + 1))
 

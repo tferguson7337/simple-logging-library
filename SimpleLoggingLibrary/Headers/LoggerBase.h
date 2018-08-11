@@ -1,17 +1,20 @@
 #pragma once
 
+// Logger Interface
 #include <Interfaces\ILogger.h>
 
+// STL - std::thread::id
 #include <thread>
+
+
+// Forward declaration of unit-testing helper-class.
+namespace LoggerBaseTests
+{
+    class Tester;
+}
 
 namespace SLL
 {
-    // Forward declaration of unit-testing class.
-    namespace LoggerBaseTests
-    {
-        class Tester;
-    }
-
     ///
     //
     //  Class   - LoggerBase
@@ -23,7 +26,7 @@ namespace SLL
     class LoggerBase : public virtual ILogger
     {
         // Friend class, intended to expose non-public methods for testing.
-        friend class LoggerBaseTests::Tester;
+        friend class ::LoggerBaseTests::Tester;
 
     private:
 

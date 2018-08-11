@@ -6,16 +6,22 @@
 // C++ STL File Stream
 #include <fstream>
 
+
+// Forward declaration of unit-testing helper-class.
+namespace FileLoggerTests
+{
+    class Tester;
+}
+
 namespace SLL
 {
     class FileLogger : protected LoggerBase
     {
+        // Friend class, intended to expose non-public methods for testing.
+        friend ::FileLoggerTests::Tester;
+
         /// Construction requires ConfigPackage
         FileLogger( ) = delete;
-
-        /// No copy.
-        FileLogger(const FileLogger&) = delete;
-        FileLogger& operator=(const FileLogger&) = delete;
 
     private:
 
