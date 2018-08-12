@@ -552,19 +552,18 @@ namespace FileLoggerTests
         template <class T>
         UnitTestResult BadStream( )
         {
-            bool threw = false;
             Tester t;
 
             FILE_LOGGER_TEST_COMMON_SETUP(t);
 
             for ( OptionFlag mask = OptionFlag::PREFIX_BEGIN; mask < OptionFlag::PREFIX_END; INCREMENT_OPTIONFLAG(mask) )
             {
+                bool threw = false;
+                
                 t.GetConfig( ).Disable(OptionFlag::PREFIX_MASK);
                 t.GetConfig( ).Enable(mask);
 
                 t.GetFileStream( ).setstate(std::ios_base::badbit);
-
-                threw = false;
 
                 try
                 {
@@ -933,9 +932,7 @@ namespace FileLoggerTests
         {
             std::unique_ptr<T[ ]> pFormat;
             std::unique_ptr<wchar_t[ ]> pExpected;
-
             std::unique_ptr<T[ ]> arg1;
-            const wchar_t* arg2 = L"\"Test %f %g string %p #2\"";
 
             Tester t;
 
@@ -962,7 +959,7 @@ namespace FileLoggerTests
 
             try
             {
-                t.LogMessage<T>(pFormat.get( ), arg1.get( ), arg2);
+                t.LogMessage<T>(pFormat.get( ), arg1.get( ), L"\"Test %f %g string %p #2\"");
                 t.GetFileStream( ).flush( );
             }
             catch ( const std::exception& e )
