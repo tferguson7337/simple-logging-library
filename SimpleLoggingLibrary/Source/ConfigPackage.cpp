@@ -187,7 +187,7 @@ namespace SLL
     {
         ValidateOptionFlag(opts, __FUNCTION__);
 
-        return (mOptionMask | opts) != OptionFlag::NONE;
+        return (mOptionMask & opts) != OptionFlag::NONE;
     }
 
     // Public Method - Check if OptionFlag is Enabled

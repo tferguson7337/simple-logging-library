@@ -7,8 +7,6 @@ namespace LoggerBaseTests
     using SLL::LoggerBase;
     using ::LoggerBaseTests::Tester;
 
-#define INCREMENT_VERBOSITY(v) (v = static_cast<SLL::VerbosityLevel>(static_cast<SLL::VerbosityLevelType>(v) + 1))
-
     std::list<std::function<UnitTestResult(void)>> GetTests( )
     {
         static const std::list<std::function<UnitTestResult(void)>> testList
@@ -131,7 +129,6 @@ namespace LoggerBaseTests
         return testList;
     }
 
-
     /// Format Getter Tests \\\
 
     UnitTestResult GetTimeFormat( )
@@ -205,7 +202,6 @@ namespace LoggerBaseTests
 
         SUTL_TEST_SUCCESS( );
     }
-
 
     /// Build Time Prefix Tests \\\
 
@@ -345,7 +341,6 @@ namespace LoggerBaseTests
             SUTL_TEST_SUCCESS( );
         }
 
-
         template <class T>
         UnitTestResult IntegralArgs( )
         {
@@ -365,7 +360,6 @@ namespace LoggerBaseTests
 
             SUTL_TEST_SUCCESS( );
         }
-
 
         template <class T>
         UnitTestResult FloatingArgs( )
@@ -387,7 +381,6 @@ namespace LoggerBaseTests
             SUTL_TEST_SUCCESS( );
         }
 
-
         template <class T>
         UnitTestResult StringArgs( )
         {
@@ -407,7 +400,6 @@ namespace LoggerBaseTests
 
             SUTL_TEST_SUCCESS( );
         }
-
 
         template <class T>
         UnitTestResult ThreadIDFormat( )
@@ -439,7 +431,6 @@ namespace LoggerBaseTests
 
             SUTL_TEST_SUCCESS( );
         }
-
 
         template <class T>
         UnitTestResult VerbosityLevelFormat( )
@@ -521,7 +512,6 @@ namespace LoggerBaseTests
             SUTL_TEST_SUCCESS( );
         }
 
-
         /// Positive Tests \\\
 
         template <class T>
@@ -554,7 +544,6 @@ namespace LoggerBaseTests
 
             SUTL_TEST_SUCCESS( );
         }
-
 
         template <class T>
         UnitTestResult IntegralArgs( )
@@ -590,7 +579,6 @@ namespace LoggerBaseTests
             SUTL_TEST_SUCCESS( );
         }
 
-
         template <class T>
         UnitTestResult FloatingArgs( )
         {
@@ -625,7 +613,6 @@ namespace LoggerBaseTests
             SUTL_TEST_SUCCESS( );
         }
 
-
         template <class T>
         UnitTestResult StringArgs( )
         {
@@ -659,7 +646,6 @@ namespace LoggerBaseTests
 
             SUTL_TEST_SUCCESS( );
         }
-
 
         template <class T>
         UnitTestResult ThreadIDFormat( )
@@ -702,7 +688,6 @@ namespace LoggerBaseTests
             SUTL_TEST_SUCCESS( );
         }
 
-
         template <class T>
         UnitTestResult VerbosityLevelFormat( )
         {
@@ -740,199 +725,11 @@ namespace LoggerBaseTests
 
             SUTL_TEST_SUCCESS( );
         }
-
     }
-
 
     // Build Message Prefix(es) Tests
     namespace BuildMessagePrefixesTests
     {
-        template <class T>
-        bool IsDigit(const T);
-
-        template <>
-        bool IsDigit<char>(const char c)
-        {
-            return isdigit(c) != 0;
-        }
-
-        template <>
-        bool IsDigit<wchar_t>(const wchar_t c)
-        {
-            return iswdigit(c) != 0;
-        }
-
-        template <class T>
-        bool IsHex(const T);
-
-        template <>
-        bool IsHex<char>(const char c)
-        {
-            return isalnum(c) != 0;
-        }
-
-        template <>
-        bool IsHex<wchar_t>(const wchar_t c)
-        {
-            return iswalnum(c) != 0;
-        }
-
-        template <class T>
-        bool IsSpace(const T);
-
-        template <>
-        bool IsSpace<char>(const char c)
-        {
-            return isspace(c) != 0;
-        }
-
-        template <>
-        bool IsSpace<wchar_t>(const wchar_t c)
-        {
-            return iswspace(c) != 0;
-        }
-
-        template <class T>
-        bool IsTimePrefix(const std::unique_ptr<T[ ]>& str)
-        {
-            if ( !str )
-            {
-                return false;
-            }
-
-            // Expected Time Format:
-            // "[MM/DD/YYYY - HH:MM:SS]  "
-            size_t len = 0;
-            while ( str[len] )
-            {
-                len++;
-            }
-
-            if ( ++len != 24 )
-            {
-                return false;
-            }
-
-            return (
-                str[0] == T('[') &&
-                IsDigit<T>(str[1]) && IsDigit<T>(str[2]) && str[3] == T('/') &&       // Month
-                IsDigit<T>(str[4]) && IsDigit<T>(str[5]) && str[6] == T('/') &&       // Day
-                IsDigit<T>(str[7]) && IsDigit<T>(str[8]) &&                           // Year 
-                IsSpace<T>(str[9]) && str[10] == T('-') && IsSpace<T>(str[11]) &&     // Separator
-                IsDigit<T>(str[12]) && IsDigit<T>(str[13]) && str[14] == T(':') &&    // Hours
-                IsDigit<T>(str[15]) && IsDigit<T>(str[16]) && str[17] == T(':') &&    // Minutes
-                IsDigit<T>(str[18]) && IsDigit<T>(str[19]) && str[20] == T(']') &&    // Seconds
-                IsSpace<T>(str[21]) && IsSpace<T>(str[22]) && str[23] == T('\0')      // Ending spaces
-                );
-
-        }
-
-        template <class T>
-        bool IsThreadIDPrefix(const std::unique_ptr<T[ ]>& str)
-        {
-            if ( !str )
-            {
-                return false;
-            }
-
-            // Expected Thread-ID Format:
-            // "TID[<unsigned long>]  "
-            size_t len = 0;
-            while ( str[len] )
-            {
-                len++;
-            }
-
-            if ( ++len < Tester::GetThreadIDFormat<T>( ).size( ) )
-            {
-                return false;
-            }
-
-            // TID Prefix
-            if ( !(str[0] == T('T') && str[1] == T('I') && str[2] == T('D') && str[3] == T('[')) )
-            {
-                return false;
-            }
-
-            // Thread ID
-            size_t i = 4;
-            while ( str[i] != T(']') )
-            {
-                if ( !IsHex<T>(str[i]) || str[i] == T('\0') )
-                {
-                    return false;
-                }
-
-                i++;
-            }
-
-            // String end.
-            return (str[i] == T(']') && IsSpace<T>(str[i + 1]) && IsSpace<T>(str[i + 2]) && str[i + 3] == T('\0'));
-        }
-
-        template <class T>
-        bool IsVerbosityLevelPrefix(const std::unique_ptr<T[ ]>& str)
-        {
-            bool match = false;
-            size_t i = 0;
-            size_t end = 0;
-
-            if ( !str )
-            {
-                return false;
-            }
-
-            // Expected VerbosityLevel Format:
-            // "Type[<verbosity level string>]  "
-            size_t len = 0;
-            while ( str[len] )
-            {
-                len++;
-            }
-
-            if ( ++len < Tester::GetVerbosityLevelFormat<T>( ).size( ) )
-            {
-                return false;
-            }
-
-            // Type prefix
-            if ( !(str[0] == T('T') && str[1] == T('y') && str[2] == T('p') && str[3] == T('e') && str[4] == T('[')) )
-            {
-                return false;
-            }
-
-            // Find verbosity string boundaries.
-            i = end = 5;
-            while ( str[end] != T(']') )
-            {
-                if ( str[end++] == T('\0') )
-                {
-                    return false;
-                }
-            }
-
-            // Check for verbosity string match.
-            std::basic_string<T> subStr(&str[i], end - i);
-            for ( SLL::VerbosityLevel lvl = SLL::VerbosityLevel::BEGIN; lvl != SLL::VerbosityLevel::MAX; INCREMENT_VERBOSITY(lvl) )
-            {
-                const std::basic_string<T> verbosityString(SLL::VerbosityLevelConverter::ToString<T>(lvl));
-                if ( subStr.size( ) == verbosityString.size( ) && subStr == verbosityString )
-                {
-                    match = true;
-                    i += (end - i);
-                    break;
-                }
-            }
-
-            if ( !match )
-            {
-                return false;
-            }
-
-            // String end.
-            return (str[i] == T(']') && IsSpace<T>(str[i + 1]) && IsSpace<T>(str[i + 2]) && str[i + 3] == T('\0'));
-        }
-
         /// Negative Tests \\\
 
         template <class T>
@@ -959,7 +756,6 @@ namespace LoggerBaseTests
 
             SUTL_TEST_SUCCESS( );
         }
-
 
         /// Positive Tests \\\
 
@@ -989,7 +785,6 @@ namespace LoggerBaseTests
 
             SUTL_TEST_SUCCESS( );
         }
-
 
         template <class T>
         UnitTestResult TimeOnly( )
@@ -1023,7 +818,6 @@ namespace LoggerBaseTests
             SUTL_TEST_SUCCESS( );
         }
 
-
         template <class T>
         UnitTestResult ThreadIDOnly( )
         {
@@ -1056,7 +850,6 @@ namespace LoggerBaseTests
             SUTL_TEST_SUCCESS( );
         }
 
-
         template <class T>
         UnitTestResult VerbosityLevelOnly( )
         {
@@ -1088,7 +881,6 @@ namespace LoggerBaseTests
 
             SUTL_TEST_SUCCESS( );
         }
-
 
         template <class T>
         UnitTestResult Time_ThreadID( )
@@ -1123,7 +915,6 @@ namespace LoggerBaseTests
             SUTL_TEST_SUCCESS( );
         }
 
-
         template <class T>
         UnitTestResult Time_VerbosityLevel( )
         {
@@ -1157,7 +948,6 @@ namespace LoggerBaseTests
             SUTL_TEST_SUCCESS( );
         }
 
-
         template <class T>
         UnitTestResult ThreadID_VerbosityLevel( )
         {
@@ -1190,7 +980,6 @@ namespace LoggerBaseTests
 
             SUTL_TEST_SUCCESS( );
         }
-
 
         template <class T>
         UnitTestResult AllOptions( )
@@ -1227,7 +1016,6 @@ namespace LoggerBaseTests
         }
 
     }
-
 
     // Build Formatted Message Tests
     namespace BuildFormattedMessageTests
@@ -1281,7 +1069,6 @@ namespace LoggerBaseTests
             SUTL_TEST_SUCCESS( );
         }
 
-
         template <class T>
         UnitTestResult IntegralArgs( )
         {
@@ -1305,7 +1092,6 @@ namespace LoggerBaseTests
 
             SUTL_TEST_SUCCESS( );
         }
-
 
         template <class T>
         UnitTestResult FloatingArgs( )
@@ -1331,7 +1117,6 @@ namespace LoggerBaseTests
             SUTL_TEST_SUCCESS( );
         }
 
-
         template <class T>
         UnitTestResult StringArgs( )
         {
@@ -1355,6 +1140,5 @@ namespace LoggerBaseTests
 
             SUTL_TEST_SUCCESS( );
         }
-
     }
 }

@@ -25,16 +25,18 @@ void GetUnitTests(UnitTestRunner<char>& utr)
 
 int main( )
 {
+    bool pass = false;
+
     UnitTestRunner<char> utr("SLL Unit Tests");
 
     // Get Tests
     GetUnitTests(utr);
 
     // Run Tests
-    utr.RunUnitTests( );
+    pass = utr.RunUnitTests( );
 
     // Print Results
     utr.PrintTestLogs( );
 
-    return 0;
+    return (pass) ? 0 : -1;
 }

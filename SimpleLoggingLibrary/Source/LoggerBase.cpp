@@ -34,7 +34,7 @@ namespace SLL
     template <>
     const std::basic_string<char>& LoggerBase::GetThreadIDFormat( )
     {
-        static const std::basic_string<char> threadIDFormatA = "TID[%X]  ";
+        static const std::basic_string<char> threadIDFormatA = "TID[%08X]  ";
         return threadIDFormatA;
     }
 
@@ -42,7 +42,7 @@ namespace SLL
     template <>
     const std::basic_string<wchar_t>& LoggerBase::GetThreadIDFormat( )
     {
-        static const std::basic_string<wchar_t> threadIDFormatW = L"TID[%X]  ";
+        static const std::basic_string<wchar_t> threadIDFormatW = L"TID[%08X]  ";
         return threadIDFormatW;
     }
 
@@ -50,7 +50,7 @@ namespace SLL
     template <>
     const std::basic_string<char>& LoggerBase::GetVerbosityLevelFormat( )
     {
-        static const std::basic_string<char> verbosityLevelFormatA = "Type[%s]  ";
+        static const std::basic_string<char> verbosityLevelFormatA = "Type[%5.5s]  ";
         return verbosityLevelFormatA;
     }
 
@@ -58,7 +58,7 @@ namespace SLL
     template <>
     const std::basic_string<wchar_t>& LoggerBase::GetVerbosityLevelFormat( )
     {
-        static const std::basic_string<wchar_t> verbosityLevelFormatW = L"Type[%s]  ";
+        static const std::basic_string<wchar_t> verbosityLevelFormatW = L"Type[%5.5s]  ";
         return verbosityLevelFormatW;
     }
 
@@ -155,7 +155,7 @@ namespace SLL
                 ")."
             );
         }
-        else if ( writeLen != bufLen - 1 )
+        else if ( static_cast<size_t>(writeLen) != bufLen - 1 )
         {
             throw std::logic_error(
                 __FUNCTION__" - vsnprintf wrote " +
@@ -197,7 +197,7 @@ namespace SLL
                 ")."
             );
         }
-        else if ( writeLen != bufLen - 1 )
+        else if ( static_cast<size_t>(writeLen) != bufLen - 1 )
         {
             throw std::logic_error(
                 __FUNCTION__" - vswprintf wrote " +
@@ -253,6 +253,13 @@ namespace SLL
         mConfig = std::move(src.mConfig);
 
         return *this;
+    }
+
+    /// Common Protected Getter \\\
+
+    ConfigPackage& LoggerBase::GetConfig( ) noexcept
+    {
+        return mConfig;
     }
 
     /// Common Protected Helper Methods \\\

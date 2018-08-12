@@ -46,7 +46,7 @@ namespace SLL
     bool FileLogger::RestoreFileStream( )
     {
         // Static trackers for logging failed restore attempts to stderr.
-        const static size_t FAIL_FREQ_START = 3;
+        const static size_t FAIL_FREQ_START = 1;
         static size_t failTotalCount = 0;
         static size_t failTicker = 0;
         static size_t failFreq = FAIL_FREQ_START;
@@ -62,7 +62,7 @@ namespace SLL
         {
             // Best effort - log recovery failure to stderr.
             // Less frequent reports as more failed attempts occur.
-            if ( (failTicker % failFreq) == 0 )
+            if ( (failTicker++ % failFreq) == 0 )
             {
                 failTicker = 1;
                 failFreq++;
@@ -93,6 +93,11 @@ namespace SLL
     {
         std::vector<std::unique_ptr<T[ ]>> prefixes;
 
+        if ( !mFileStream.is_open( ) || !mFileStream.good( ) )
+        {
+            throw std::runtime_error(__FUNCTION__" - File stream in bad state, cannot write prefix strings.");
+        }
+
         try
         {
             prefixes = BuildMessagePrefixes<T>(lvl, tid);
@@ -105,15 +110,12 @@ namespace SLL
 
         for ( auto& p : prefixes )
         {
-            try
+            if ( !mFileStream.is_open( ) || !mFileStream.good( ) )
             {
-                mFileStream << p.get( );
+                throw std::runtime_error(__FUNCTION__" - File stream in bad state, cannot write message prefix to file.");
             }
-            catch ( const std::exception& )
-            {
-                // Best effort, attempt to restore file stream next go.
-                mFileStream.setstate(std::ios_base::badbit);
-            }
+
+            mFileStream << p.get( );
         }
     }
 
@@ -122,6 +124,16 @@ namespace SLL
     void FileLogger::LogMessage(const T* pFormat, va_list pArgs)
     {
         std::unique_ptr<T[ ]> message;
+
+        if ( !mFileStream.is_open( ) || !mFileStream.good( ) )
+        {
+            throw std::runtime_error(__FUNCTION__" - File stream in bad state, cannot write message to file.");
+        }
+
+        if ( !pFormat )
+        {
+            throw std::invalid_argument(__FUNCTION__" - Invalid format string (null).");
+        }
 
         try
         {
@@ -133,15 +145,7 @@ namespace SLL
             return;
         }
 
-        try
-        {
-            mFileStream << message.get( ) << std::endl;
-        }
-        catch ( const std::exception& )
-        {
-            // Best effort, attempt to restore file stream next go.
-            mFileStream.setstate(std::ios_base::badbit);
-        }
+        mFileStream << message.get( ) << L"\n";
     }
 
     /// Constructors \\\
@@ -215,6 +219,8 @@ namespace SLL
     template <class T, typename>
     bool FileLogger::Log(const VerbosityLevel& lvl, const T* pFormat, ...)
     {
+        va_list pArgs;
+
         // Ensure verbosity level is valid.
         if ( lvl < VerbosityLevel::BEGIN || lvl >= VerbosityLevel::MAX )
         {
@@ -244,17 +250,32 @@ namespace SLL
         }
 
         // Log message prefix strings.
-        LogPrefixes<T>(lvl, std::this_thread::get_id( ));
+        try
+        {
+            LogPrefixes<T>(lvl, std::this_thread::get_id( ));
+        }
+        catch ( const std::exception& )
+        {
+            // Best effort - we'll attempt to restore to a good state next log.
+            mFileStream.setstate(std::ios_base::badbit);
+            return mFileStream.good( );
+        }
 
         // If file stream state is still good, log user message.
-        if ( mFileStream.good( ) )
+        try
         {
-            va_list pArgs;
             va_start(pArgs, pFormat);
             LogMessage<T>(pFormat, pArgs);
             va_end(pArgs);
         }
-        
+        catch ( const std::exception& )
+        {
+            // Best effort - we'll attempt to restore to a good state next log.
+            va_end(pArgs);
+            mFileStream.setstate(std::ios_base::badbit);
+            return mFileStream.good( );
+        }
+
         // If the message is important enough, attempt to flush contents to file now.
         if ( lvl >= VerbosityLevel::WARN )
         {

@@ -91,6 +91,10 @@ namespace SLL
         // Move Assignment
         LoggerBase& operator=(LoggerBase&&);
 
+        /// Common Protected Getter \\\
+
+        ConfigPackage& GetConfig( ) noexcept;
+
         /// Common Protected Helper Methods \\\
 
         // Generates log-ready string that contains all enabled message-prefix output.

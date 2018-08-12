@@ -149,6 +149,171 @@ namespace LoggerBaseTests
     }
 }
 
+// Helper Functions and Macros
+namespace LoggerBaseTests
+{
+    // Helper macros for incrementing enum class variables.
+#define INCREMENT_VERBOSITY(v)  v = static_cast<SLL::VerbosityLevel>(static_cast<SLL::VerbosityLevelType>(v) + 1)
+#define INCREMENT_OPTIONFLAG(f) f = static_cast<SLL::OptionFlag>(static_cast<SLL::OptionFlagType>(f) + 1)
+ 
+    template <class T>
+    bool IsDigit(const T);
+
+    template <>
+    inline bool IsDigit<char>(const char c)
+    {
+        return isdigit(c) != 0;
+    }
+
+    template <>
+    inline bool IsDigit<wchar_t>(const wchar_t c)
+    {
+        return iswdigit(c) != 0;
+    }
+
+    template <class T>
+    bool IsHex(const T);
+
+    template <>
+    inline bool IsHex<char>(const char c)
+    {
+        return isalnum(c) != 0;
+    }
+
+    template <>
+    inline bool IsHex<wchar_t>(const wchar_t c)
+    {
+        return iswalnum(c) != 0;
+    }
+
+    template <class T>
+    bool IsAlpha(const T);
+
+    template <>
+    inline bool IsAlpha<char>(const char c)
+    {
+        return isalpha(c) != 0;
+    }
+
+    template <>
+    inline bool IsAlpha<wchar_t>(const wchar_t c)
+    {
+        return iswalpha(c) != 0;
+    }
+
+    template <class T>
+    bool IsSpace(const T);
+
+    template <>
+    inline bool IsSpace<char>(const char c)
+    {
+        return isspace(c) != 0;
+    }
+
+    template <>
+    inline bool IsSpace<wchar_t>(const wchar_t c)
+    {
+        return iswspace(c) != 0;
+    }
+
+    template <class T>
+    inline bool IsTimePrefix(const std::unique_ptr<T[ ]>& str)
+    {
+        return (
+            str &&
+            str[0] == T('[') &&
+            IsDigit<T>(str[1]) && IsDigit<T>(str[2]) && str[3] == T('/') &&       // Month
+            IsDigit<T>(str[4]) && IsDigit<T>(str[5]) && str[6] == T('/') &&       // Day
+            IsDigit<T>(str[7]) && IsDigit<T>(str[8]) &&                           // Year 
+            IsSpace<T>(str[9]) && str[10] == T('-') && IsSpace<T>(str[11]) &&     // Separator
+            IsDigit<T>(str[12]) && IsDigit<T>(str[13]) && str[14] == T(':') &&    // Hours
+            IsDigit<T>(str[15]) && IsDigit<T>(str[16]) && str[17] == T(':') &&    // Minutes
+            IsDigit<T>(str[18]) && IsDigit<T>(str[19]) && str[20] == T(']') &&    // Seconds
+            IsSpace<T>(str[21]) && IsSpace<T>(str[22]) && str[23] == T('\0')      // Ending spaces
+            );
+
+    }
+
+    template <class T>
+    inline bool IsThreadIDPrefix(const std::unique_ptr<T[ ]>& str)
+    {
+        if ( !str )
+        {
+            return false;
+        }
+
+        // TID Prefix (0 - 3)
+        if ( !(str[0] == T('T') && str[1] == T('I') && str[2] == T('D') && str[3] == T('[')) )
+        {
+            return false;
+        }
+
+        // Thread ID - Hexademical Digits (4 - 11)
+        for ( size_t c = 0; c < 8; c++ )
+        {
+            if ( !IsHex<T>(str[c + 4]) || str[c + 4] == T('\0') )
+            {
+                return false;
+            }
+        }
+
+        // String end (12 - 15).
+        return (str[12] == T(']') && IsSpace<T>(str[13]) && IsSpace<T>(str[14]) && str[15] == T('\0'));
+    }
+
+    template <class T>
+    inline bool IsVerbosityLevelPrefix(const std::unique_ptr<T[ ]>& str)
+    {
+        bool match = false;
+
+        if ( !str )
+        {
+            return false;
+        }
+
+        // Type prefix (0 - 4)
+        if ( !(str[0] == T('T') && str[1] == T('y') && str[2] == T('p') && str[3] == T('e') && str[4] == T('[')) )
+        {
+            return false;
+        }
+
+        // VerbosityLevel string (5 - 9)
+        size_t l = 0;
+        for ( size_t i = 5; i < 10; i++ )
+        {
+            if ( !IsAlpha(str[i]) && !IsSpace(str[i]) )
+            {
+                return false;
+            }
+            else if ( l == 0 && IsAlpha(str[i]) )
+            {
+                // Get start of string after space(s).
+                l = i;
+            }
+        }
+
+        // Check for verbosity string match.
+        std::basic_string<T> subStr(&str[l], 10 - l);
+        for ( SLL::VerbosityLevel lvl = SLL::VerbosityLevel::BEGIN; lvl != SLL::VerbosityLevel::MAX; INCREMENT_VERBOSITY(lvl) )
+        {
+            const std::basic_string<T> verbosityString(SLL::VerbosityLevelConverter::ToString<T>(lvl));
+            if ( subStr.size( ) == verbosityString.size( ) && subStr == verbosityString )
+            {
+                match = true;
+                break;
+            }
+        }
+
+        if ( !match )
+        {
+            return false;
+        }
+
+        // String end (10 - 13).
+        return (str[10] == T(']') && IsSpace<T>(str[11]) && IsSpace<T>(str[12]) && str[13] == T('\0'));
+    }
+}
+
 namespace LoggerBaseTests
 {
     ///
