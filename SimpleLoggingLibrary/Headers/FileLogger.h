@@ -37,6 +37,9 @@ namespace SLL
         // Restore File Stream.
         bool RestoreFileStream( );
 
+        // Flush buffer contents to file.
+        void Flush( );
+
         // Log Prefixes to File.
         template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
         void LogPrefixes(const VerbosityLevel&, const std::thread::id&);
@@ -68,9 +71,6 @@ namespace SLL
         FileLogger& operator=(FileLogger&&);
 
         /// Public Method \\\
-
-        // Flush buffer contents to file.
-        void Flush( );
         
         // Log formatted message to file.
         template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>

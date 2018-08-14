@@ -452,6 +452,14 @@ namespace FileLoggerTests
             return mpFileLogger->RestoreFileStream( );
         }
 
+        // Flush Content To File.
+        void Flush( )
+        {
+            CheckForNullLogger(__FUNCTION__);
+
+            mpFileLogger->Flush( );
+        }
+
         // Log Prefixes to File.
         template <class T>
         void LogPrefixes(const SLL::VerbosityLevel& lvl, const std::thread::id& tid)

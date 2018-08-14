@@ -87,6 +87,15 @@ namespace SLL
         return true;
     }
 
+    // Flush buffer contents to file.
+    void FileLogger::Flush( )
+    {
+        if ( mFileStream.good( ) && mFileStream.is_open( ) )
+        {
+            mFileStream.flush( );
+        }
+    }
+
     // Build and log prefix strings as part of user's message to file.
     template <class T, typename>
     void FileLogger::LogPrefixes(const VerbosityLevel& lvl, const std::thread::id& tid)
@@ -206,19 +215,13 @@ namespace SLL
 
     /// Public Method \\\
 
-    // Flush buffer contents to file.
-    void FileLogger::Flush( )
-    {
-        if ( mFileStream.good( ) && mFileStream.is_open( ) )
-        {
-            mFileStream.flush( );
-        }
-    }
-
     // Log formatted message to file.
     template <class T, typename>
     bool FileLogger::Log(const VerbosityLevel& lvl, const T* pFormat, ...)
     {
+        static size_t flushCounter = 0;
+        static const size_t flushInterval = 3;
+
         va_list pArgs;
 
         // Ensure verbosity level is valid.
@@ -276,9 +279,14 @@ namespace SLL
             return mFileStream.good( );
         }
 
-        // If the message is important enough, attempt to flush contents to file now.
-        if ( lvl >= VerbosityLevel::WARN )
+        // Flush messages to file periodically, or if the message is likely important.
+        if ( (flushCounter++ % flushInterval) == 0 || lvl >= VerbosityLevel::WARN )
         {
+            if ( lvl >= VerbosityLevel::WARN )
+            {
+                flushCounter = 1;
+            }
+
             Flush( );
         }
 

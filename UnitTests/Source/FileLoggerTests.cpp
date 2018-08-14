@@ -391,7 +391,7 @@ namespace FileLoggerTests
 
             try
             {
-                t.GetLogger( ).Flush( );
+                t.Flush( );
             }
             catch ( const std::exception& e )
             {
@@ -419,7 +419,7 @@ namespace FileLoggerTests
 
                 try
                 {
-                    t.GetLogger( ).Flush( );
+                    t.Flush( );
                 }
                 catch ( const std::exception& e )
                 {
@@ -445,7 +445,7 @@ namespace FileLoggerTests
 
             try
             {
-                t.GetLogger( ).Flush( );
+                t.Flush( );
             }
             catch ( const std::exception& e )
             {
@@ -478,7 +478,7 @@ namespace FileLoggerTests
 
             try
             {
-                t.GetLogger( ).Flush( );
+                t.Flush( );
             }
             catch ( const std::exception& e )
             {
@@ -1496,11 +1496,7 @@ namespace FileLoggerTests
                     SUTL_TEST_ASSERT(t.GetFileStream( ).good( ));
                     SUTL_TEST_ASSERT(t.GetFileStream( ).is_open( ));
 
-                    if ( lvl <= VerbosityLevel::INFO )
-                    {
-                        SUTL_TEST_ASSERT(ReadTestFile( ).empty( ));
-                    }
-                    else
+                    if ( lvl >= VerbosityLevel::WARN )
                     {
                         SUTL_TEST_ASSERT(ValidateLog(t.GetConfig( ), ReadTestFile( ), pExpected));
                     }
