@@ -47,9 +47,6 @@ namespace LoggerBaseTests
         UnitTestResult StringArgs( );
 
         template <class T>
-        UnitTestResult TimeFormat( );
-
-        template <class T>
         UnitTestResult ThreadIDFormat( );
 
         template <class T>
