@@ -10,7 +10,6 @@
 #include <UnitTestResult.h>
 
 // STL
-#include <cstdarg>
 #include <functional>
 #include <list>
 #include <tuple>
@@ -453,11 +452,11 @@ namespace FileLoggerTests
         }
 
         // Flush Content To File.
-        void Flush( )
+        void Flush(const SLL::VerbosityLevel& lvl)
         {
             CheckForNullLogger(__FUNCTION__);
 
-            mpFileLogger->Flush( );
+            mpFileLogger->Flush(lvl);
         }
 
         // Log Prefixes to File.

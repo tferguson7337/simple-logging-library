@@ -5,8 +5,6 @@
 #include <Uncopyable.h>
 #include <Unmovable.h>
 
-#include <cstdarg>
-
 #include <functional>
 #include <list>
 

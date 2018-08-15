@@ -391,7 +391,7 @@ namespace FileLoggerTests
 
             try
             {
-                t.Flush( );
+                t.Flush(VerbosityLevel::FATAL);
             }
             catch ( const std::exception& e )
             {
@@ -419,7 +419,7 @@ namespace FileLoggerTests
 
                 try
                 {
-                    t.Flush( );
+                    t.Flush(VerbosityLevel::FATAL);
                 }
                 catch ( const std::exception& e )
                 {
@@ -445,7 +445,7 @@ namespace FileLoggerTests
 
             try
             {
-                t.Flush( );
+                t.Flush(VerbosityLevel::FATAL);
             }
             catch ( const std::exception& e )
             {
@@ -478,7 +478,7 @@ namespace FileLoggerTests
 
             try
             {
-                t.Flush( );
+                t.Flush(VerbosityLevel::FATAL);
             }
             catch ( const std::exception& e )
             {

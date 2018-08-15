@@ -1,9 +1,11 @@
 #include <FileLogger.h>
 
-#include <cstdarg>
-
 namespace SLL
 {
+    /// Immutable Static Member Initialization \\\
+
+    const size_t FileLogger::mFlushInterval = 3;
+
     /// Private Helper Methods \\\
 
     // Initialize file stream by opening file specified in configuration package.
@@ -88,9 +90,15 @@ namespace SLL
     }
 
     // Flush buffer contents to file.
-    void FileLogger::Flush( )
+    void FileLogger::Flush(const VerbosityLevel& lvl)
     {
-        if ( mFileStream.good( ) && mFileStream.is_open( ) )
+        if ( !mFileStream.good( ) || !mFileStream.is_open( ) )
+        {
+            return;
+        }
+
+        // Flush messages to file periodically, or if the message is likely important.
+        if ( (mFlushCounter++ % mFlushInterval) == 0 || lvl >= VerbosityLevel::WARN )
         {
             mFileStream.flush( );
         }
@@ -161,14 +169,16 @@ namespace SLL
             
     // ConfigPackage Constructor [C]
     FileLogger::FileLogger(const ConfigPackage& config) :
-        LoggerBase(config)
+        LoggerBase(config),
+        mFlushCounter(0)
     {
         InitializeFileStream( );
     }
 
     // ConfigPackage Constructor [M]
     FileLogger::FileLogger(ConfigPackage&& config) :
-        LoggerBase(std::move(config))
+        LoggerBase(std::move(config)),
+        mFlushCounter(0)
     {
         InitializeFileStream( );
     }
@@ -176,7 +186,8 @@ namespace SLL
     // Move Constructor
     FileLogger::FileLogger(FileLogger&& src) noexcept :
         LoggerBase(std::move(src)),
-        mFileStream(std::move(src.mFileStream))
+        mFileStream(std::move(src.mFileStream)),
+        mFlushCounter(0)
     { }
 
     /// Destructor \\\
@@ -209,6 +220,7 @@ namespace SLL
 
         LoggerBase::operator=(std::move(src));
         mFileStream = std::move(src.mFileStream);
+        mFlushCounter = src.mFlushCounter;
 
         return *this;
     }
@@ -219,9 +231,6 @@ namespace SLL
     template <class T, typename>
     bool FileLogger::Log(const VerbosityLevel& lvl, const T* pFormat, ...)
     {
-        static size_t flushCounter = 0;
-        static const size_t flushInterval = 3;
-
         va_list pArgs;
 
         // Ensure verbosity level is valid.
@@ -280,15 +289,7 @@ namespace SLL
         }
 
         // Flush messages to file periodically, or if the message is likely important.
-        if ( (flushCounter++ % flushInterval) == 0 || lvl >= VerbosityLevel::WARN )
-        {
-            if ( lvl >= VerbosityLevel::WARN )
-            {
-                flushCounter = 1;
-            }
-
-            Flush( );
-        }
+        Flush(lvl);
 
         return mFileStream.good( );
     }

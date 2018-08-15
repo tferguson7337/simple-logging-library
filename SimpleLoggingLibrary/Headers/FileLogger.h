@@ -24,10 +24,11 @@ namespace SLL
         FileLogger( ) = delete;
 
     private:
-
         /// Data Members \\\
 
         std::basic_ofstream<wchar_t> mFileStream;
+        static const size_t mFlushInterval;
+        size_t mFlushCounter;
 
         /// Private Helper Methods \\\
 
@@ -38,7 +39,7 @@ namespace SLL
         bool RestoreFileStream( );
 
         // Flush buffer contents to file.
-        void Flush( );
+        void Flush(const VerbosityLevel&);
 
         // Log Prefixes to File.
         template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>

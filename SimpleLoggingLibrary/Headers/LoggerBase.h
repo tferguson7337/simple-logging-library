@@ -3,6 +3,9 @@
 // Logger Interface
 #include <Interfaces\ILogger.h>
 
+// Variadic Arguments
+#include <cstdarg>
+
 // STL - std::thread::id
 #include <thread>
 

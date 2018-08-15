@@ -1,9 +1,6 @@
 // Class Header
 #include <LoggerBase.h>
 
-// Variadic Function Arguments
-#include <cstdarg>
-
 // std::put_time
 #include <iomanip>
 
