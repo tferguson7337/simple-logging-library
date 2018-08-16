@@ -2,10 +2,25 @@
 
 namespace SLL
 {
-    /// Private Helper Methods \\\
+    /// Private Helper Methods - Specialization \\\
 
-    // Initialize Stream.
-    void StreamLogger::InitializeStream( )
+    // Return whether or not stream is in good state (stdout).
+    template <>
+    bool StreamLogger<StdOutStream>::IsStreamGood( ) const noexcept
+    {
+        return mStream.good( ) && mStream.rdbuf( );
+    }
+
+    // Return whether or not stream is in good state (file).
+    template <>
+    bool StreamLogger<FileStream>::IsStreamGood( ) const noexcept
+    {
+        return mStream.good( ) && mStream.is_open( );
+    }
+
+    // Initialize Stream (stdout)
+    template <>
+    void StreamLogger<StdOutStream>::InitializeStream( )
     {
         // Ensure the stream has a buffer (stdout).
         if ( !mStream.rdbuf( ) )
@@ -13,7 +28,7 @@ namespace SLL
             mStream.set_rdbuf(std::wcout.rdbuf( ));
         }
 
-        if ( !mStream.good( ) || !mStream.rdbuf( ) )
+        if ( !IsStreamGood( ) )
         {
             throw std::runtime_error(
                 std::string(__FUNCTION__" - Failed to initialize stream: ") +
@@ -24,9 +39,53 @@ namespace SLL
             );
         }
     }
+
+    // Initialize Stream (file).
+    template <>
+    void StreamLogger<FileStream>::InitializeStream( )
+    {
+        static const std::string commonThrowStr(__FUNCTION__" - Failed to initialize file stream: ");
+
+        const ConfigPackage& config = GetConfig( );
+
+        // Close stream if it happens to be open.
+        if ( mStream.is_open( ) )
+        {
+            mStream.close( );
+        }
+
+        // We require a filename from the config package to target.
+        if ( config.GetFile( ).empty( ) )
+        {
+            throw std::logic_error(commonThrowStr + "No filename provided.");
+        }
+
+        try
+        {   
+            // Attempt to open file stream.  Use append mode, binary write, only allow write (no read).
+            mStream.open(config.GetFile( ), std::ios_base::app | std::ios_base::binary | std::ios_base::out);
+        }
+        catch ( const std::exception& e )
+        {
+            throw std::runtime_error(commonThrowStr + e.what( ));
+        }
+
+        // See if we successfully opened the file and the stream is in a good state.
+        if ( !IsStreamGood( ) )
+        {
+            throw std::runtime_error(
+                commonThrowStr +
+                "good == " +
+                std::to_string(mStream.good( )) +
+                ", is_open == " +
+                std::to_string(mStream.is_open( ))
+            );
+        }
+    }
     
     // Restore Stream to Good State.
-    bool StreamLogger::RestoreStream( )
+    template <class StreamType>
+    bool StreamLogger<StreamType>::RestoreStream( )
     {
         // Static trackers for logging failed restore attempts to stderr.
         const static size_t FAIL_FREQ_START = 1;
@@ -39,7 +98,6 @@ namespace SLL
             // Clear stream state and attempt to flush.
             mStream.clear( );
             InitializeStream( );
-            mStream.flush( );
         }
         catch ( const std::exception& e )
         {
@@ -67,13 +125,14 @@ namespace SLL
         failTicker = 0;
         failFreq = FAIL_FREQ_START;
 
-        return mStream.good( );
+        return IsStreamGood( );
     }
 
     // Flush Buffer Contents To Stream.
-    void StreamLogger::Flush(const VerbosityLevel& lvl)
+    template <class StreamType>
+    void StreamLogger<StreamType>::Flush(const VerbosityLevel& lvl)
     {
-        if ( !mStream.good( ) )
+        if ( !IsStreamGood( ) )
         {
             return;
         }
@@ -86,12 +145,13 @@ namespace SLL
     }
 
     // Log Prefixes to Stream.
+    template <class StreamType>
     template <class T, typename>
-    void StreamLogger::LogPrefixes(const VerbosityLevel& lvl, const std::thread::id& tid)
+    void StreamLogger<StreamType>::LogPrefixes(const VerbosityLevel& lvl, const std::thread::id& tid)
     {
         std::vector<std::unique_ptr<T[ ]>> prefixes;
 
-        if ( !mStream.good( ) )
+        if ( !IsStreamGood( ) )
         {
             throw std::runtime_error(__FUNCTION__" - Stream in bad state, cannot write prefix strings.");
         }
@@ -108,7 +168,7 @@ namespace SLL
 
         for ( auto& p : prefixes )
         {
-            if ( !mStream.good( ) )
+            if ( !IsStreamGood( ) )
             {
                 throw std::runtime_error(__FUNCTION__" - Stream in bad state, cannot write message prefix to stream.");
             }
@@ -118,12 +178,13 @@ namespace SLL
     }
 
     // Log User Message To File.
+    template <class StreamType>
     template <class T, typename>
-    void StreamLogger::LogMessage(const T* pFormat, va_list pArgs)
+    void StreamLogger<StreamType>::LogMessage(const T* pFormat, va_list pArgs)
     {
         std::unique_ptr<T[ ]> message;
 
-        if ( !mStream.good( ) )
+        if ( !IsStreamGood( ) )
         {
             throw std::runtime_error(__FUNCTION__" - Stream in bad state, cannot write message to stream.");
         }
@@ -148,32 +209,58 @@ namespace SLL
 
     /// Constructors \\\
 
-    // ConfigPackage Constructor [C]
-    StreamLogger::StreamLogger(const ConfigPackage& config) :
+    // ConfigPackage Constructor [C] - stdout.
+    template <>
+    StreamLogger<StdOutStream>::StreamLogger(const ConfigPackage& config) :
         LoggerBase(config),
         mStream(std::wcout.rdbuf( ))
     { }
 
-    // ConfigPackage Constructor [M]
-    StreamLogger::StreamLogger(ConfigPackage&& config) noexcept :
+    // ConfigPackage Constructor [C] - file.
+    template <>
+    StreamLogger<FileStream>::StreamLogger(const ConfigPackage& config) :
+        LoggerBase(config)
+    {
+        InitializeStream( );
+    }
+
+    // ConfigPackage Constructor [M] - stdout.
+    template <>
+    StreamLogger<StdOutStream>::StreamLogger(ConfigPackage&& config) noexcept :
         LoggerBase(std::move(config)),
         mStream(std::wcout.rdbuf( ))
     { }
 
-    // Move Constructor
-    StreamLogger::StreamLogger(StreamLogger&& src) noexcept :
+    // ConfigPackage Constructor [M] - file.
+    template <>
+    StreamLogger<FileStream>::StreamLogger(ConfigPackage&& config) noexcept :
+        LoggerBase(std::move(config))
+    {
+        InitializeStream( );
+    }
+
+    // Move Constructor - stdout.
+    template <>
+    StreamLogger<StdOutStream>::StreamLogger(StreamLogger&& src) noexcept :
         LoggerBase(std::move(src)),
         mStream(std::wcout.rdbuf( ))
-    {
-        *this = std::move(src);
+    { }
+
+    // Move Constructor - file.
+    template <>
+    StreamLogger<FileStream>::StreamLogger(StreamLogger&& src) noexcept :
+        LoggerBase(std::move(src))
+    { 
+        InitializeStream( );
     }
 
     /// Destructor \\\
 
     // Virtual Destructor
-    StreamLogger::~StreamLogger( )
+    template <class StreamType>
+    StreamLogger<StreamType>::~StreamLogger( )
     {
-        if ( mStream.good( ) )
+        if ( IsStreamGood( ) )
         {
             try
             {
@@ -188,20 +275,40 @@ namespace SLL
 
     /// Assignment Overload \\\
 
-    StreamLogger& StreamLogger::operator=(StreamLogger&& src)
+    // Move Assignment Overload - stdout.
+    template <>
+    StreamLogger<StdOutStream>& StreamLogger<StdOutStream>::operator=(StreamLogger&& src)
     {
         if ( this == &src )
         {
             throw std::invalid_argument(__FUNCTION__" - Attempted self-assignment.");
         }
 
+        LoggerBase::operator=(std::move(src));
+
+        return *this;
+    }
+
+    // Move Assignment Overload - file.
+    template <>
+    StreamLogger<FileStream>& StreamLogger<FileStream>::operator=(StreamLogger&& src)
+    {
+        if ( this == &src )
+        {
+            throw std::invalid_argument(__FUNCTION__" - Attempted self-assignment.");
+        }
+
+        LoggerBase::operator=(std::move(src));
+        mStream = std::move(src.mStream);
+
         return *this;
     }
 
     /// Public Methods \\\
 
+    template <class StreamType>
     template <class T, typename>
-    bool StreamLogger::Log(const VerbosityLevel& lvl, const T* pFormat, va_list pArgs)
+    bool StreamLogger<StreamType>::Log(const VerbosityLevel& lvl, const T* pFormat, va_list pArgs)
     {
         // Ensure verbosity level is valid.
         if ( lvl < VerbosityLevel::BEGIN || lvl >= VerbosityLevel::MAX )
@@ -232,7 +339,7 @@ namespace SLL
         }
 
         // Check if the file stream is still open and in a good state, attempt to recover if not.
-        if ( !mStream.good( ) && !RestoreStream( ) )
+        if ( !IsStreamGood( ) && !RestoreStream( ) )
         {
             return false;
         }
@@ -246,7 +353,7 @@ namespace SLL
         {
             // Best effort - we'll attempt to restore to a good state next log.
             mStream.setstate(std::ios_base::badbit);
-            return mStream.good( );
+            return IsStreamGood( );
         }
 
         // If file stream state is still good, log user message.
@@ -258,17 +365,18 @@ namespace SLL
         {
             // Best effort - we'll attempt to restore to a good state next log.
             mStream.setstate(std::ios_base::badbit);
-            return mStream.good( );
+            return IsStreamGood( );
         }
 
         // Flush messages to file periodically, or if the message is likely important.
         Flush(lvl);
 
-        return mStream.good( );
+        return IsStreamGood( );
     }
 
+    template <class StreamType>
     template <class T, typename>
-    bool StreamLogger::Log(const VerbosityLevel& lvl, const T* pFormat, ...)
+    bool StreamLogger<StreamType>::Log(const VerbosityLevel& lvl, const T* pFormat, ...)
     {
         va_list pArgs;
 
@@ -288,12 +396,6 @@ namespace SLL
             throw std::invalid_argument(__FUNCTION__ " - Invalid format string (nullptr).");
         }
 
-        // Ensure the arg list is valid.
-        if ( !pArgs )
-        {
-            throw std::invalid_argument(__FUNCTION__ " - Invalid argument list (nullptr).");
-        }
-
         // Don't log if message level is below the configured verbosity threshold.
         if ( lvl < GetConfig( ).GetVerbosityThreshold( ) )
         {
@@ -301,7 +403,7 @@ namespace SLL
         }
 
         // Check if the file stream is still open and in a good state, attempt to recover if not.
-        if ( !mStream.good( ) && !RestoreStream( ) )
+        if ( !IsStreamGood( ) && !RestoreStream( ) )
         {
             return false;
         }
@@ -315,7 +417,7 @@ namespace SLL
         {
             // Best effort - we'll attempt to restore to a good state next log.
             mStream.setstate(std::ios_base::badbit);
-            return mStream.good( );
+            return IsStreamGood( );
         }
 
         // If file stream state is still good, log user message.
@@ -330,13 +432,24 @@ namespace SLL
             // Best effort - we'll attempt to restore to a good state next log.
             va_end(pArgs);
             mStream.setstate(std::ios_base::badbit);
-            return mStream.good( );
+            return IsStreamGood( );
         }
 
         // Flush messages to file periodically, or if the message is likely important.
         Flush(lvl);
 
-        return mStream.good( );
+        return IsStreamGood( );
     }
 
+    /// Explicit Template Instantiations \\\
+
+    // Class Instantiations
+    template StreamLogger<StdOutStream>;
+    template StreamLogger<FileStream>;
+
+    // Log Instantiations - Variadic Arguments
+    template bool StdOutLogger::Log<char>(const VerbosityLevel& lvl, const char* pFormat, ...);
+    template bool StdOutLogger::Log<wchar_t>(const VerbosityLevel& lvl, const wchar_t* pFormat, ...);
+    template bool FileLogger::Log<char>(const VerbosityLevel& lvl, const char* pFormat, ...);
+    template bool FileLogger::Log<wchar_t>(const VerbosityLevel& lvl, const wchar_t* pFormat, ...);
 }

@@ -62,9 +62,6 @@
     <ClInclude Include="Common\Headers\Macros.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\FileLogger.h">
-      <Filter>Logger\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Headers\StreamLogger.h">
       <Filter>Logger\Header Files</Filter>
     </ClInclude>
@@ -81,9 +78,6 @@
     </ClCompile>
     <ClCompile Include="Source\OptionFlag.cpp">
       <Filter>Logger Configuration\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\FileLogger.cpp">
-      <Filter>Logger\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\LoggerBase.cpp">
       <Filter>Logger\Source Files</Filter>

@@ -1,7 +1,7 @@
 #pragma once
 
-// Target Class
-#include <FileLogger.h>
+// Target Class - FileLogger specialization.
+#include <StreamLogger.h>
 
 // LoggerBase - Helper Functions and Macros
 #include <LoggerBaseTests.h>
@@ -318,6 +318,8 @@ namespace FileLoggerTests
 
 namespace FileLoggerTests
 {
+    typedef SLL::StreamLogger<SLL::FileStream> TesteeType;
+
     class Tester
     {
         /// No copy or move allowed.
@@ -330,7 +332,7 @@ namespace FileLoggerTests
     private:
         /// Private Data Member \\\
 
-        std::unique_ptr<SLL::FileLogger> mpFileLogger;
+        std::unique_ptr<SLL::StreamLogger<SLL::FileStream>> mpFileLogger;
 
         inline void CheckForNullLogger(const std::string& f) const
         {
@@ -354,7 +356,7 @@ namespace FileLoggerTests
         /// Getters \\\
 
         // File Logger Getter - const
-        const SLL::FileLogger& GetLogger( ) const
+        const TesteeType& GetLogger( ) const
         {
             CheckForNullLogger(__FUNCTION__);
 
@@ -362,7 +364,7 @@ namespace FileLoggerTests
         }
 
         // File Logger Getter - non-const
-        SLL::FileLogger& GetLogger( )
+        TesteeType& GetLogger( )
         {
             CheckForNullLogger(__FUNCTION__);
 
@@ -370,19 +372,19 @@ namespace FileLoggerTests
         }
 
         // File Logger Stream Getter - const
-        const std::basic_ofstream<wchar_t>& GetFileStream( ) const
+        const SLL::FileStream& GetFileStream( ) const
         {
             CheckForNullLogger(__FUNCTION__);
 
-            return mpFileLogger->mFileStream;
+            return mpFileLogger->mStream;
         }
 
         // File Logger Stream Getter - non-const
-        std::basic_ofstream<wchar_t>& GetFileStream( )
+        SLL::FileStream& GetFileStream( )
         {
             CheckForNullLogger(__FUNCTION__);
 
-            return mpFileLogger->mFileStream;
+            return mpFileLogger->mStream;
         }
 
         const SLL::ConfigPackage& GetConfig( ) const
@@ -402,21 +404,21 @@ namespace FileLoggerTests
         /// Setters \\\
 
         // File Logger Setter - FileLogger [M]
-        void SetFileLogger(SLL::FileLogger&& src)
+        void SetFileLogger(TesteeType&& src)
         {
-            mpFileLogger = std::make_unique<SLL::FileLogger>(std::move(src));
+            mpFileLogger = std::make_unique<TesteeType>(std::move(src));
         }
 
         // File Logger Setter - ConfigPackage [C]
         void SetFileLogger(const SLL::ConfigPackage& config)
         {
-            mpFileLogger = std::make_unique<SLL::FileLogger>(config);
+            mpFileLogger = std::make_unique<TesteeType>(config);
         }
 
         // File Logger Setter - ConfigPackage [M]
         void SetFileLogger(SLL::ConfigPackage&& config)
         {
-            mpFileLogger = std::make_unique<SLL::FileLogger>(std::move(config));
+            mpFileLogger = std::make_unique<TesteeType>(std::move(config));
         }
 
         /// FileLogger Exposer Methods \\\
@@ -440,7 +442,7 @@ namespace FileLoggerTests
         {
             CheckForNullLogger(__FUNCTION__);
 
-            mpFileLogger->InitializeFileStream( );
+            mpFileLogger->InitializeStream( );
         }
 
         // Restore File Stream.
@@ -448,7 +450,7 @@ namespace FileLoggerTests
         {
             CheckForNullLogger(__FUNCTION__);
 
-            return mpFileLogger->RestoreFileStream( );
+            return mpFileLogger->RestoreStream( );
         }
 
         // Flush Content To File.

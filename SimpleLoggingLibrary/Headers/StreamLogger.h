@@ -3,8 +3,14 @@
 // Parent class
 #include <LoggerBase.h>
 
-// C++ STL File Stream
+// C++ STL Streams
+#include <fstream>
 #include <iostream>
+
+namespace FileLoggerTests
+{
+    class Tester;
+}
 
 namespace StreamLoggerTests
 {
@@ -13,16 +19,29 @@ namespace StreamLoggerTests
 
 namespace SLL
 {
+    template <class StreamType>
+    class StreamLogger;
+
+    // typedefs for supported stream types.
+    typedef std::basic_ostream<wchar_t> StdOutStream;
+    typedef std::basic_ofstream<wchar_t> FileStream;
+
+    // typedefs for logger types
+    typedef StreamLogger<StdOutStream> StdOutLogger;
+    typedef StreamLogger<FileStream> FileLogger;
+
     ///
     //
     //  Class   - StreamLogger
     //
-    //  Purpose - Output message contents to stream (i.e., stdout, stderr, user-provided stream).   
+    //  Purpose - Output message contents to stream (e.g., stdout, file).   
     //
     ///
+    template <class StreamType>
     class StreamLogger : public LoggerBase
     {
         // Friend class, intended to expose non-public methods for testing.
+        friend ::FileLoggerTests::Tester;
         friend ::StreamLoggerTests::Tester;
 
         /// Construction requires ConfigPackage
@@ -31,9 +50,12 @@ namespace SLL
     private:
         /// Private Data Members \\\
 
-        std::basic_ostream<wchar_t> mStream;
+        StreamType mStream;
 
         /// Private Helper Methods \\\
+
+        // Return whether or not stream is in good state.
+        bool IsStreamGood( ) const noexcept;
 
         // Initialize Stream.
         void InitializeStream( );
