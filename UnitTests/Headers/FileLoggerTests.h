@@ -318,8 +318,6 @@ namespace FileLoggerTests
 
 namespace FileLoggerTests
 {
-    typedef SLL::StreamLogger<SLL::FileStream> TesteeType;
-
     class Tester
     {
         /// No copy or move allowed.
@@ -332,7 +330,7 @@ namespace FileLoggerTests
     private:
         /// Private Data Member \\\
 
-        std::unique_ptr<SLL::StreamLogger<SLL::FileStream>> mpFileLogger;
+        std::unique_ptr<SLL::FileLogger> mpFileLogger;
 
         inline void CheckForNullLogger(const std::string& f) const
         {
@@ -356,7 +354,7 @@ namespace FileLoggerTests
         /// Getters \\\
 
         // File Logger Getter - const
-        const TesteeType& GetLogger( ) const
+        const FileLogger& GetLogger( ) const
         {
             CheckForNullLogger(__FUNCTION__);
 
@@ -364,7 +362,7 @@ namespace FileLoggerTests
         }
 
         // File Logger Getter - non-const
-        TesteeType& GetLogger( )
+        FileLogger& GetLogger( )
         {
             CheckForNullLogger(__FUNCTION__);
 
@@ -404,21 +402,21 @@ namespace FileLoggerTests
         /// Setters \\\
 
         // File Logger Setter - FileLogger [M]
-        void SetFileLogger(TesteeType&& src)
+        void SetFileLogger(FileLogger&& src)
         {
-            mpFileLogger = std::make_unique<TesteeType>(std::move(src));
+            mpFileLogger = std::make_unique<FileLogger>(std::move(src));
         }
 
         // File Logger Setter - ConfigPackage [C]
         void SetFileLogger(const SLL::ConfigPackage& config)
         {
-            mpFileLogger = std::make_unique<TesteeType>(config);
+            mpFileLogger = std::make_unique<FileLogger>(config);
         }
 
         // File Logger Setter - ConfigPackage [M]
         void SetFileLogger(SLL::ConfigPackage&& config)
         {
-            mpFileLogger = std::make_unique<TesteeType>(std::move(config));
+            mpFileLogger = std::make_unique<FileLogger>(std::move(config));
         }
 
         /// FileLogger Exposer Methods \\\
