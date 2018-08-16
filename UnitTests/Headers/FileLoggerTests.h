@@ -354,7 +354,7 @@ namespace FileLoggerTests
         /// Getters \\\
 
         // File Logger Getter - const
-        const FileLogger& GetLogger( ) const
+        const SLL::FileLogger& GetLogger( ) const
         {
             CheckForNullLogger(__FUNCTION__);
 
@@ -362,7 +362,7 @@ namespace FileLoggerTests
         }
 
         // File Logger Getter - non-const
-        FileLogger& GetLogger( )
+        SLL::FileLogger& GetLogger( )
         {
             CheckForNullLogger(__FUNCTION__);
 
@@ -402,21 +402,21 @@ namespace FileLoggerTests
         /// Setters \\\
 
         // File Logger Setter - FileLogger [M]
-        void SetFileLogger(FileLogger&& src)
+        void SetFileLogger(SLL::FileLogger&& src)
         {
-            mpFileLogger = std::make_unique<FileLogger>(std::move(src));
+            mpFileLogger = std::make_unique<SLL::FileLogger>(std::move(src));
         }
 
         // File Logger Setter - ConfigPackage [C]
         void SetFileLogger(const SLL::ConfigPackage& config)
         {
-            mpFileLogger = std::make_unique<FileLogger>(config);
+            mpFileLogger = std::make_unique<SLL::FileLogger>(config);
         }
 
         // File Logger Setter - ConfigPackage [M]
         void SetFileLogger(SLL::ConfigPackage&& config)
         {
-            mpFileLogger = std::make_unique<FileLogger>(std::move(config));
+            mpFileLogger = std::make_unique<SLL::FileLogger>(std::move(config));
         }
 
         /// FileLogger Exposer Methods \\\
