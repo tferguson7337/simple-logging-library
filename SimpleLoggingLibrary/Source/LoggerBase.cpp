@@ -208,6 +208,10 @@ namespace SLL
         return buf;
     }
 
+    /// Common Immutable Static Protected Data Members Initialization \\\
+
+    const size_t LoggerBase::mFlushInterval = 3;
+
 ///
 //
 //  Suppress static code analysis warnings that are due to a known bug.
@@ -221,12 +225,14 @@ namespace SLL
 
     // ConfigPackage Constructor [C]
     LoggerBase::LoggerBase(const ConfigPackage& config) :
-        mConfig(config)
+        mConfig(config),
+        mFlushCounter(0)
     { }
 
     // ConfigPackage Constructor [M]
     LoggerBase::LoggerBase(ConfigPackage&& config) noexcept :
-        mConfig(std::move(config))
+        mConfig(std::move(config)),
+        mFlushCounter(0)
     { }
 
     // Move Constructor
@@ -248,6 +254,7 @@ namespace SLL
         }
 
         mConfig = std::move(src.mConfig);
+        mFlushCounter = src.mFlushCounter;
 
         return *this;
     }

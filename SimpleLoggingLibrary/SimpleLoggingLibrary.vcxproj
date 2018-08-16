@@ -30,6 +30,7 @@
     <ClInclude Include="Headers\Interfaces\ILogger.h" />
     <ClInclude Include="Headers\LoggerBase.h" />
     <ClInclude Include="Headers\OptionFlag.h" />
+    <ClInclude Include="Headers\StreamLogger.h" />
     <ClInclude Include="Headers\VerbosityLevel.h" />
   </ItemGroup>
   <ItemGroup>
@@ -38,6 +39,7 @@
     <ClCompile Include="Source\FileLogger.cpp" />
     <ClCompile Include="Source\LoggerBase.cpp" />
     <ClCompile Include="Source\OptionFlag.cpp" />
+    <ClCompile Include="Source\StreamLogger.cpp" />
     <ClCompile Include="Source\VerbosityLevel.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

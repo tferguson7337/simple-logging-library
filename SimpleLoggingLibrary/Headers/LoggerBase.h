@@ -9,7 +9,6 @@
 // STL - std::thread::id
 #include <thread>
 
-
 // Forward declaration of unit-testing helper-class.
 namespace LoggerBaseTests
 {
@@ -32,7 +31,6 @@ namespace SLL
         friend class ::LoggerBaseTests::Tester;
 
     private:
-
         /// Common Private Data Member \\\
 
         ConfigPackage mConfig;
@@ -72,6 +70,11 @@ namespace SLL
         static std::unique_ptr<T[ ]> StringPrintWrapper(const size_t, const T*, va_list);
 
     protected:
+
+        /// Common Protected Data Members \\\
+
+        static const size_t mFlushInterval;
+        size_t mFlushCounter;
 
         /// Constructors \\\
 
