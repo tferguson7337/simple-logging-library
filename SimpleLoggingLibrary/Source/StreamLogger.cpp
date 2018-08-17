@@ -109,16 +109,8 @@ namespace SLL
             {
                 failTicker = 1;
                 failFreq++;
-
-                std::fprintf(
-                    stderr,
-                    "\n\n   %s - Failed to restore stream from bad state (attempt %zu): %s\n\n",
-                    __FUNCTION__,
-                    ++failTotalCount,
-                    e.what( )
-                );
-
-                std::fflush(stderr);
+                std::cerr << "\n\n   " << __FUNCTION__ << " - Failed to restore stream from bad state ";
+                std::cerr << "(attempt " << ++failTotalCount << "): " << e.what( ) << "\n" << std::endl;
             }
 
             return false;
