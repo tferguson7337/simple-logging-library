@@ -1,0 +1,3 @@
+[submodule "SimpleLoggingLibrary/Common"]
+	path = SimpleLoggingLibrary/Common
+	url = https://github.com/tferguson7337/common-utils
