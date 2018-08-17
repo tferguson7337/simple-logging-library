@@ -67,11 +67,11 @@ namespace SLL
         void Flush(const VerbosityLevel&);
 
         // Log Prefixes to Stream.
-        template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
+        template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
         void LogPrefixes(const VerbosityLevel&, const std::thread::id&);
 
         // Log User Message To File.
-        template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
+        template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
         void LogMessage(const T*, va_list);
 
 
@@ -99,10 +99,10 @@ namespace SLL
 
         /// Public Methods \\\
 
-        template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
+        template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
         bool Log(const VerbosityLevel& lvl, const T* pFormat, va_list pArgs);
 
-        template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
+        template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
         bool Log(const VerbosityLevel& lvl, const T* pFormat, ...);
     };
 }

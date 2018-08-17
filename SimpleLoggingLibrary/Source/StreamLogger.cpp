@@ -35,7 +35,7 @@ namespace SLL
                 "good == " +
                 std::to_string(mStream.good( )) +
                 ", buffer == " +
-                (mStream.rdbuf( ) ? std::string("valid") : std::string("null"))
+                StringUtil::UnsignedToString<char>(StringUtil::ConversionType::Hexidecimal, mStream.rdbuf( ))
             );
         }
     }
@@ -78,7 +78,9 @@ namespace SLL
                 "good == " +
                 std::to_string(mStream.good( )) +
                 ", is_open == " +
-                std::to_string(mStream.is_open( ))
+                std::to_string(mStream.is_open( )) +
+                ", buffer == " +
+                StringUtil::UnsignedToString<char>(StringUtil::ConversionType::Hexidecimal, mStream.rdbuf( ))
             );
         }
     }
@@ -110,11 +112,13 @@ namespace SLL
 
                 std::fprintf(
                     stderr,
-                    "\n\n   %s - Failed to restore stream from bad state (attempt %zu): %s",
+                    "\n\n   %s - Failed to restore stream from bad state (attempt %zu): %s\n\n",
                     __FUNCTION__,
                     ++failTotalCount,
                     e.what( )
                 );
+
+                std::fflush(stderr);
             }
 
             return false;

@@ -15,7 +15,7 @@ namespace ColorTests
     {
         UnitTestResult ToScalar( );
 
-        template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
+        template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
         UnitTestResult ToString( );
     }
 }

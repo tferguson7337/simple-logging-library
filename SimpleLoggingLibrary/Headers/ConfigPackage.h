@@ -94,11 +94,11 @@ namespace SLL
         void SetVerbosityThreshold(const VerbosityLevel);
 
         // Specifies file to log to [C].
-        template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
+        template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
         void SetFile(const std::basic_string<T>&);
 
         // Specifies file to log to [M].
-        template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
+        template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
         void SetFile(std::basic_string<T>&&);
 
         /// Public Methods \\\

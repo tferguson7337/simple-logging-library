@@ -47,7 +47,7 @@ namespace SLL
         /// Private Helper Methods \\\
 
         // VerbosityLevel String Getters
-        template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
+        template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
         static const std::basic_string<T>& GetVerbosityLevelString(const size_t);
 
     public:
@@ -56,7 +56,7 @@ namespace SLL
         static VerbosityLevelType ToScalar(VerbosityLevel);
 
         // Returns string name of VerbosityLevel argument.
-        template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
+        template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
         static const std::basic_string<T>& ToString(VerbosityLevel);
     };
 }

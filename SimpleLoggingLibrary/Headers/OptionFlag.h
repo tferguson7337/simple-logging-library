@@ -98,15 +98,15 @@ namespace SLL
         /// Private Helper Methods \\\
 
         // OptionFlag String Getters
-        template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
+        template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
         static const std::basic_string<T>& GetOptionFlagString(const size_t);
 
         // OptionFlag::NONE String Getters
-        template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
+        template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
         static const std::basic_string<T>& GetEmptyMaskString( );
 
         // Separator Getters
-        template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
+        template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
         static const std::basic_string<T>& GetSeparator( );
 
     public:
@@ -116,7 +116,7 @@ namespace SLL
         // Returns underlying scalar type value of OptionFlag mask argument.
         static OptionFlagType ToScalar(OptionFlag);
 
-        template <class T, STRING_TEMPLATE_ENABLE_IF_SUPPORTED_TYPE(T)>
+        template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
         static std::basic_string<T> ToString(OptionFlag);
     };
 }
