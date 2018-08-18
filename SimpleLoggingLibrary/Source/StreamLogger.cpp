@@ -376,72 +376,23 @@ namespace SLL
     {
         va_list pArgs;
 
-        // Ensure verbosity level is valid.
-        if ( lvl < VerbosityLevel::BEGIN || lvl >= VerbosityLevel::MAX )
-        {
-            throw std::invalid_argument(
-                __FUNCTION__" - Invalid verbosity level argument (" +
-                std::to_string(static_cast<VerbosityLevelType>(lvl)) +
-                ")."
-            );
-        }
-
-        // Ensure we have a valid format string.
-        if ( !pFormat )
-        {
-            throw std::invalid_argument(__FUNCTION__ " - Invalid format string (nullptr).");
-        }
-
-        // Don't log if message level is below the configured verbosity threshold.
-        if ( lvl < GetConfig( ).GetVerbosityThreshold( ) )
-        {
-            return true;
-        }
-
-        // Check if the file stream is still open and in a good state, attempt to recover if not.
-        if ( !IsStreamGood( ) && !RestoreStream( ) )
-        {
-            return false;
-        }
-
-        // Log message prefix strings.
         try
         {
-            LogPrefixes<T>(lvl, std::this_thread::get_id( ));
-        }
-        catch ( const std::exception& )
-        {
-            // Best effort - we'll attempt to restore to a good state next log.
-            mStream.setstate(std::ios_base::badbit);
-            return IsStreamGood( );
-        }
-
-        // If file stream state is still good, log user message.
-        try
-        {
+            // Get arguments, send to va_list, cleanup, return result.
             va_start(pArgs, pFormat);
-            LogMessage<T>(pFormat, pArgs);
+            bool ret = Log<T>(lvl, pFormat, pArgs);
             va_end(pArgs);
+            return ret;
         }
         catch ( const std::exception& )
         {
-            // Best effort - we'll attempt to restore to a good state next log.
+            // Cleanup, rethrow exception.
             va_end(pArgs);
-            mStream.setstate(std::ios_base::badbit);
-            return IsStreamGood( );
+            throw;
         }
-
-        // Flush messages to file periodically, or if the message is likely important.
-        Flush(lvl);
-
-        return IsStreamGood( );
     }
 
     /// Explicit Template Instantiations \\\
-
-    // Class Instantiations
-    template StreamLogger<StdOutStream>;
-    template StreamLogger<FileStream>;
 
     // Log Instantiations - Variadic Arguments
     template bool StdOutLogger::Log<char>(const VerbosityLevel& lvl, const char* pFormat, ...);
