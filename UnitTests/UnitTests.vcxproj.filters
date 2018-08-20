@@ -29,6 +29,9 @@
     <ClInclude Include="Headers\FileLoggerTests.h">
       <Filter>Tests\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Headers\StdOutLoggerTests.h">
+      <Filter>Tests\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\OptionFlagTests.cpp">
@@ -45,6 +48,9 @@
     </ClCompile>
     <ClCompile Include="Source\RunTests.cpp" />
     <ClCompile Include="Source\FileLoggerTests.cpp">
+      <Filter>Tests\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\StdOutLoggerTests.cpp">
       <Filter>Tests\Source Files</Filter>
     </ClCompile>
   </ItemGroup>

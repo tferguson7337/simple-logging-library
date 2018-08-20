@@ -23,6 +23,7 @@
     <ClInclude Include="Headers\FileLoggerTests.h" />
     <ClInclude Include="Headers\LoggerBaseTests.h" />
     <ClInclude Include="Headers\OptionFlagTests.h" />
+    <ClInclude Include="Headers\StdOutLoggerTests.h" />
     <ClInclude Include="Headers\VerbosityLevelTests.h" />
   </ItemGroup>
   <ItemGroup>
@@ -31,6 +32,7 @@
     <ClCompile Include="Source\LoggerBaseTests.cpp" />
     <ClCompile Include="Source\OptionFlagTests.cpp" />
     <ClCompile Include="Source\RunTests.cpp" />
+    <ClCompile Include="Source\StdOutLoggerTests.cpp" />
     <ClCompile Include="Source\VerbosityLevelTests.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

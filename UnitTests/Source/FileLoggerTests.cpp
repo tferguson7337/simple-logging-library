@@ -5,6 +5,7 @@ namespace FileLoggerTests
 {
     using SLL::ConfigPackage;
     using SLL::FileLogger;
+    using SLL::FileStream;
     using SLL::OptionFlag;
     using SLL::VerbosityLevel;
 
@@ -12,23 +13,23 @@ namespace FileLoggerTests
     {
         static const std::list<std::function<UnitTestResult(void)>> testList
         {
-            /// InitializeFileStream Tests \\\
+            /// InitializeStream Tests \\\
 
             // Negative Tests
-            InitializeFileStream::NoFile,
-            InitializeFileStream::BadPath,
+            InitializeStream::NoFile,
+            InitializeStream::BadPath,
 
             // Positive Test
-            InitializeFileStream::GoodPath,
+            InitializeStream::GoodPath,
 
-            /// RestoreFileStream Tests \\\
+            /// RestoreStream Tests \\\
 
             // Negative Tests
-            RestoreFileStream::NoFile,
-            RestoreFileStream::BadPath,
+            RestoreStream::NoFile,
+            RestoreStream::BadPath,
 
             // Positive Test
-            RestoreFileStream::GoodPath,
+            RestoreStream::GoodPath,
 
             /// Flush Tests \\\
 
@@ -87,6 +88,12 @@ namespace FileLoggerTests
             /// Log Tests \\\
 
             // Negative Tests
+            Log::NoFile<char>,
+            Log::NoFile<wchar_t>,
+
+            Log::BadStream<char>,
+            Log::BadStream<wchar_t>,
+
             Log::BadVerbosityLevel<char>,
             Log::BadVerbosityLevel<wchar_t>,
 
@@ -128,6 +135,8 @@ namespace FileLoggerTests
         return testList;
     }
 
+    typedef StreamLoggerTests::Tester<FileLogger, FileStream> TesterHelper;
+
     /// Helper Macros \\\
 
 // Perform setup common to most unit tests.
@@ -136,7 +145,7 @@ namespace FileLoggerTests
 #define FILE_LOGGER_TEST_COMMON_SETUP(t)                                                \
     try                                                                                 \
     {                                                                                   \
-        t.SetFileLogger(BuildConfig(GetGoodFileString( ), SLL::VerbosityLevel::INFO));  \
+        t.SetLogger(BuildConfig(GetGoodFileString( ), VerbosityLevel::INFO));           \
     }                                                                                   \
     catch ( const std::exception& e )                                                   \
     {                                                                                   \
@@ -144,8 +153,8 @@ namespace FileLoggerTests
     }                                                                                   \
                                                                                         \
     SUTL_SETUP_ASSERT(!t.GetConfig( ).GetFile( ).empty( ));                             \
-    SUTL_SETUP_ASSERT(t.GetFileStream( ).good( ));                                      \
-    SUTL_SETUP_ASSERT(t.GetFileStream( ).is_open( ));
+    SUTL_SETUP_ASSERT(t.GetStream( ).good( ));                                          \
+    SUTL_SETUP_ASSERT(t.GetStream( ).is_open( ));
 
 
 // Perform cleanup common to most unit tests.
@@ -154,7 +163,7 @@ namespace FileLoggerTests
 #define FILE_LOGGER_TEST_COMMON_CLEANUP(t)      \
     try                                         \
     {                                           \
-        t.GetFileStream( ).close( );            \
+        t.GetStream( ).close( );                \
         SUTL_CLEANUP_ASSERT(DeleteTestFile( )); \
     }                                           \
     catch ( const std::exception& e )           \
@@ -165,33 +174,33 @@ namespace FileLoggerTests
 
     /// Unit Tests \\\
 
-    namespace InitializeFileStream
+    namespace InitializeStream
     {
         /// Negative Tests \\\
 
         UnitTestResult NoFile( )
         {
             bool threw = false;
-            Tester t;
+            TesterHelper t;
 
             FILE_LOGGER_TEST_COMMON_SETUP(t);
 
             try
             {
-                t.GetFileStream( ).close( );
+                t.GetStream( ).close( );
             }
             catch ( const std::exception& e )
             {
                 SUTL_SETUP_EXCEPTION(e.what( ));
             }
 
-            SUTL_SETUP_ASSERT(!t.GetFileStream( ).is_open( ));
+            SUTL_SETUP_ASSERT(!t.GetStream( ).is_open( ));
 
-            t.SetTargetFile(L"");
+            t.GetConfig( ).SetFile<wchar_t>(L"");
 
             try
             {
-                t.InitializeFileStream( );
+                t.InitializeStream( );
             }
             catch ( const std::exception& )
             {
@@ -199,7 +208,7 @@ namespace FileLoggerTests
             }
 
             SUTL_TEST_ASSERT(threw);
-            SUTL_TEST_ASSERT(!t.GetFileStream( ).is_open( ));
+            SUTL_TEST_ASSERT(!t.GetStream( ).is_open( ));
 
             FILE_LOGGER_TEST_COMMON_CLEANUP(t);
 
@@ -209,26 +218,26 @@ namespace FileLoggerTests
         UnitTestResult BadPath( )
         {
             bool threw = false;
-            Tester t;
+            TesterHelper t;
 
             FILE_LOGGER_TEST_COMMON_SETUP(t);
 
             try
             {
-                t.GetFileStream( ).close( );
+                t.GetStream( ).close( );
             }
             catch ( const std::exception& e )
             {
                 SUTL_SETUP_EXCEPTION(e.what( ));
             }
 
-            SUTL_SETUP_ASSERT(!t.GetFileStream( ).is_open( ));
+            SUTL_SETUP_ASSERT(!t.GetStream( ).is_open( ));
 
-            t.SetTargetFile(GetBadFileString( ));
+            t.GetConfig( ).SetFile(GetBadFileString( ));
 
             try
             {
-                t.InitializeFileStream( );
+                t.InitializeStream( );
             }
             catch ( const std::exception& )
             {
@@ -236,7 +245,7 @@ namespace FileLoggerTests
             }
 
             SUTL_TEST_ASSERT(threw);
-            SUTL_TEST_ASSERT(!t.GetFileStream( ).is_open( ));
+            SUTL_TEST_ASSERT(!t.GetStream( ).is_open( ));
 
             FILE_LOGGER_TEST_COMMON_CLEANUP(t);
 
@@ -247,34 +256,34 @@ namespace FileLoggerTests
 
         UnitTestResult GoodPath( )
         {
-            Tester t;
+            TesterHelper t;
 
             FILE_LOGGER_TEST_COMMON_SETUP(t);
 
             try
             {
-                t.GetFileStream( ).close( );
+                t.GetStream( ).close( );
             }
             catch ( const std::exception& e )
             {
                 SUTL_SETUP_EXCEPTION(e.what( ));
             }
 
-            SUTL_SETUP_ASSERT(!t.GetFileStream( ).is_open( ));
+            SUTL_SETUP_ASSERT(!t.GetStream( ).is_open( ));
 
-            t.SetTargetFile(GetGoodFileString( ));
+            t.GetConfig( ).SetFile(GetGoodFileString( ));
 
             try
             {
-                t.InitializeFileStream( );
+                t.InitializeStream( );
             }
             catch ( const std::exception& e )
             {
                 SUTL_TEST_EXCEPTION(e.what( ));
             }
 
-            SUTL_TEST_ASSERT(t.GetFileStream( ).good( ));
-            SUTL_TEST_ASSERT(t.GetFileStream( ).is_open( ));
+            SUTL_TEST_ASSERT(t.GetStream( ).good( ));
+            SUTL_TEST_ASSERT(t.GetStream( ).is_open( ));
 
             FILE_LOGGER_TEST_COMMON_CLEANUP(t);
 
@@ -282,28 +291,28 @@ namespace FileLoggerTests
         }
     }
 
-    namespace RestoreFileStream
+    namespace RestoreStream
     {
         /// Negative Tests \\\
 
         UnitTestResult NoFile( )
         {
-            Tester t;
+            TesterHelper t;
 
             FILE_LOGGER_TEST_COMMON_SETUP(t);
 
-            t.SetTargetFile(L"");
+            t.GetConfig( ).SetFile<wchar_t>(L"");
 
             try
             {
-                SUTL_TEST_ASSERT(!t.RestoreFileStream( ));
+                SUTL_TEST_ASSERT(!t.RestoreStream( ));
             }
             catch ( const std::exception& e )
             {
                 SUTL_TEST_EXCEPTION(e.what( ));
             }
 
-            SUTL_TEST_ASSERT(!t.GetFileStream( ).is_open( ));
+            SUTL_TEST_ASSERT(!t.GetStream( ).is_open( ));
 
             FILE_LOGGER_TEST_COMMON_CLEANUP(t);
 
@@ -312,22 +321,22 @@ namespace FileLoggerTests
 
         UnitTestResult BadPath( )
         {
-            Tester t;
+            TesterHelper t;
 
             FILE_LOGGER_TEST_COMMON_SETUP(t);
 
-            t.SetTargetFile(GetBadFileString( ));
+            t.GetConfig( ).SetFile(GetBadFileString( ));
 
             try
             {
-                SUTL_TEST_ASSERT(!t.RestoreFileStream( ));
+                SUTL_TEST_ASSERT(!t.RestoreStream( ));
             }
             catch ( const std::exception& e )
             {
                 SUTL_TEST_EXCEPTION(e.what( ));
             }
 
-            SUTL_TEST_ASSERT(!t.GetFileStream( ).is_open( ));
+            SUTL_TEST_ASSERT(!t.GetStream( ).is_open( ));
 
             FILE_LOGGER_TEST_COMMON_CLEANUP(t);
 
@@ -338,23 +347,23 @@ namespace FileLoggerTests
 
         UnitTestResult GoodPath( )
         {
-            Tester t;
+            TesterHelper t;
 
             FILE_LOGGER_TEST_COMMON_SETUP(t);
 
-            t.SetTargetFile(GetGoodFileString( ));
+            t.GetConfig( ).SetFile(GetGoodFileString( ));
 
             try
             {
-                SUTL_TEST_ASSERT(t.RestoreFileStream( ));
+                SUTL_TEST_ASSERT(t.RestoreStream( ));
             }
             catch ( const std::exception& e )
             {
                 SUTL_TEST_EXCEPTION(e.what( ));
             }
 
-            SUTL_TEST_ASSERT(t.GetFileStream( ).good( ));
-            SUTL_TEST_ASSERT(t.GetFileStream( ).is_open( ));
+            SUTL_TEST_ASSERT(t.GetStream( ).good( ));
+            SUTL_TEST_ASSERT(t.GetStream( ).is_open( ));
 
             FILE_LOGGER_TEST_COMMON_CLEANUP(t);
 
@@ -369,16 +378,16 @@ namespace FileLoggerTests
         UnitTestResult NoFile( )
         {
             bool threw = false;
-            Tester t;
+            TesterHelper t;
 
             FILE_LOGGER_TEST_COMMON_SETUP(t);
 
-            t.SetTargetFile(L"");
+            t.GetConfig( ).SetFile<wchar_t>(L"");
 
             try
             {
-                t.GetFileStream( ).close( );
-                t.InitializeFileStream( );
+                t.GetStream( ).close( );
+                t.InitializeStream( );
             }
             catch ( const std::exception& )
             {
@@ -386,20 +395,23 @@ namespace FileLoggerTests
             }
 
             SUTL_SETUP_ASSERT(threw);
-            SUTL_SETUP_ASSERT(t.GetFileStream( ).good( ));
-            SUTL_SETUP_ASSERT(!t.GetFileStream( ).is_open( ));
+            SUTL_SETUP_ASSERT(t.GetStream( ).good( ));
+            SUTL_SETUP_ASSERT(!t.GetStream( ).is_open( ));
 
             try
             {
-                t.Flush(VerbosityLevel::FATAL);
+                for ( VerbosityLevel lvl = VerbosityLevel::BEGIN; lvl < VerbosityLevel::MAX; INCREMENT_VERBOSITY(lvl) )
+                {
+                    t.Flush(lvl);
+                }
             }
             catch ( const std::exception& e )
             {
                 SUTL_TEST_EXCEPTION(e.what( ));
             }
 
-            SUTL_TEST_ASSERT(t.GetFileStream( ).good( ));
-            SUTL_TEST_ASSERT(!t.GetFileStream( ).is_open( ));
+            SUTL_TEST_ASSERT(t.GetStream( ).good( ));
+            SUTL_TEST_ASSERT(!t.GetStream( ).is_open( ));
 
             FILE_LOGGER_TEST_COMMON_CLEANUP(t);
 
@@ -408,26 +420,32 @@ namespace FileLoggerTests
 
         UnitTestResult BadStream( )
         {
-            Tester t;
+            TesterHelper t;
 
             FILE_LOGGER_TEST_COMMON_SETUP(t);
 
             for ( auto state : std::vector<int>{ std::ios_base::failbit, std::ios_base::badbit, std::ios_base::failbit | std::ios_base::badbit } )
             {
-                t.GetFileStream( ).clear( );
-                t.GetFileStream( ).setstate(state);
+                t.GetStream( ).clear( );
+                t.GetStream( ).setstate(state);
 
                 try
                 {
-                    t.Flush(VerbosityLevel::FATAL);
+                    for ( VerbosityLevel lvl = VerbosityLevel::BEGIN; lvl < VerbosityLevel::MAX; INCREMENT_VERBOSITY(lvl) )
+                    {
+                        t.Flush(lvl);
+
+                        SUTL_TEST_ASSERT(t.GetStream( ).rdstate( ) == state);
+                        SUTL_TEST_ASSERT(t.GetStream( ).is_open( ));
+                    }
                 }
                 catch ( const std::exception& e )
                 {
                     SUTL_TEST_EXCEPTION(e.what( ));
                 }
 
-                SUTL_TEST_ASSERT(t.GetFileStream( ).rdstate( ) == state);
-                SUTL_TEST_ASSERT(t.GetFileStream( ).is_open( ));
+                SUTL_TEST_ASSERT(t.GetStream( ).rdstate( ) == state);
+                SUTL_TEST_ASSERT(t.GetStream( ).is_open( ));
             }
 
             FILE_LOGGER_TEST_COMMON_CLEANUP(t);
@@ -439,7 +457,7 @@ namespace FileLoggerTests
 
         UnitTestResult NoContent( )
         {
-            Tester t;
+            TesterHelper t;
 
             FILE_LOGGER_TEST_COMMON_SETUP(t);
 
@@ -452,8 +470,8 @@ namespace FileLoggerTests
                 SUTL_TEST_EXCEPTION(e.what( ));
             }
 
-            SUTL_TEST_ASSERT(t.GetFileStream( ).good( ));
-            SUTL_TEST_ASSERT(t.GetFileStream( ).is_open( ));
+            SUTL_TEST_ASSERT(t.GetStream( ).good( ));
+            SUTL_TEST_ASSERT(t.GetStream( ).is_open( ));
 
             FILE_LOGGER_TEST_COMMON_CLEANUP(t);
 
@@ -463,13 +481,13 @@ namespace FileLoggerTests
         UnitTestResult GoodStream( )
         {
             const std::wstring testStr = L"Test string";
-            Tester t;
+            TesterHelper t;
 
             FILE_LOGGER_TEST_COMMON_SETUP(t);
 
             try
             {
-                t.GetFileStream( ) << testStr;
+                t.GetStream( ) << testStr;
             }
             catch ( const std::exception& e )
             {
@@ -485,8 +503,8 @@ namespace FileLoggerTests
                 SUTL_TEST_EXCEPTION(e.what( ));
             }
 
-            SUTL_TEST_ASSERT(t.GetFileStream( ).good( ));
-            SUTL_TEST_ASSERT(t.GetFileStream( ).is_open( ));
+            SUTL_TEST_ASSERT(t.GetStream( ).good( ));
+            SUTL_TEST_ASSERT(t.GetStream( ).is_open( ));
             SUTL_TEST_ASSERT(ReadTestFile( ) == testStr);
 
             FILE_LOGGER_TEST_COMMON_CLEANUP(t);
@@ -503,16 +521,16 @@ namespace FileLoggerTests
         UnitTestResult NoFile( )
         {
             bool threw = false;
-            Tester t;
+            TesterHelper t;
 
             FILE_LOGGER_TEST_COMMON_SETUP(t);
 
-            t.SetTargetFile(L"");
+            t.GetConfig( ).SetFile<wchar_t>(L"");
 
             try
             {
-                t.GetFileStream( ).close( );
-                t.InitializeFileStream( );
+                t.GetStream( ).close( );
+                t.InitializeStream( );
             }
             catch ( const std::exception& )
             {
@@ -520,8 +538,8 @@ namespace FileLoggerTests
             }
 
             SUTL_SETUP_ASSERT(threw);
-            SUTL_SETUP_ASSERT(t.GetFileStream( ).good( ));
-            SUTL_SETUP_ASSERT(!t.GetFileStream( ).is_open( ));
+            SUTL_SETUP_ASSERT(t.GetStream( ).good( ));
+            SUTL_SETUP_ASSERT(!t.GetStream( ).is_open( ));
 
             for ( OptionFlag mask = OptionFlag::PREFIX_BEGIN; mask < OptionFlag::PREFIX_END; INCREMENT_OPTIONFLAG(mask) )
             {
@@ -540,8 +558,8 @@ namespace FileLoggerTests
                 }
 
                 SUTL_TEST_ASSERT(threw);
-                SUTL_TEST_ASSERT(t.GetFileStream( ).good( ));
-                SUTL_TEST_ASSERT(!t.GetFileStream( ).is_open( ));
+                SUTL_TEST_ASSERT(t.GetStream( ).good( ));
+                SUTL_TEST_ASSERT(!t.GetStream( ).is_open( ));
             }
 
             FILE_LOGGER_TEST_COMMON_CLEANUP(t);
@@ -552,7 +570,7 @@ namespace FileLoggerTests
         template <class T>
         UnitTestResult BadStream( )
         {
-            Tester t;
+            TesterHelper t;
 
             FILE_LOGGER_TEST_COMMON_SETUP(t);
 
@@ -563,7 +581,7 @@ namespace FileLoggerTests
                 t.GetConfig( ).Disable(OptionFlag::PREFIX_MASK);
                 t.GetConfig( ).Enable(mask);
 
-                t.GetFileStream( ).setstate(std::ios_base::badbit);
+                t.GetStream( ).setstate(std::ios_base::badbit);
 
                 try
                 {
@@ -575,8 +593,8 @@ namespace FileLoggerTests
                 }
 
                 SUTL_TEST_ASSERT(threw);
-                SUTL_TEST_ASSERT(!t.GetFileStream( ).good( ));
-                SUTL_TEST_ASSERT(t.GetFileStream( ).is_open( ));
+                SUTL_TEST_ASSERT(!t.GetStream( ).good( ));
+                SUTL_TEST_ASSERT(t.GetStream( ).is_open( ));
             }
 
             FILE_LOGGER_TEST_COMMON_CLEANUP(t);
@@ -587,7 +605,7 @@ namespace FileLoggerTests
         template <class T>
         UnitTestResult BadVerbosityLevel( )
         {
-            Tester t;
+            TesterHelper t;
 
             FILE_LOGGER_TEST_COMMON_SETUP(t);
 
@@ -599,7 +617,7 @@ namespace FileLoggerTests
                 try
                 {
                     t.LogPrefixes<T>(VerbosityLevel::MAX, std::this_thread::get_id( ));
-                    t.GetFileStream( ).flush( );
+                    t.GetStream( ).flush( );
                 }
                 catch ( const std::exception& e )
                 {
@@ -607,8 +625,8 @@ namespace FileLoggerTests
                 }
 
                 SUTL_TEST_ASSERT(ReadTestFile( ).empty( ));
-                SUTL_TEST_ASSERT(t.GetFileStream( ).good( ));
-                SUTL_TEST_ASSERT(t.GetFileStream( ).is_open( ));
+                SUTL_TEST_ASSERT(t.GetStream( ).good( ));
+                SUTL_TEST_ASSERT(t.GetStream( ).is_open( ));
             }
 
             FILE_LOGGER_TEST_COMMON_CLEANUP(t);
@@ -621,7 +639,7 @@ namespace FileLoggerTests
         template <class T>
         UnitTestResult GoodStream( )
         {
-            Tester t;
+            TesterHelper t;
 
             for ( OptionFlag mask = OptionFlag::PREFIX_BEGIN; mask < OptionFlag::PREFIX_END; mask = static_cast<OptionFlag>(static_cast<SLL::OptionFlagType>(mask) + static_cast<SLL::OptionFlagType>(OptionFlag::PREFIX_BEGIN)) )
             {
@@ -632,16 +650,16 @@ namespace FileLoggerTests
                 try
                 {
                     t.LogPrefixes<T>(VerbosityLevel::INFO, std::this_thread::get_id( ));
-                    t.GetFileStream( ).flush( );
+                    t.GetStream( ).flush( );
                 }
                 catch ( const std::exception& e )
                 {
                     SUTL_TEST_EXCEPTION(e.what( ));
                 }
 
-                SUTL_TEST_ASSERT(ValidatePrefixes(t.GetConfig( ), ReadTestFile( )));
-                SUTL_TEST_ASSERT(t.GetFileStream( ).good( ));
-                SUTL_TEST_ASSERT(t.GetFileStream( ).is_open( ));
+                SUTL_TEST_ASSERT(StreamLoggerTests::ValidatePrefixes(t.GetConfig( ), ReadTestFile( )));
+                SUTL_TEST_ASSERT(t.GetStream( ).good( ));
+                SUTL_TEST_ASSERT(t.GetStream( ).is_open( ));
 
                 FILE_LOGGER_TEST_COMMON_CLEANUP(t);
             }
@@ -659,7 +677,7 @@ namespace FileLoggerTests
         {
             std::unique_ptr<T[ ]> pFormat;
             bool threw = false;
-            Tester t;
+            TesterHelper t;
 
             FILE_LOGGER_TEST_COMMON_SETUP(t);
 
@@ -672,12 +690,12 @@ namespace FileLoggerTests
                 SUTL_SETUP_EXCEPTION(e.what( ));
             }
 
-            t.GetFileStream( ).close( );
-            t.SetTargetFile(L"");
+            t.GetStream( ).close( );
+            t.GetConfig( ).SetFile<wchar_t>(L"");
 
             try
             {
-                t.InitializeFileStream( );
+                t.InitializeStream( );
             }
             catch ( const std::exception& )
             {
@@ -685,8 +703,8 @@ namespace FileLoggerTests
             }
 
             SUTL_SETUP_ASSERT(threw);
-            SUTL_SETUP_ASSERT(!t.GetFileStream( ).is_open( ));
-            SUTL_SETUP_ASSERT(t.GetFileStream( ).good( ));
+            SUTL_SETUP_ASSERT(!t.GetStream( ).is_open( ));
+            SUTL_SETUP_ASSERT(t.GetStream( ).good( ));
 
             threw = false;
             try
@@ -699,8 +717,8 @@ namespace FileLoggerTests
             }
 
             SUTL_TEST_ASSERT(threw);
-            SUTL_TEST_ASSERT(!t.GetFileStream( ).is_open( ));
-            SUTL_TEST_ASSERT(t.GetFileStream( ).good( ));
+            SUTL_TEST_ASSERT(!t.GetStream( ).is_open( ));
+            SUTL_TEST_ASSERT(t.GetStream( ).good( ));
 
             FILE_LOGGER_TEST_COMMON_CLEANUP(t);
 
@@ -712,7 +730,7 @@ namespace FileLoggerTests
         {
             std::unique_ptr<T[ ]> pFormat;
             bool threw = false;
-            Tester t;
+            TesterHelper t;
 
             FILE_LOGGER_TEST_COMMON_SETUP(t);
 
@@ -725,7 +743,7 @@ namespace FileLoggerTests
                 SUTL_SETUP_EXCEPTION(e.what( ));
             }
 
-            t.GetFileStream( ).setstate(std::ios_base::badbit);
+            t.GetStream( ).setstate(std::ios_base::badbit);
 
             threw = false;
             try
@@ -738,8 +756,8 @@ namespace FileLoggerTests
             }
 
             SUTL_TEST_ASSERT(threw);
-            SUTL_TEST_ASSERT(t.GetFileStream( ).is_open( ));
-            SUTL_TEST_ASSERT(!t.GetFileStream( ).good( ));
+            SUTL_TEST_ASSERT(t.GetStream( ).is_open( ));
+            SUTL_TEST_ASSERT(!t.GetStream( ).good( ));
             SUTL_TEST_ASSERT(ReadTestFile( ).empty( ));
 
             FILE_LOGGER_TEST_COMMON_CLEANUP(t);
@@ -752,7 +770,7 @@ namespace FileLoggerTests
         {
             std::unique_ptr<T[ ]> pFormat;
             bool threw = false;
-            Tester t;
+            TesterHelper t;
 
             FILE_LOGGER_TEST_COMMON_SETUP(t);
 
@@ -767,8 +785,8 @@ namespace FileLoggerTests
             }
 
             SUTL_TEST_ASSERT(threw);
-            SUTL_TEST_ASSERT(t.GetFileStream( ).is_open( ));
-            SUTL_TEST_ASSERT(t.GetFileStream( ).good( ));
+            SUTL_TEST_ASSERT(t.GetStream( ).is_open( ));
+            SUTL_TEST_ASSERT(t.GetStream( ).good( ));
             SUTL_TEST_ASSERT(ReadTestFile( ).empty( ));
 
             FILE_LOGGER_TEST_COMMON_CLEANUP(t);
@@ -782,7 +800,7 @@ namespace FileLoggerTests
         UnitTestResult ZeroLengthFormat( )
         {
             std::unique_ptr<T[ ]> pFormat;
-            Tester t;
+            TesterHelper t;
 
             FILE_LOGGER_TEST_COMMON_SETUP(t);
 
@@ -804,8 +822,8 @@ namespace FileLoggerTests
                 SUTL_TEST_EXCEPTION(e.what( ));
             }
 
-            SUTL_TEST_ASSERT(t.GetFileStream( ).is_open( ));
-            SUTL_TEST_ASSERT(t.GetFileStream( ).good( ));
+            SUTL_TEST_ASSERT(t.GetStream( ).is_open( ));
+            SUTL_TEST_ASSERT(t.GetStream( ).good( ));
             SUTL_TEST_ASSERT(ReadTestFile( ).empty( ));
 
             FILE_LOGGER_TEST_COMMON_CLEANUP(t);
@@ -818,7 +836,7 @@ namespace FileLoggerTests
         {
             std::unique_ptr<T[ ]> pFormat;
             std::unique_ptr<wchar_t[ ]> pExpected;
-            Tester t;
+            TesterHelper t;
 
             FILE_LOGGER_TEST_COMMON_SETUP(t);
 
@@ -835,15 +853,15 @@ namespace FileLoggerTests
             try
             {
                 t.LogMessage<T>(pFormat.get( ));
-                t.GetFileStream( ).flush( );
+                t.GetStream( ).flush( );
             }
             catch ( const std::exception& e )
             {
                 SUTL_TEST_EXCEPTION(e.what( ));
             }
 
-            SUTL_TEST_ASSERT(t.GetFileStream( ).is_open( ));
-            SUTL_TEST_ASSERT(t.GetFileStream( ).good( ));
+            SUTL_TEST_ASSERT(t.GetStream( ).is_open( ));
+            SUTL_TEST_ASSERT(t.GetStream( ).good( ));
             SUTL_TEST_ASSERT(ReadTestFile( ).compare(pExpected.get( )) == 0);
 
             FILE_LOGGER_TEST_COMMON_CLEANUP(t);
@@ -856,7 +874,7 @@ namespace FileLoggerTests
         {
             std::unique_ptr<T[ ]> pFormat;
             std::unique_ptr<wchar_t[ ]> pExpected;
-            Tester t;
+            TesterHelper t;
 
             FILE_LOGGER_TEST_COMMON_SETUP(t);
 
@@ -873,15 +891,15 @@ namespace FileLoggerTests
             try
             {
                 t.LogMessage<T>(pFormat.get( ), -500, 300000ull);
-                t.GetFileStream( ).flush( );
+                t.GetStream( ).flush( );
             }
             catch ( const std::exception& e )
             {
                 SUTL_TEST_EXCEPTION(e.what( ));
             }
 
-            SUTL_TEST_ASSERT(t.GetFileStream( ).is_open( ));
-            SUTL_TEST_ASSERT(t.GetFileStream( ).good( ));
+            SUTL_TEST_ASSERT(t.GetStream( ).is_open( ));
+            SUTL_TEST_ASSERT(t.GetStream( ).good( ));
             SUTL_TEST_ASSERT(ReadTestFile( ).compare(pExpected.get( )) == 0);
 
             FILE_LOGGER_TEST_COMMON_CLEANUP(t);
@@ -894,7 +912,7 @@ namespace FileLoggerTests
         {
             std::unique_ptr<T[ ]> pFormat;
             std::unique_ptr<wchar_t[ ]> pExpected;
-            Tester t;
+            TesterHelper t;
 
             FILE_LOGGER_TEST_COMMON_SETUP(t);
 
@@ -911,15 +929,15 @@ namespace FileLoggerTests
             try
             {
                 t.LogMessage<T>(pFormat.get( ), -35.019, 1.577789);
-                t.GetFileStream( ).flush( );
+                t.GetStream( ).flush( );
             }
             catch ( const std::exception& e )
             {
                 SUTL_TEST_EXCEPTION(e.what( ));
             }
 
-            SUTL_TEST_ASSERT(t.GetFileStream( ).is_open( ));
-            SUTL_TEST_ASSERT(t.GetFileStream( ).good( ));
+            SUTL_TEST_ASSERT(t.GetStream( ).is_open( ));
+            SUTL_TEST_ASSERT(t.GetStream( ).good( ));
             SUTL_TEST_ASSERT(ReadTestFile( ).compare(pExpected.get( )) == 0);
 
             FILE_LOGGER_TEST_COMMON_CLEANUP(t);
@@ -934,7 +952,7 @@ namespace FileLoggerTests
             std::unique_ptr<wchar_t[ ]> pExpected;
             std::unique_ptr<T[ ]> arg1;
 
-            Tester t;
+            TesterHelper t;
 
             FILE_LOGGER_TEST_COMMON_SETUP(t);
 
@@ -960,15 +978,15 @@ namespace FileLoggerTests
             try
             {
                 t.LogMessage<T>(pFormat.get( ), arg1.get( ), L"\"Test %f %g string %p #2\"");
-                t.GetFileStream( ).flush( );
+                t.GetStream( ).flush( );
             }
             catch ( const std::exception& e )
             {
                 SUTL_TEST_EXCEPTION(e.what( ));
             }
 
-            SUTL_TEST_ASSERT(t.GetFileStream( ).is_open( ));
-            SUTL_TEST_ASSERT(t.GetFileStream( ).good( ));
+            SUTL_TEST_ASSERT(t.GetStream( ).is_open( ));
+            SUTL_TEST_ASSERT(t.GetStream( ).good( ));
             SUTL_TEST_ASSERT(ReadTestFile( ).compare(pExpected.get( )) == 0);
 
             FILE_LOGGER_TEST_COMMON_CLEANUP(t);
@@ -982,11 +1000,98 @@ namespace FileLoggerTests
         /// Negative Tests \\\
 
         template <class T>
+        UnitTestResult NoFile( )
+        {
+            std::unique_ptr<T[ ]> pFormat;
+            bool ret = false;
+            bool threw = false;
+            TesterHelper t;
+
+            FILE_LOGGER_TEST_COMMON_SETUP(t);
+
+            try
+            {
+                pFormat = StringUtil::ConvertAndCopy<T>("Test string #%d\n");
+            }
+            catch ( const std::exception& e )
+            {
+                SUTL_SETUP_EXCEPTION(e.what( ));
+            }
+
+            t.GetStream( ).close( );
+            t.GetConfig( ).SetFile<wchar_t>(L"");
+
+            try
+            {
+                t.InitializeStream( );
+            }
+            catch ( const std::exception& )
+            {
+                threw = true;
+            }
+
+            SUTL_SETUP_ASSERT(threw);
+            SUTL_SETUP_ASSERT(!t.GetStream( ).is_open( ));
+            SUTL_SETUP_ASSERT(t.GetStream( ).good( ));
+
+            try
+            {
+                ret = t.GetLogger( ).Log<T>(VerbosityLevel::INFO, pFormat.get( ), 1);
+            }
+            catch ( const std::exception& e )
+            {
+                SUTL_TEST_EXCEPTION(e.what( ));
+            }            
+
+            SUTL_TEST_ASSERT(!ret);
+            SUTL_TEST_ASSERT(!t.GetStream( ).is_open( ));
+            SUTL_TEST_ASSERT(t.GetStream( ).good( ));
+
+            SUTL_TEST_SUCCESS( );
+        }
+
+        template <class T>
+        UnitTestResult BadStream( )
+        {
+            std::unique_ptr<T[ ]> pFormat;
+            bool ret = false;
+            TesterHelper t;
+
+            FILE_LOGGER_TEST_COMMON_SETUP(t);
+
+            try
+            {
+                pFormat = StringUtil::ConvertAndCopy<T>("Test string #%d\n");
+            }
+            catch ( const std::exception& e )
+            {
+                SUTL_SETUP_EXCEPTION(e.what( ));
+            }
+
+            t.GetStream( ).setstate(std::ios_base::badbit);
+
+            try
+            {
+                ret = t.GetLogger( ).Log<T>(VerbosityLevel::INFO, pFormat.get( ), 1);
+            }
+            catch ( const std::exception& e )
+            {
+                SUTL_TEST_EXCEPTION(e.what( ));
+            }
+
+            SUTL_TEST_ASSERT(ret);
+            SUTL_TEST_ASSERT(t.GetStream( ).is_open( ));
+            SUTL_TEST_ASSERT(t.GetStream( ).good( ));
+
+            SUTL_TEST_SUCCESS( );
+        }
+
+        template <class T>
         UnitTestResult BadVerbosityLevel( )
         {
             std::unique_ptr<T[ ]> pFormat;
             bool threw = false;
-            Tester t;
+            TesterHelper t;
 
             FILE_LOGGER_TEST_COMMON_SETUP(t);
 
@@ -1009,8 +1114,8 @@ namespace FileLoggerTests
             }
 
             SUTL_TEST_ASSERT(threw);
-            SUTL_TEST_ASSERT(t.GetFileStream( ).is_open( ));
-            SUTL_TEST_ASSERT(t.GetFileStream( ).good( ));
+            SUTL_TEST_ASSERT(t.GetStream( ).is_open( ));
+            SUTL_TEST_ASSERT(t.GetStream( ).good( ));
 
             FILE_LOGGER_TEST_COMMON_CLEANUP(t);
 
@@ -1022,7 +1127,7 @@ namespace FileLoggerTests
         {
             std::unique_ptr<T[ ]> pFormat;
             bool threw = false;
-            Tester t;
+            TesterHelper t;
 
             FILE_LOGGER_TEST_COMMON_SETUP(t);
 
@@ -1036,8 +1141,8 @@ namespace FileLoggerTests
             }
 
             SUTL_TEST_ASSERT(threw);
-            SUTL_TEST_ASSERT(t.GetFileStream( ).is_open( ));
-            SUTL_TEST_ASSERT(t.GetFileStream( ).good( ));
+            SUTL_TEST_ASSERT(t.GetStream( ).is_open( ));
+            SUTL_TEST_ASSERT(t.GetStream( ).good( ));
 
             FILE_LOGGER_TEST_COMMON_CLEANUP(t);
 
@@ -1051,7 +1156,7 @@ namespace FileLoggerTests
         {
             std::unique_ptr<T[ ]> pFormat;
             std::unique_ptr<wchar_t[ ]> pExpected;
-            Tester t;
+            TesterHelper t;
 
             try
             {
@@ -1067,13 +1172,15 @@ namespace FileLoggerTests
             {
                 for ( VerbosityLevel lvl = VerbosityLevel::BEGIN; lvl < VerbosityLevel::MAX; INCREMENT_VERBOSITY(lvl) )
                 {
+                    bool ret = false;
+
                     FILE_LOGGER_TEST_COMMON_SETUP(t);
 
                     t.GetConfig( ).Enable(mask);
 
                     try
                     {
-                        t.GetFileStream( ).close( );
+                        t.GetStream( ).close( );
                     }
                     catch ( const std::exception& e )
                     {
@@ -1082,17 +1189,18 @@ namespace FileLoggerTests
 
                     try
                     {
-                        t.GetLogger( ).Log<T>(lvl, pFormat.get( ));
-                        t.GetFileStream( ).flush( );
+                        ret = t.GetLogger( ).Log<T>(lvl, pFormat.get( ));
+                        t.GetStream( ).flush( );
                     }
                     catch ( const std::exception& e )
                     {
                         SUTL_TEST_EXCEPTION(e.what( ));
                     }
 
-                    SUTL_TEST_ASSERT(t.GetFileStream( ).good( ));
-                    SUTL_TEST_ASSERT(t.GetFileStream( ).is_open( ));
-                    SUTL_TEST_ASSERT(ValidateLog(t.GetConfig( ), ReadTestFile( ), pExpected));
+                    SUTL_TEST_ASSERT(ret);
+                    SUTL_TEST_ASSERT(t.GetStream( ).good( ));
+                    SUTL_TEST_ASSERT(t.GetStream( ).is_open( ));
+                    SUTL_TEST_ASSERT(StreamLoggerTests::ValidateLog(t.GetConfig( ), ReadTestFile( ), pExpected));
 
                     FILE_LOGGER_TEST_COMMON_CLEANUP(t);
                 }
@@ -1106,7 +1214,7 @@ namespace FileLoggerTests
         {
             std::unique_ptr<T[ ]> pFormat;
             std::unique_ptr<wchar_t[ ]> pExpected;
-            Tester t;
+            TesterHelper t;
 
             try
             {
@@ -1122,23 +1230,26 @@ namespace FileLoggerTests
             {
                 for ( VerbosityLevel lvl = VerbosityLevel::BEGIN; lvl < VerbosityLevel::MAX; INCREMENT_VERBOSITY(lvl) )
                 {
+                    bool ret = false;
+
                     FILE_LOGGER_TEST_COMMON_SETUP(t);
 
                     t.GetConfig( ).Enable(mask);
 
                     try
                     {
-                        t.GetLogger( ).Log<T>(lvl, pFormat.get( ));
-                        t.GetFileStream( ).flush( );
+                        ret = t.GetLogger( ).Log<T>(lvl, pFormat.get( ));
+                        t.GetStream( ).flush( );
                     }
                     catch ( const std::exception& e )
                     {
                         SUTL_TEST_EXCEPTION(e.what( ));
                     }
 
-                    SUTL_TEST_ASSERT(t.GetFileStream( ).good( ));
-                    SUTL_TEST_ASSERT(t.GetFileStream( ).is_open( ));
-                    SUTL_TEST_ASSERT(ValidateLog(t.GetConfig( ), ReadTestFile( ), pExpected));
+                    SUTL_TEST_ASSERT(ret);
+                    SUTL_TEST_ASSERT(t.GetStream( ).good( ));
+                    SUTL_TEST_ASSERT(t.GetStream( ).is_open( ));
+                    SUTL_TEST_ASSERT(StreamLoggerTests::ValidateLog(t.GetConfig( ), ReadTestFile( ), pExpected));
 
                     FILE_LOGGER_TEST_COMMON_CLEANUP(t);
                 }
@@ -1152,7 +1263,7 @@ namespace FileLoggerTests
         {
             std::unique_ptr<T[ ]> pFormat;
             std::unique_ptr<wchar_t[ ]> pExpected;
-            Tester t;
+            TesterHelper t;
 
             try
             {
@@ -1168,23 +1279,26 @@ namespace FileLoggerTests
             {
                 for ( VerbosityLevel lvl = VerbosityLevel::BEGIN; lvl < VerbosityLevel::MAX; INCREMENT_VERBOSITY(lvl) )
                 {
+                    bool ret = false;
+
                     FILE_LOGGER_TEST_COMMON_SETUP(t);
 
                     t.GetConfig( ).Enable(mask);
 
                     try
                     {
-                        t.GetLogger( ).Log<T>(lvl, pFormat.get( ), -500, 300000ull);
-                        t.GetFileStream( ).flush( );
+                        ret = t.GetLogger( ).Log<T>(lvl, pFormat.get( ), -500, 300000ull);
+                        t.GetStream( ).flush( );
                     }
                     catch ( const std::exception& e )
                     {
                         SUTL_TEST_EXCEPTION(e.what( ));
                     }
 
-                    SUTL_TEST_ASSERT(t.GetFileStream( ).good( ));
-                    SUTL_TEST_ASSERT(t.GetFileStream( ).is_open( ));
-                    SUTL_TEST_ASSERT(ValidateLog(t.GetConfig( ), ReadTestFile( ), pExpected));
+                    SUTL_TEST_ASSERT(ret);
+                    SUTL_TEST_ASSERT(t.GetStream( ).good( ));
+                    SUTL_TEST_ASSERT(t.GetStream( ).is_open( ));
+                    SUTL_TEST_ASSERT(StreamLoggerTests::ValidateLog(t.GetConfig( ), ReadTestFile( ), pExpected));
 
                     FILE_LOGGER_TEST_COMMON_CLEANUP(t);
                 }
@@ -1198,7 +1312,7 @@ namespace FileLoggerTests
         {
             std::unique_ptr<T[ ]> pFormat;
             std::unique_ptr<wchar_t[ ]> pExpected;
-            Tester t;
+            TesterHelper t;
 
             try
             {
@@ -1214,23 +1328,26 @@ namespace FileLoggerTests
             {
                 for ( VerbosityLevel lvl = VerbosityLevel::BEGIN; lvl < VerbosityLevel::MAX; INCREMENT_VERBOSITY(lvl) )
                 {
+                    bool ret = false;
+
                     FILE_LOGGER_TEST_COMMON_SETUP(t);
 
                     t.GetConfig( ).Enable(mask);
 
                     try
                     {
-                        t.GetLogger( ).Log<T>(lvl, pFormat.get( ), -35.019, 1.577789);
-                        t.GetFileStream( ).flush( );
+                        ret = t.GetLogger( ).Log<T>(lvl, pFormat.get( ), -35.019, 1.577789);
+                        t.GetStream( ).flush( );
                     }
                     catch ( const std::exception& e )
                     {
                         SUTL_TEST_EXCEPTION(e.what( ));
                     }
 
-                    SUTL_TEST_ASSERT(t.GetFileStream( ).good( ));
-                    SUTL_TEST_ASSERT(t.GetFileStream( ).is_open( ));
-                    SUTL_TEST_ASSERT(ValidateLog(t.GetConfig( ), ReadTestFile( ), pExpected));
+                    SUTL_TEST_ASSERT(ret);
+                    SUTL_TEST_ASSERT(t.GetStream( ).good( ));
+                    SUTL_TEST_ASSERT(t.GetStream( ).is_open( ));
+                    SUTL_TEST_ASSERT(StreamLoggerTests::ValidateLog(t.GetConfig( ), ReadTestFile( ), pExpected));
 
                     FILE_LOGGER_TEST_COMMON_CLEANUP(t);
                 }
@@ -1248,7 +1365,7 @@ namespace FileLoggerTests
             std::unique_ptr<T[ ]> arg1;
             const wchar_t* arg2 = L"\"Test %f %g string %p #2\"";
 
-            Tester t;
+            TesterHelper t;
 
             try
             {
@@ -1273,23 +1390,26 @@ namespace FileLoggerTests
             {
                 for ( VerbosityLevel lvl = VerbosityLevel::BEGIN; lvl < VerbosityLevel::MAX; INCREMENT_VERBOSITY(lvl) )
                 {
+                    bool ret = false;
+
                     FILE_LOGGER_TEST_COMMON_SETUP(t);
 
                     t.GetConfig( ).Enable(mask);
 
                     try
                     {
-                        t.GetLogger( ).Log<T>(lvl, pFormat.get( ), arg1.get( ), arg2);
-                        t.GetFileStream( ).flush( );
+                        ret = t.GetLogger( ).Log<T>(lvl, pFormat.get( ), arg1.get( ), arg2);
+                        t.GetStream( ).flush( );
                     }
                     catch ( const std::exception& e )
                     {
                         SUTL_TEST_EXCEPTION(e.what( ));
                     }
 
-                    SUTL_TEST_ASSERT(t.GetFileStream( ).good( ));
-                    SUTL_TEST_ASSERT(t.GetFileStream( ).is_open( ));
-                    SUTL_TEST_ASSERT(ValidateLog(t.GetConfig( ), ReadTestFile( ), pExpected));
+                    SUTL_TEST_ASSERT(ret);
+                    SUTL_TEST_ASSERT(t.GetStream( ).good( ));
+                    SUTL_TEST_ASSERT(t.GetStream( ).is_open( ));
+                    SUTL_TEST_ASSERT(StreamLoggerTests::ValidateLog(t.GetConfig( ), ReadTestFile( ), pExpected));
 
                     FILE_LOGGER_TEST_COMMON_CLEANUP(t);
                 }
@@ -1303,7 +1423,7 @@ namespace FileLoggerTests
         {
             std::unique_ptr<T[ ]> pFormat;
             std::unique_ptr<wchar_t[ ]> pExpected;
-            Tester t;
+            TesterHelper t;
 
             try
             {
@@ -1319,13 +1439,15 @@ namespace FileLoggerTests
             {
                 for ( VerbosityLevel lvl = VerbosityLevel::BEGIN; lvl < VerbosityLevel::MAX; INCREMENT_VERBOSITY(lvl) )
                 {
+                    bool ret = false;
+
                     FILE_LOGGER_TEST_COMMON_SETUP(t);
 
                     t.GetConfig( ).Enable(mask);
 
                     try
                     {
-                        t.GetFileStream( ).close( );
+                        t.GetStream( ).close( );
                     }
                     catch ( const std::exception& e )
                     {
@@ -1334,17 +1456,18 @@ namespace FileLoggerTests
 
                     try
                     {
-                        t.GetLogger( ).Log<T>(lvl, pFormat.get( ), 1);
-                        t.GetFileStream( ).flush( );
+                        ret = t.GetLogger( ).Log<T>(lvl, pFormat.get( ), 1);
+                        t.GetStream( ).flush( );
                     }
                     catch ( const std::exception& e )
                     {
                         SUTL_TEST_EXCEPTION(e.what( ));
                     }
 
-                    SUTL_TEST_ASSERT(t.GetFileStream( ).good( ));
-                    SUTL_TEST_ASSERT(t.GetFileStream( ).is_open( ));
-                    SUTL_TEST_ASSERT(ValidateLog(t.GetConfig( ), ReadTestFile( ), pExpected));
+                    SUTL_TEST_ASSERT(ret);
+                    SUTL_TEST_ASSERT(t.GetStream( ).good( ));
+                    SUTL_TEST_ASSERT(t.GetStream( ).is_open( ));
+                    SUTL_TEST_ASSERT(StreamLoggerTests::ValidateLog(t.GetConfig( ), ReadTestFile( ), pExpected));
 
                     FILE_LOGGER_TEST_COMMON_CLEANUP(t);
                 }
@@ -1358,7 +1481,7 @@ namespace FileLoggerTests
         {
             std::unique_ptr<T[ ]> pFormat;
             std::unique_ptr<wchar_t[ ]> pExpected;
-            Tester t;
+            TesterHelper t;
 
             try
             {
@@ -1374,24 +1497,27 @@ namespace FileLoggerTests
             {
                 for ( VerbosityLevel lvl = VerbosityLevel::BEGIN; lvl < VerbosityLevel::MAX; INCREMENT_VERBOSITY(lvl) )
                 {
+                    bool ret = false;
+
                     FILE_LOGGER_TEST_COMMON_SETUP(t);
 
                     t.GetConfig( ).Enable(mask);
-                    t.GetFileStream( ).setstate(std::ios_base::badbit);
+                    t.GetStream( ).setstate(std::ios_base::badbit);
 
                     try
                     {
-                        t.GetLogger( ).Log<T>(lvl, pFormat.get( ), 1);
-                        t.GetFileStream( ).flush( );
+                        ret = t.GetLogger( ).Log<T>(lvl, pFormat.get( ), 1);
+                        t.GetStream( ).flush( );
                     }
                     catch ( const std::exception& e )
                     {
                         SUTL_TEST_EXCEPTION(e.what( ));
                     }
 
-                    SUTL_TEST_ASSERT(t.GetFileStream( ).good( ));
-                    SUTL_TEST_ASSERT(t.GetFileStream( ).is_open( ));
-                    SUTL_TEST_ASSERT(ValidateLog(t.GetConfig( ), ReadTestFile( ), pExpected));
+                    SUTL_TEST_ASSERT(ret);
+                    SUTL_TEST_ASSERT(t.GetStream( ).good( ));
+                    SUTL_TEST_ASSERT(t.GetStream( ).is_open( ));
+                    SUTL_TEST_ASSERT(StreamLoggerTests::ValidateLog(t.GetConfig( ), ReadTestFile( ), pExpected));
 
                     FILE_LOGGER_TEST_COMMON_CLEANUP(t);
                 }
@@ -1405,7 +1531,7 @@ namespace FileLoggerTests
         {
             std::unique_ptr<T[ ]> pFormat;
             std::unique_ptr<wchar_t[ ]> pExpected;
-            Tester t;
+            TesterHelper t;
 
             try
             {
@@ -1423,6 +1549,8 @@ namespace FileLoggerTests
                 {
                     for ( VerbosityLevel threshold = VerbosityLevel::BEGIN; threshold < VerbosityLevel::MAX; INCREMENT_VERBOSITY(threshold) )
                     {
+                        bool ret = false;
+
                         FILE_LOGGER_TEST_COMMON_SETUP(t);
 
                         t.GetConfig( ).Enable(mask);
@@ -1430,16 +1558,17 @@ namespace FileLoggerTests
 
                         try
                         {
-                            t.GetLogger( ).Log<T>(lvl, pFormat.get( ), 1);
-                            t.GetFileStream( ).flush( );
+                            ret = t.GetLogger( ).Log<T>(lvl, pFormat.get( ), 1);
+                            t.GetStream( ).flush( );
                         }
                         catch ( const std::exception& e )
                         {
                             SUTL_TEST_EXCEPTION(e.what( ));
                         }
 
-                        SUTL_TEST_ASSERT(t.GetFileStream( ).good( ));
-                        SUTL_TEST_ASSERT(t.GetFileStream( ).is_open( ));
+                        SUTL_TEST_ASSERT(ret);
+                        SUTL_TEST_ASSERT(t.GetStream( ).good( ));
+                        SUTL_TEST_ASSERT(t.GetStream( ).is_open( ));
 
                         if ( lvl < threshold )
                         {
@@ -1447,7 +1576,7 @@ namespace FileLoggerTests
                         }
                         else
                         {
-                            SUTL_TEST_ASSERT(ValidateLog(t.GetConfig( ), ReadTestFile( ), pExpected));
+                            SUTL_TEST_ASSERT(StreamLoggerTests::ValidateLog(t.GetConfig( ), ReadTestFile( ), pExpected));
                         }
 
                         FILE_LOGGER_TEST_COMMON_CLEANUP(t);
@@ -1463,7 +1592,7 @@ namespace FileLoggerTests
         {
             std::unique_ptr<T[ ]> pFormat;
             std::unique_ptr<wchar_t[ ]> pExpected;
-            Tester t;
+            TesterHelper t;
 
             try
             {
@@ -1479,26 +1608,29 @@ namespace FileLoggerTests
             {
                 for ( VerbosityLevel lvl = VerbosityLevel::BEGIN; lvl < VerbosityLevel::MAX; INCREMENT_VERBOSITY(lvl) )
                 {
+                    bool ret = false;
+
                     FILE_LOGGER_TEST_COMMON_SETUP(t);
 
                     t.GetConfig( ).Enable(mask);
-                    t.GetFileStream( ).setstate(std::ios_base::badbit);
+                    t.GetStream( ).setstate(std::ios_base::badbit);
 
                     try
                     {
-                        t.GetLogger( ).Log<T>(lvl, pFormat.get( ), 1);
+                        ret = t.GetLogger( ).Log<T>(lvl, pFormat.get( ), 1);
                     }
                     catch ( const std::exception& e )
                     {
                         SUTL_TEST_EXCEPTION(e.what( ));
                     }
 
-                    SUTL_TEST_ASSERT(t.GetFileStream( ).good( ));
-                    SUTL_TEST_ASSERT(t.GetFileStream( ).is_open( ));
+                    SUTL_TEST_ASSERT(ret);
+                    SUTL_TEST_ASSERT(t.GetStream( ).good( ));
+                    SUTL_TEST_ASSERT(t.GetStream( ).is_open( ));
 
                     if ( lvl >= VerbosityLevel::WARN )
                     {
-                        SUTL_TEST_ASSERT(ValidateLog(t.GetConfig( ), ReadTestFile( ), pExpected));
+                        SUTL_TEST_ASSERT(StreamLoggerTests::ValidateLog(t.GetConfig( ), ReadTestFile( ), pExpected));
                     }
 
                     FILE_LOGGER_TEST_COMMON_CLEANUP(t);
@@ -1515,7 +1647,7 @@ namespace FileLoggerTests
             std::unique_ptr<wchar_t[ ]> pExpected1;
             std::unique_ptr<wchar_t[ ]> pExpected2;
 
-            Tester t;
+            TesterHelper t;
 
             try
             {
@@ -1532,6 +1664,9 @@ namespace FileLoggerTests
             {
                 for ( VerbosityLevel lvl = VerbosityLevel::BEGIN; lvl < VerbosityLevel::MAX; INCREMENT_VERBOSITY(lvl) )
                 {
+                    bool ret1 = false;
+                    bool ret2 = false;
+
                     std::wstring fileContents;
                     std::wstring line1;
                     std::wstring line2;
@@ -1543,17 +1678,19 @@ namespace FileLoggerTests
 
                     try
                     {
-                        t.GetLogger( ).Log<T>(lvl, pFormat.get( ), 1);
-                        t.GetLogger( ).Log<T>(lvl, pFormat.get( ), 2);
-                        t.GetFileStream( ).flush( );
+                        ret1 = t.GetLogger( ).Log<T>(lvl, pFormat.get( ), 1);
+                        ret2 = t.GetLogger( ).Log<T>(lvl, pFormat.get( ), 2);
+                        t.GetStream( ).flush( );
                     }
                     catch ( const std::exception& e )
                     {
                         SUTL_TEST_EXCEPTION(e.what( ));
                     }
 
-                    SUTL_TEST_ASSERT(t.GetFileStream( ).good( ));
-                    SUTL_TEST_ASSERT(t.GetFileStream( ).is_open( ));
+                    SUTL_TEST_ASSERT(ret1);
+                    SUTL_TEST_ASSERT(ret2);
+                    SUTL_TEST_ASSERT(t.GetStream( ).good( ));
+                    SUTL_TEST_ASSERT(t.GetStream( ).is_open( ));
 
                     fileContents = ReadTestFile( );
                     SUTL_TEST_ASSERT(!fileContents.empty( ));
@@ -1564,8 +1701,8 @@ namespace FileLoggerTests
                     line1 = fileContents.substr(0, pos);
                     line2 = fileContents.substr(pos + 1);
 
-                    SUTL_TEST_ASSERT(ValidateLog(t.GetConfig( ), line1, pExpected1));
-                    SUTL_TEST_ASSERT(ValidateLog(t.GetConfig( ), line2, pExpected2));
+                    SUTL_TEST_ASSERT(StreamLoggerTests::ValidateLog(t.GetConfig( ), line1, pExpected1));
+                    SUTL_TEST_ASSERT(StreamLoggerTests::ValidateLog(t.GetConfig( ), line2, pExpected2));
 
                     FILE_LOGGER_TEST_COMMON_CLEANUP(t);
                 }

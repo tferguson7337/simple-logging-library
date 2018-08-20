@@ -30,9 +30,9 @@ namespace OptionFlagTests
     UnitTestResult LeftShiftAssign( );
     UnitTestResult RightShiftAssign( );
 
+    // Conversion Tests
     namespace ConverterTests
-    {
-        // Conversion Tests
+    { 
         UnitTestResult ToScalar( );
 
         template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>

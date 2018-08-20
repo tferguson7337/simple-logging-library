@@ -7,13 +7,9 @@
 #include <fstream>
 #include <iostream>
 
-namespace FileLoggerTests
-{
-    class Tester;
-}
-
 namespace StreamLoggerTests
 {
+    template <class LoggerType, class StreamType>
     class Tester;
 }
 
@@ -41,8 +37,8 @@ namespace SLL
     class StreamLogger : public LoggerBase
     {
         // Friend class, intended to expose non-public methods for testing.
-        friend ::FileLoggerTests::Tester;
-        friend ::StreamLoggerTests::Tester;
+        friend ::StreamLoggerTests::Tester<FileLogger, StreamType>;
+        friend ::StreamLoggerTests::Tester<StdOutLogger, StreamType>;
 
         /// Construction requires ConfigPackage
         StreamLogger( ) = delete;
@@ -51,6 +47,10 @@ namespace SLL
         /// Private Data Members \\\
 
         StreamType mStream;
+        std::wstreambuf* mpWideStreamBuffer;
+
+        static const std::vector<std::basic_string<char>> mColorSequencesA;
+        static const std::vector<std::basic_string<wchar_t>> mColorSequencesW;
 
         /// Private Helper Methods \\\
 
@@ -66,14 +66,21 @@ namespace SLL
         // Flush Buffer Contents To Stream.
         void Flush(const VerbosityLevel&);
 
+        // Get Color String (VerbosityLevel).
+        template <class T>
+        const std::basic_string<T>& GetColorSequence(const VerbosityLevel&) const;
+
+        // Get Color String (Color).
+        template <class T>
+        const std::basic_string<T>& GetColorSequence(const Color&) const;
+
         // Log Prefixes to Stream.
-        template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
+        template <class T>
         void LogPrefixes(const VerbosityLevel&, const std::thread::id&);
 
         // Log User Message To File.
-        template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
+        template <class T>
         void LogMessage(const T*, va_list);
-
 
     public:
         /// Constructors \\\

@@ -31,6 +31,7 @@
     <ClInclude Include="Headers\OptionFlag.h" />
     <ClInclude Include="Headers\StreamLogger.h" />
     <ClInclude Include="Headers\VerbosityLevel.h" />
+    <ClInclude Include="Headers\WindowsConsoleHelper.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Color.cpp" />
@@ -39,6 +40,7 @@
     <ClCompile Include="Source\OptionFlag.cpp" />
     <ClCompile Include="Source\StreamLogger.cpp" />
     <ClCompile Include="Source\VerbosityLevel.cpp" />
+    <ClCompile Include="Source\WindowsConsoleHelper.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -136,7 +138,6 @@
       <AdditionalIncludeDirectories>$(ProjectDir)Common\Headers\;$(ProjectDir)Headers\</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalOptions>/experimental:preprocessor %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -155,7 +156,6 @@
       <AdditionalIncludeDirectories>$(ProjectDir)Common\Headers\;$(ProjectDir)Headers\</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalOptions>/experimental:preprocessor %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -178,7 +178,6 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <AdditionalOptions>/experimental:preprocessor %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -203,7 +202,6 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <AdditionalOptions>/experimental:preprocessor %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

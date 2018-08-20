@@ -17,7 +17,7 @@ namespace SLL
     // Private Helper - Validate Color
     void ConfigPackage::ValidateColor(const Color color, const std::string& f)
     {
-        if ( color < Color::BEGIN || color >= Color::MAX )
+        if ( color < Color::BASIC_BEGIN || color >= Color::MAX )
         {
             throw std::invalid_argument(f + " - Invalid log color (" + std::to_string(static_cast<ColorType>(color)) + ").");
         }

@@ -10,23 +10,67 @@ namespace SLL
     enum class Color : size_t
     {
         // Basic Colors
-        WHITE = 0,
-        RED,
-        GREEN,
-        YELLOW,
-        BLUE,
-        MAGENTA,
-        CYAN,
-        BLACK,
+        BLACK   = 0,
+        RED     = 1 << 0,
+        GREEN   = 1 << 1,
+        YELLOW  = RED | GREEN,
+        BLUE    = 1 << 2,
+        MAGENTA = RED | BLUE,
+        CYAN    = GREEN | BLUE,
+        WHITE   = RED | GREEN | BLUE,
+
+        // Bright Flag
+        BRIGHT  = 1 << 3,
+
+        // Default
+        DEFAULT = 1 << 4,
 
         // MAX CAP
         MAX,
 
-        // MIN CAP
-        BEGIN = 0
+        // Color Range
+        BASIC_BEGIN = BLACK,
+        BASIC_END = DEFAULT,
     };
 
     using ColorType = std::underlying_type_t<Color>;
+
+    // Bitwise NOT
+    Color operator~(const Color rhs);
+
+    // Bitwise OR
+    Color operator|(const Color lhs, const Color rhs);
+
+    // Bitwise AND
+    Color operator&(const Color lhs, const Color rhs);
+
+    // Bitwise XOR
+    Color operator^(const Color lhs, const Color rhs);
+
+
+    // Bitwise OR - Assignment
+    Color operator|=(Color& lhs, const Color rhs);
+
+    // Bitwise AND - Assignment
+    Color operator&=(Color& lhs, const Color rhs);
+
+    // Bitwise XOR - Assignment
+    Color operator^=(Color& lhs, const Color rhs);
+
+
+    // Left Shift
+    Color operator<<(const Color lhs, const ColorType s);
+
+    // Right Shift
+    Color operator>>(const Color lhs, const ColorType s);
+
+
+    // Left Shift - Assignment
+    Color operator<<=(Color& lhs, const ColorType s);
+
+    // Right Shift - Assignment
+    Color operator>>=(Color& lhs, const ColorType s);
+
 
     class ColorConverter
     {

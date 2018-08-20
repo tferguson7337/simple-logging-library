@@ -9,9 +9,7 @@
 // SUTL
 #include <UnitTestResult.h>
 
-// STL
-#include <functional>
-#include <list>
+// STL - Tuples for Validation Helpers
 #include <tuple>
 
 // C++17 - File-Deletion Cleanup
@@ -22,7 +20,7 @@ namespace FileLoggerTests
 {
     std::list<std::function<UnitTestResult(void)>> GetTests( );
 
-    namespace InitializeFileStream
+    namespace InitializeStream
     {
         /// Negative Tests \\\
 
@@ -34,7 +32,7 @@ namespace FileLoggerTests
         UnitTestResult GoodPath( );
     }
 
-    namespace RestoreFileStream
+    namespace RestoreStream
     {
         /// Negative Tests \\\
 
@@ -112,6 +110,12 @@ namespace FileLoggerTests
     namespace Log
     {
         /// Negative Tests \\\
+
+        template <class T>
+        UnitTestResult NoFile( );
+
+        template <class T>
+        UnitTestResult BadStream( );
 
         template <class T>
         UnitTestResult BadVerbosityLevel( );
@@ -219,18 +223,24 @@ namespace FileLoggerTests
         // Delete file, double-check that it doesn't exist after deletion.
         return std::filesystem::remove(testFilePath) && !std::filesystem::exists(testFilePath);
     }
+}
 
-    inline size_t ValidatePrefixes(const SLL::ConfigPackage& config, const std::wstring& str)
+namespace StreamLoggerTests
+{
+    /// Helper Functions \\\
+
+    template <class T>
+    inline size_t ValidatePrefixes(const SLL::ConfigPackage& config, const std::basic_string<T>& str)
     {
-        typedef std::function<bool(const std::unique_ptr<wchar_t[ ]>&)> ValidityFunc;
+        typedef std::function<bool(const std::unique_ptr<T[ ]>&)> ValidityFunc;
         typedef std::tuple<SLL::OptionFlag, ValidityFunc, size_t> ValidityTuple;
 
         // Tuple = (OptionFlag, Validation Function, Expected Prefix String Size)
         static const std::vector<ValidityTuple> validityTuples
         {
-            std::make_tuple(SLL::OptionFlag::LogTimestamp, LoggerBaseTests::IsTimePrefix<wchar_t>, 24),
-            std::make_tuple(SLL::OptionFlag::LogThreadID, LoggerBaseTests::IsThreadIDPrefix<wchar_t>, 16),
-            std::make_tuple(SLL::OptionFlag::LogVerbosityLevel, LoggerBaseTests::IsVerbosityLevelPrefix<wchar_t>, 14)
+            std::make_tuple(SLL::OptionFlag::LogTimestamp, LoggerBaseTests::IsTimePrefix<T>, 24),
+            std::make_tuple(SLL::OptionFlag::LogThreadID, LoggerBaseTests::IsThreadIDPrefix<T>, 16),
+            std::make_tuple(SLL::OptionFlag::LogVerbosityLevel, LoggerBaseTests::IsVerbosityLevelPrefix<T>, 14)
         };
 
         // Check to see if there's any work to do.
@@ -242,12 +252,12 @@ namespace FileLoggerTests
         size_t i = 0;
         for ( const auto& tuple : validityTuples )
         {
-            std::unique_ptr<wchar_t[ ]> prefixStr;
+            std::unique_ptr<T[ ]> prefixStr;
 
             // Extract tuple data.
-            const SLL::OptionFlag&   flag = std::get<0>(tuple);
-            const ValidityFunc& func = std::get<1>(tuple);
-            const size_t&       size = std::get<2>(tuple);
+            const SLL::OptionFlag&  flag = std::get<0>(tuple);
+            const ValidityFunc&     func = std::get<1>(tuple);
+            const size_t&           size = std::get<2>(tuple);
 
             // See if we're testing for this flag.
             if ( !config.OptionEnabled(flag) )
@@ -262,7 +272,7 @@ namespace FileLoggerTests
             }
 
             // Get the target prefix substring.
-            prefixStr = StringUtil::ConvertAndCopy<wchar_t>(str.substr(i, size - 1).c_str( ), size);
+            prefixStr = StringUtil::ConvertAndCopy<T>(str.substr(i, size - 1).c_str( ), size);
 
             // See if the prefix string is valid.
             if ( !func(prefixStr) )
@@ -277,9 +287,10 @@ namespace FileLoggerTests
         return i;
     }
 
-    inline bool ValidateLog(const SLL::ConfigPackage& config, const std::wstring& str, const std::unique_ptr<wchar_t[ ]>& pExpected)
+    template <class T>
+    inline bool ValidateLog(const SLL::ConfigPackage& config, const std::basic_string<T>& str, const std::unique_ptr<T[ ]>& pExpected)
     {
-        std::unique_ptr<wchar_t[ ]> logStr;
+        std::unique_ptr<T[ ]> logStr;
         size_t i = 0;
 
         // If str and pExpected are empty, then we're done.
@@ -309,15 +320,13 @@ namespace FileLoggerTests
         }
 
         // Extract log string.
-        logStr = StringUtil::ConvertAndCopy<wchar_t>(str.substr(i).c_str( ), str.size( ) + 1 - i);
+        logStr = StringUtil::ConvertAndCopy<T>(str.substr(i).c_str( ), str.size( ) + 1 - i);
 
-        return memcmp(logStr.get( ), pExpected.get( ), sizeof(wchar_t) * (str.size( ) + 1 - i)) == 0;
+        return memcmp(logStr.get( ), pExpected.get( ), sizeof(T) * (str.size( ) + 1 - i)) == 0;
     }
 
-}
 
-namespace FileLoggerTests
-{
+    template <class LoggerType, class StreamType>
     class Tester
     {
         /// No copy or move allowed.
@@ -330,13 +339,13 @@ namespace FileLoggerTests
     private:
         /// Private Data Member \\\
 
-        std::unique_ptr<SLL::FileLogger> mpFileLogger;
+        std::unique_ptr<LoggerType> mpLogger;
 
         inline void CheckForNullLogger(const std::string& f) const
         {
-            if ( !mpFileLogger )
+            if ( !mpLogger )
             {
-                throw std::logic_error(f + " - mpFileLogger is null.");
+                throw std::logic_error(f + " - mpLogger is null.");
             }
         }
 
@@ -344,7 +353,7 @@ namespace FileLoggerTests
         /// Constructors \\\
         
         Tester( ) noexcept :
-            mpFileLogger(nullptr)
+            mpLogger(nullptr)
         { }
 
         /// Destructor \\\
@@ -353,102 +362,119 @@ namespace FileLoggerTests
 
         /// Getters \\\
 
-        // File Logger Getter - const
-        const SLL::FileLogger& GetLogger( ) const
+        // Logger Getter - const
+        const LoggerType& GetLogger( ) const
         {
             CheckForNullLogger(__FUNCTION__);
 
-            return *mpFileLogger;
+            return *mpLogger;
         }
 
-        // File Logger Getter - non-const
-        SLL::FileLogger& GetLogger( )
+        // Logger Getter - non-const
+        LoggerType& GetLogger( )
         {
             CheckForNullLogger(__FUNCTION__);
 
-            return *mpFileLogger;
+            return *mpLogger;
         }
 
-        // File Logger Stream Getter - const
-        const SLL::FileStream& GetFileStream( ) const
+        // Logger Stream Getter - const
+        const StreamType& GetStream( ) const
         {
             CheckForNullLogger(__FUNCTION__);
 
-            return mpFileLogger->mStream;
+            return mpLogger->mStream;
         }
 
-        // File Logger Stream Getter - non-const
-        SLL::FileStream& GetFileStream( )
+        // Logger Stream Getter - non-const
+        StreamType& GetStream( )
         {
             CheckForNullLogger(__FUNCTION__);
 
-            return mpFileLogger->mStream;
+            return mpLogger->mStream;
         }
 
+        // Logger ConfigPackage Getter - const
         const SLL::ConfigPackage& GetConfig( ) const
         {
             CheckForNullLogger(__FUNCTION__);
 
-            return mpFileLogger->GetConfig( );
+            return mpLogger->GetConfig( );
         }
 
+        // Logger ConfigPackage Getter - non-const
         SLL::ConfigPackage& GetConfig( )
         {
             CheckForNullLogger(__FUNCTION__);
 
-            return mpFileLogger->GetConfig( );
+            return mpLogger->GetConfig( );
+        }
+
+        // Logger Color Sequence Getter - const
+        template <class T>
+        const std::vector<std::basic_string<T>>& GetColorSequences( ) const;
+
+        // Logger Color Sequence Getter - narrow
+        template <>
+        const std::vector<std::basic_string<char>>& GetColorSequences<char>( ) const
+        {
+            CheckForNullLogger(__FUNCTION__);
+
+            return mpLogger->mColorSequencesA;
+        }
+
+        // Logger Color Sequence Getter - wide
+        template <>
+        const std::vector<std::basic_string<wchar_t>>& GetColorSequences<wchar_t>( ) const
+        {
+            CheckForNullLogger(__FUNCTION__);
+
+            return mpLogger->mColorSequencesW;
         }
 
         /// Setters \\\
 
-        // File Logger Setter - FileLogger [M]
-        void SetFileLogger(SLL::FileLogger&& src)
+        // Logger Setter - Logger [M]
+        void SetLogger(LoggerType&& src)
         {
-            mpFileLogger = std::make_unique<SLL::FileLogger>(std::move(src));
+            mpLogger = std::make_unique<LoggerType>(std::move(src));
         }
 
-        // File Logger Setter - ConfigPackage [C]
-        void SetFileLogger(const SLL::ConfigPackage& config)
+        // Logger Setter - ConfigPackage [C]
+        void SetLogger(const SLL::ConfigPackage& config)
         {
-            mpFileLogger = std::make_unique<SLL::FileLogger>(config);
+            mpLogger = std::make_unique<LoggerType>(config);
         }
 
-        // File Logger Setter - ConfigPackage [M]
-        void SetFileLogger(SLL::ConfigPackage&& config)
+        // Logger Setter - ConfigPackage [M]
+        void SetLogger(SLL::ConfigPackage&& config)
         {
-            mpFileLogger = std::make_unique<SLL::FileLogger>(std::move(config));
+            mpLogger = std::make_unique<LoggerType>(std::move(config));
         }
 
-        /// FileLogger Exposer Methods \\\
-
-        void SetTargetFile(const std::wstring& f)
+        void SetStreamBuffer(std::wstreambuf& buf)
         {
             CheckForNullLogger(__FUNCTION__);
 
-            mpFileLogger->GetConfig( ).SetFile(f);
+            mpLogger->mpWideStreamBuffer = &buf;
         }
 
-        void SetVerbosityThreshold(const SLL::VerbosityLevel& lvl)
+        /// StreamLogger Exposer Methods \\\
+
+        // Initialize Stream 
+        void InitializeStream( )
         {
             CheckForNullLogger(__FUNCTION__);
 
-            mpFileLogger->GetConfig( ).SetVerbosityThreshold(lvl);
+            mpLogger->InitializeStream( );
         }
 
-        // Initialize File Stream 
-        void InitializeFileStream( )
+        // Restore Stream.
+        bool RestoreStream( )
         {
             CheckForNullLogger(__FUNCTION__);
 
-            mpFileLogger->InitializeStream( );
-        }
-
-        // Restore File Stream.
-        bool RestoreFileStream( )
-        {
-            CheckForNullLogger(__FUNCTION__);
-
-            return mpFileLogger->RestoreStream( );
+            return mpLogger->RestoreStream( );
         }
 
         // Flush Content To File.
@@ -456,7 +482,7 @@ namespace FileLoggerTests
         {
             CheckForNullLogger(__FUNCTION__);
 
-            mpFileLogger->Flush(lvl);
+            mpLogger->Flush(lvl);
         }
 
         // Log Prefixes to File.
@@ -465,7 +491,7 @@ namespace FileLoggerTests
         {
             CheckForNullLogger(__FUNCTION__);
 
-            mpFileLogger->LogPrefixes<T>(lvl, tid);
+            mpLogger->LogPrefixes<T>(lvl, tid);
         }
 
         // Log User Message to File (...)
@@ -476,12 +502,12 @@ namespace FileLoggerTests
 
             CheckForNullLogger(__FUNCTION__);
 
-            va_start(pArgs, pFormat);
             try
             {
-                mpFileLogger->LogMessage(pFormat, pArgs);
+                va_start(pArgs, pFormat);
+                mpLogger->LogMessage<T>(pFormat, pArgs);
             }
-            catch ( ... )
+            catch ( const std::exception& )
             {
                 va_end(pArgs);
                 throw;

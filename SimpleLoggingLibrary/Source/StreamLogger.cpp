@@ -1,7 +1,68 @@
+// Class Declaration
 #include <StreamLogger.h>
+
+// For enabling console color logging
+// using Window's Virtual Terminal
+#include <WindowsConsoleHelper.h>
+
+// STL synchronization
+#include <atomic>
+#include <mutex>
 
 namespace SLL
 {
+    /// Static Private Data Member Initialization \\\
+
+    // Color sequences for Windows 10 (Threshold 2 and beyond) console color output.
+    // Defined in https://docs.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences (Text Formatting)
+    template <class StreamType>
+    const std::vector<std::basic_string<char>> StreamLogger<StreamType>::mColorSequencesA
+    {
+        "\x1b[30m",  // BLACK
+        "\x1b[31m",  // RED
+        "\x1b[32m",  // GREEN
+        "\x1b[33m",  // YELLOW
+        "\x1b[34m",  // BLUE
+        "\x1b[35m",  // MAGENTA
+        "\x1b[36m",  // CYAN
+        "\x1b[37m",  // WHITE
+
+        "\x1b[90m",  // BRIGHT_BLACK
+        "\x1b[91m",  // BRIGHT_RED
+        "\x1b[92m",  // BRIGHT_GREEN
+        "\x1b[93m",  // BRIGHT_YELLOW
+        "\x1b[94m",  // BRIGHT_BLUE
+        "\x1b[95m",  // BRIGHT_MAGENTA
+        "\x1b[96m",  // BRIGHT_CYAN
+        "\x1b[97m",  // BRIGHT_WHITE
+
+        "\x1b[39m",  // DEFAULT
+    };
+
+    template <class StreamType>
+    const std::vector<std::basic_string<wchar_t>> StreamLogger<StreamType>::mColorSequencesW
+    {
+        L"\x1b[30m",  // BLACK
+        L"\x1b[31m",  // RED
+        L"\x1b[32m",  // GREEN
+        L"\x1b[33m",  // YELLOW
+        L"\x1b[34m",  // BLUE
+        L"\x1b[35m",  // MAGENTA
+        L"\x1b[36m",  // CYAN
+        L"\x1b[37m",  // WHITE
+
+        L"\x1b[90m",  // BRIGHT_BLACK
+        L"\x1b[91m",  // BRIGHT_RED
+        L"\x1b[92m",  // BRIGHT_GREEN
+        L"\x1b[93m",  // BRIGHT_YELLOW
+        L"\x1b[94m",  // BRIGHT_BLUE
+        L"\x1b[95m",  // BRIGHT_MAGENTA
+        L"\x1b[96m",  // BRIGHT_CYAN
+        L"\x1b[97m",  // BRIGHT_WHITE
+
+        L"\x1b[39m",  // DEFAULT
+    };
+
     /// Private Helper Methods - Specialization \\\
 
     // Return whether or not stream is in good state (stdout).
@@ -25,7 +86,20 @@ namespace SLL
         // Ensure the stream has a buffer (stdout).
         if ( !mStream.rdbuf( ) )
         {
-            mStream.set_rdbuf(std::wcout.rdbuf( ));
+            mStream.set_rdbuf(mpWideStreamBuffer);
+
+            if ( !mStream.good( ) )
+            {
+                mStream.clear( );
+            }
+        }
+
+        if ( GetConfig( ).OptionEnabled(OptionFlag::LogInColor) )
+        {
+            if ( !WindowsConsoleHelper::Initialize( ) )
+            {
+                GetConfig( ).Disable(OptionFlag::LogInColor);
+            }
         }
 
         if ( !IsStreamGood( ) )
@@ -61,7 +135,7 @@ namespace SLL
         }
 
         try
-        {   
+        {
             // Attempt to open file stream.  Use append mode, binary write, only allow write (no read).
             mStream.open(config.GetFile( ), std::ios_base::app | std::ios_base::binary | std::ios_base::out);
         }
@@ -84,7 +158,7 @@ namespace SLL
             );
         }
     }
-    
+
     // Restore Stream to Good State.
     template <class StreamType>
     bool StreamLogger<StreamType>::RestoreStream( )
@@ -109,13 +183,14 @@ namespace SLL
             {
                 failTicker = 1;
                 failFreq++;
-                std::cerr << "\n\n   " << __FUNCTION__ << " - Failed to restore stream from bad state ";
-                std::cerr << "(attempt " << ++failTotalCount << "): " << e.what( ) << "\n" << std::endl;
+                std::wcerr << L"\n\n   " << __FUNCTIONW__ << L" - Failed to restore stream from bad state ";
+                std::wcerr << L"(attempt " << ++failTotalCount << "): ";
+                std::wcerr << StringUtil::ConvertAndCopy<wchar_t>(e.what( )) << L"\n" << std::endl;
             }
 
             return false;
         }
-        
+
         // Successfully recovered - reset fail trackers.
         failTotalCount = 0;
         failTicker = 0;
@@ -140,9 +215,94 @@ namespace SLL
         }
     }
 
+    // Get Color String - VerbosityLevel (FileStream, Narrow)
+    template <>
+    template <class T>
+    const std::basic_string<T>& StreamLogger<FileStream>::GetColorSequence(const VerbosityLevel&) const
+    {
+        // Color output intended only for console logging.
+        static const std::basic_string<T> emptyStr;
+        return emptyStr;
+    }
+
+    // Get Color String - Color (FileStream, Narrow)
+    template <>
+    template <class T>
+    const std::basic_string<T>& StreamLogger<FileStream>::GetColorSequence(const Color&) const
+    {
+        // Color output intended only for console logging.
+        static const std::basic_string<T> emptyStr;
+        return emptyStr;
+    }
+
+
+    // Get Color String - VerbosityLevel (StdOutStream, Narrow)
+    template <>
+    template <>
+    const std::basic_string<char>& StreamLogger<StdOutStream>::GetColorSequence<char>(const VerbosityLevel& lvl) const
+    {
+        const ConfigPackage& config = GetConfig( );
+
+        if ( !config.OptionEnabled(OptionFlag::LogInColor) )
+        {
+            static const std::basic_string<char> emptyStr;
+            return emptyStr;
+        }
+
+        return mColorSequencesA[ColorConverter::ToScalar(config.GetColor(lvl))];
+    }
+
+    // Get Color String - VerbosityLevel (StdOutStream, Wide)
+    template <>
+    template <>
+    const std::basic_string<wchar_t>& StreamLogger<StdOutStream>::GetColorSequence<wchar_t>(const VerbosityLevel& lvl) const
+    {
+        const ConfigPackage& config = GetConfig( );
+
+        if ( !config.OptionEnabled(OptionFlag::LogInColor) )
+        {
+            static const std::basic_string<wchar_t> emptyStr;
+            return emptyStr;
+        }
+
+        return mColorSequencesW[ColorConverter::ToScalar(config.GetColor(lvl))];
+    }
+
+    // Get Color String - Color (StdOutStream, Narrow)
+    template <>
+    template <>
+    const std::basic_string<char>& StreamLogger<StdOutStream>::GetColorSequence<char>(const Color& clr) const
+    {
+        const ConfigPackage& config = GetConfig( );
+
+        if ( !config.OptionEnabled(OptionFlag::LogInColor) )
+        {
+            static const std::basic_string<char> emptyStr;
+            return emptyStr;
+        }
+
+        return mColorSequencesA[ColorConverter::ToScalar(clr)];
+    }
+
+    // Get Color String - Color (StdOutStream, Wide)
+    template <>
+    template <>
+    const std::basic_string<wchar_t>& StreamLogger<StdOutStream>::GetColorSequence<wchar_t>(const Color& clr) const
+    {
+        const ConfigPackage& config = GetConfig( );
+
+        if ( !config.OptionEnabled(OptionFlag::LogInColor) )
+        {
+            static const std::basic_string<wchar_t> emptyStr;
+            return emptyStr;
+        }
+
+        return mColorSequencesW[ColorConverter::ToScalar(clr)];
+    }
+
     // Log Prefixes to Stream.
     template <class StreamType>
-    template <class T, typename>
+    template <class T>
     void StreamLogger<StreamType>::LogPrefixes(const VerbosityLevel& lvl, const std::thread::id& tid)
     {
         std::vector<std::unique_ptr<T[ ]>> prefixes;
@@ -162,6 +322,12 @@ namespace SLL
             return;
         }
 
+        // Log in color if option is enabled (does nothing for FileLogger specialization).
+        if ( GetConfig( ).OptionEnabled(OptionFlag::LogInColor) )
+        {
+            mStream << GetColorSequence<wchar_t>(lvl).c_str( );
+        }
+
         for ( auto& p : prefixes )
         {
             if ( !IsStreamGood( ) )
@@ -175,7 +341,7 @@ namespace SLL
 
     // Log User Message To File.
     template <class StreamType>
-    template <class T, typename>
+    template <class T>
     void StreamLogger<StreamType>::LogMessage(const T* pFormat, va_list pArgs)
     {
         std::unique_ptr<T[ ]> message;
@@ -200,7 +366,16 @@ namespace SLL
             return;
         }
 
-        mStream << message.get( ) << L"\n";
+        mStream << message.get( );
+
+        // If LogInColor is enabled, then return text output to the 
+        // original console foreground color, in case other things are writting to stdout.
+        if ( GetConfig( ).OptionEnabled(OptionFlag::LogInColor) )
+        {
+            mStream << GetColorSequence<wchar_t>(Color::DEFAULT);
+        }
+
+        mStream << L"\n";
     }
 
     /// Constructors \\\
@@ -209,13 +384,17 @@ namespace SLL
     template <>
     StreamLogger<StdOutStream>::StreamLogger(const ConfigPackage& config) :
         LoggerBase(config),
-        mStream(std::wcout.rdbuf( ))
-    { }
+        mpWideStreamBuffer(std::wcout.rdbuf( )),
+        mStream(mpWideStreamBuffer)
+    {
+        InitializeStream( );
+    }
 
     // ConfigPackage Constructor [C] - file.
     template <>
     StreamLogger<FileStream>::StreamLogger(const ConfigPackage& config) :
-        LoggerBase(config)
+        LoggerBase(config),
+        mpWideStreamBuffer(nullptr)
     {
         InitializeStream( );
     }
@@ -224,13 +403,17 @@ namespace SLL
     template <>
     StreamLogger<StdOutStream>::StreamLogger(ConfigPackage&& config) noexcept :
         LoggerBase(std::move(config)),
-        mStream(std::wcout.rdbuf( ))
-    { }
+        mpWideStreamBuffer(std::wcout.rdbuf( )),
+        mStream(mpWideStreamBuffer)
+    {
+        InitializeStream( );
+    }
 
     // ConfigPackage Constructor [M] - file.
     template <>
     StreamLogger<FileStream>::StreamLogger(ConfigPackage&& config) noexcept :
-        LoggerBase(std::move(config))
+        LoggerBase(std::move(config)),
+        mpWideStreamBuffer(nullptr)
     {
         InitializeStream( );
     }
@@ -239,14 +422,18 @@ namespace SLL
     template <>
     StreamLogger<StdOutStream>::StreamLogger(StreamLogger&& src) noexcept :
         LoggerBase(std::move(src)),
-        mStream(std::wcout.rdbuf( ))
-    { }
+        mpWideStreamBuffer(std::wcout.rdbuf( )),
+        mStream(mpWideStreamBuffer)
+    {
+        InitializeStream( );
+    }
 
     // Move Constructor - file.
     template <>
     StreamLogger<FileStream>::StreamLogger(StreamLogger&& src) noexcept :
-        LoggerBase(std::move(src))
-    { 
+        LoggerBase(std::move(src)),
+        mpWideStreamBuffer(nullptr)
+    {
         InitializeStream( );
     }
 
@@ -256,16 +443,13 @@ namespace SLL
     template <class StreamType>
     StreamLogger<StreamType>::~StreamLogger( )
     {
-        if ( IsStreamGood( ) )
+        try
         {
-            try
-            {
-                mStream.flush( );
-            }
-            catch ( const std::exception& )
-            {
-                // Best attempt - nothing more to be done.
-            }
+            Flush(SLL::VerbosityLevel::FATAL);
+        }
+        catch ( const std::exception& )
+        {
+            // Best attempt - nothing more to be done.
         }
     }
 
