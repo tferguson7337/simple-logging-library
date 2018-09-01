@@ -68,6 +68,9 @@
     <ClInclude Include="Headers\WindowsConsoleHelper.h">
       <Filter>Logger\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Headers\DualLogger.h">
+      <Filter>Logger\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\ConfigPackage.cpp">
@@ -89,6 +92,9 @@
       <Filter>Logger\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\WindowsConsoleHelper.cpp">
+      <Filter>Logger\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DualLogger.cpp">
       <Filter>Logger\Source Files</Filter>
     </ClCompile>
   </ItemGroup>

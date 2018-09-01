@@ -401,7 +401,7 @@ namespace SLL
 
     // ConfigPackage Constructor [M] - stdout.
     template <>
-    StreamLogger<StdOutStream>::StreamLogger(ConfigPackage&& config) noexcept :
+    StreamLogger<StdOutStream>::StreamLogger(ConfigPackage&& config) :
         LoggerBase(std::move(config)),
         mpWideStreamBuffer(std::wcout.rdbuf( )),
         mStream(mpWideStreamBuffer)
@@ -411,7 +411,7 @@ namespace SLL
 
     // ConfigPackage Constructor [M] - file.
     template <>
-    StreamLogger<FileStream>::StreamLogger(ConfigPackage&& config) noexcept :
+    StreamLogger<FileStream>::StreamLogger(ConfigPackage&& config) :
         LoggerBase(std::move(config)),
         mpWideStreamBuffer(nullptr)
     {
@@ -420,7 +420,7 @@ namespace SLL
 
     // Move Constructor - stdout.
     template <>
-    StreamLogger<StdOutStream>::StreamLogger(StreamLogger&& src) noexcept :
+    StreamLogger<StdOutStream>::StreamLogger(StreamLogger&& src) :
         LoggerBase(std::move(src)),
         mpWideStreamBuffer(std::wcout.rdbuf( )),
         mStream(mpWideStreamBuffer)
@@ -430,7 +430,7 @@ namespace SLL
 
     // Move Constructor - file.
     template <>
-    StreamLogger<FileStream>::StreamLogger(StreamLogger&& src) noexcept :
+    StreamLogger<FileStream>::StreamLogger(StreamLogger&& src) :
         LoggerBase(std::move(src)),
         mpWideStreamBuffer(nullptr)
     {
@@ -441,7 +441,7 @@ namespace SLL
 
     // Virtual Destructor
     template <class StreamType>
-    StreamLogger<StreamType>::~StreamLogger( )
+    StreamLogger<StreamType>::~StreamLogger( ) noexcept
     {
         try
         {

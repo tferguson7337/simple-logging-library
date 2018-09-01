@@ -89,15 +89,15 @@ namespace SLL
         explicit StreamLogger(const ConfigPackage&);
 
         // ConfigPackage Constructor [M]
-        explicit StreamLogger(ConfigPackage&&) noexcept;
+        explicit StreamLogger(ConfigPackage&&);
 
         // Move Constructor
-        StreamLogger(StreamLogger&&) noexcept;
+        StreamLogger(StreamLogger&&);
 
         /// Destructor \\\
 
         // Virtual Destructor
-        virtual ~StreamLogger( );
+        virtual ~StreamLogger( ) noexcept;
 
         /// Assignment Overload \\\
 

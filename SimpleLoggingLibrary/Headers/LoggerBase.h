@@ -38,35 +38,35 @@ namespace SLL
         /// Common Private Helper Methods \\\
 
         // Prefix - Timestamp Format Getter (std::put_time Format)
-        template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
+        template <class T>
         static const std::basic_string<T>& GetTimeFormat( );
 
         // Prefix - Thread ID Format Getter
-        template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
+        template <class T>
         static const std::basic_string<T>& GetThreadIDFormat( );
 
         // Prefix - VerbosityLevel Format Getter
-        template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
+        template <class T>
         static const std::basic_string<T>& GetVerbosityLevelFormat( );
 
         // Extract Thread ID
         static unsigned long ExtractThreadID(const std::thread::id&);
 
         // Get Local Time String
-        template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
+        template <class T>
         static std::basic_string<T> GetLocalTime( );
 
         // Build Time Prefix String
-        template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
+        template <class T>
         static std::unique_ptr<T[ ]> BuildTimePrefix( );
 
         // Returns required length of buffer to hold built format-string
         // that would be built using format and arguments.
-        template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
+        template <class T>
         static size_t GetRequiredBufferLength(const T*, va_list);
 
         // Will build format-string with arguments, filling the passed buffer.
-        template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
+        template <class T>
         static std::unique_ptr<T[ ]> StringPrintWrapper(const size_t, const T*, va_list);
 
     protected:

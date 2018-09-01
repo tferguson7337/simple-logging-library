@@ -60,7 +60,7 @@ namespace SLL
     }
 
     // Get Local Time String
-    template <class T, typename>
+    template <class T>
     static std::basic_string<T> LoggerBase::GetLocalTime( )
     {
         std::basic_ostringstream<T> oss;
@@ -77,7 +77,7 @@ namespace SLL
     }
 
     // Build Time Prefix String
-    template<class T, typename>
+    template<class T>
     std::unique_ptr<T[ ]> LoggerBase::BuildTimePrefix( )
     {
         std::basic_string<T> str(GetLocalTime<T>( ));
