@@ -71,6 +71,14 @@ namespace SLL
         // Move Assignment
         ConfigPackage& operator=(ConfigPackage&&);
 
+        /// Comparison Overloads \\\
+
+        // Equivalency
+        bool operator==(const ConfigPackage&) const noexcept;
+
+        // Non-equivalency
+        bool operator!=(const ConfigPackage&) const noexcept;
+
         /// Getters \\\
 
         // Returns configured color output for specified verbosity threshold.

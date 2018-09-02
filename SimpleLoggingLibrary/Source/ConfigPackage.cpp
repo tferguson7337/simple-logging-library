@@ -79,6 +79,53 @@ namespace SLL
         return *this;
     }
 
+    /// COMPARISON OVERLOADS \\\
+
+    // Equivalency
+    bool ConfigPackage::operator==(const ConfigPackage& other) const noexcept
+    {
+        // Compare option masks.
+        if ( mOptionMask != other.mOptionMask )
+        {
+            return false;
+        }
+
+        // Compare verbosity thresholds.
+        if ( mVerbosityThreshold != other.mVerbosityThreshold )
+        {
+            return false;
+        }
+
+        // Compare verbosity-color vectors.
+        for ( auto itr_l = mVerbosityColors.cbegin( ), end_l = mVerbosityColors.cend( ), itr_r = other.mVerbosityColors.cbegin( ), end_r = other.mVerbosityColors.cend( ); itr_l != end_l && itr_r != end_r; itr_l++, itr_r++ )
+        {
+            if ( itr_l == end_l || itr_r == end_r )
+            {
+                return false;
+            }
+
+            if ( *itr_l != *itr_r )
+            {
+                return false;
+            }
+        }
+
+        // Compare target logfiles.
+        if ( mLogFile != other.mLogFile )
+        {
+            return false;
+        }
+
+        // All data members matched.
+        return true;
+    }
+
+    // Non-equivalency
+    bool ConfigPackage::operator!=(const ConfigPackage& other) const noexcept
+    {
+        return !(*this == other);
+    }
+
     /// GETTERS \\\
 
     // Getter - Log Color for VerbosityLevel
