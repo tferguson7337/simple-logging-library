@@ -16,14 +16,10 @@ namespace SLL
         ILogger( ) = default;
         virtual ~ILogger( ) = default;
 
-        /// Getter Methods \\\
-       
-        virtual const ConfigPackage& GetConfig( ) const noexcept = 0;
-
         /// Public Methods \\\
 
         // Submit log message to stream(s).
-        // Unfortunately, C++ doesn't allow virtual template methods.
+        // - Unfortunately, C++ doesn't allow virtual template methods.
         template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
         bool Log(const VerbosityLevel, const T*, ...);
     };

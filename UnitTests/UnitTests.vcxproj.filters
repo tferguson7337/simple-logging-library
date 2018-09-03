@@ -1,69 +1,78 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Tests">
+    <Filter Include="Configuration Tests">
+      <UniqueIdentifier>{96fa0c4c-703b-48a1-96b0-627b804fb31a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logger Tests">
       <UniqueIdentifier>{d54f9e37-61d6-45d0-8baf-c452b6fd31b0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Tests\Header Files">
+    <Filter Include="Logger Tests\Header Files">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Tests\Source Files">
+    <Filter Include="Logger Tests\Source Files">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="Configuration Tests\Header Files">
+      <UniqueIdentifier>{2586a26d-ae6d-4df7-aa15-cb76255a3e0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Configuration Tests\Source Files">
+      <UniqueIdentifier>{509a6c71-de95-4192-8a18-aa571622afe4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Headers\OptionFlagTests.h">
-      <Filter>Tests\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\VerbosityLevelTests.h">
-      <Filter>Tests\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\ColorTests.h">
-      <Filter>Tests\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Headers\LoggerBaseTests.h">
-      <Filter>Tests\Header Files</Filter>
+      <Filter>Logger Tests\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Headers\FileLoggerTests.h">
-      <Filter>Tests\Header Files</Filter>
+      <Filter>Logger Tests\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Headers\StdOutLoggerTests.h">
-      <Filter>Tests\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\ConfigPackageTests.h">
-      <Filter>Tests\Header Files</Filter>
+      <Filter>Logger Tests\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Headers\DualLoggerTests.h">
-      <Filter>Tests\Header Files</Filter>
+      <Filter>Logger Tests\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\ColorTests.h">
+      <Filter>Configuration Tests\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\ConfigPackageTests.h">
+      <Filter>Configuration Tests\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\OptionFlagTests.h">
+      <Filter>Configuration Tests\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\VerbosityLevelTests.h">
+      <Filter>Configuration Tests\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\OptionFlagTests.cpp">
-      <Filter>Tests\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\VerbosityLevelTests.cpp">
-      <Filter>Tests\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ColorTests.cpp">
-      <Filter>Tests\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\LoggerBaseTests.cpp">
-      <Filter>Tests\Source Files</Filter>
+      <Filter>Logger Tests\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\RunTests.cpp" />
     <ClCompile Include="Source\FileLoggerTests.cpp">
-      <Filter>Tests\Source Files</Filter>
+      <Filter>Logger Tests\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\StdOutLoggerTests.cpp">
-      <Filter>Tests\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ConfigPackageTests.cpp">
-      <Filter>Tests\Source Files</Filter>
+      <Filter>Logger Tests\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\DualLoggerTests.cpp">
-      <Filter>Tests\Source Files</Filter>
+      <Filter>Logger Tests\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ColorTests.cpp">
+      <Filter>Configuration Tests\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\OptionFlagTests.cpp">
+      <Filter>Configuration Tests\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\VerbosityLevelTests.cpp">
+      <Filter>Configuration Tests\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ConfigPackageTests.cpp">
+      <Filter>Configuration Tests\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
