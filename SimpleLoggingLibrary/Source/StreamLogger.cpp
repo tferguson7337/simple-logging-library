@@ -465,6 +465,8 @@ namespace SLL
         }
 
         LoggerBase::operator=(std::move(src));
+        src.mStream.set_rdbuf(nullptr);
+        mpWideStreamBuffer = std::move(src.mpWideStreamBuffer);
 
         return *this;
     }
@@ -480,6 +482,7 @@ namespace SLL
 
         LoggerBase::operator=(std::move(src));
         mStream = std::move(src.mStream);
+        mpWideStreamBuffer = std::move(src.mpWideStreamBuffer);
 
         return *this;
     }

@@ -69,7 +69,7 @@ namespace SLL
         ConfigPackage& operator=(const ConfigPackage&);
 
         // Move Assignment
-        ConfigPackage& operator=(ConfigPackage&&);
+        ConfigPackage& operator=(ConfigPackage&&) noexcept;
 
         /// Comparison Overloads \\\
 
@@ -84,7 +84,7 @@ namespace SLL
         // Returns configured color output for specified verbosity threshold.
         Color GetColor(const VerbosityLevel) const;
 
-        // Returns currently option flag mask representing currently enabled options.
+        // Returns current option flag mask representing currently enabled options.
         OptionFlag GetOptionFlags( ) const noexcept;
 
         // Returns configured verbosity threshold.

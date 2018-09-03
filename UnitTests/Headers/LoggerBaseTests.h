@@ -148,6 +148,7 @@ namespace LoggerBaseTests
 namespace LoggerBaseTests
 {
     // Helper macros for incrementing enum class variables.
+#define INCREMENT_COLOR(c)      c = static_cast<SLL::Color>(static_cast<SLL::ColorType>(c) + 1)
 #define INCREMENT_VERBOSITY(v)  v = static_cast<SLL::VerbosityLevel>(static_cast<SLL::VerbosityLevelType>(v) + 1)
 #define INCREMENT_OPTIONFLAG(f) f = static_cast<SLL::OptionFlag>(static_cast<SLL::OptionFlagType>(f) + 1)
  

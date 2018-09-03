@@ -11,7 +11,7 @@ namespace SLL
     //  Purpose - Wrapper for StdOutLogger and FileLogger.
     //
     ///
-    class DualLogger : public ILogger
+    class DualLogger
     {
     private:
         /// Private Data Members \\\

@@ -34,7 +34,7 @@ namespace SLL
     //
     ///
     template <class StreamType>
-    class StreamLogger : public LoggerBase
+    class StreamLogger : public virtual LoggerBase
     {
         // Friend class, intended to expose non-public methods for testing.
         friend ::StreamLoggerTests::Tester<FileLogger, StreamType>;

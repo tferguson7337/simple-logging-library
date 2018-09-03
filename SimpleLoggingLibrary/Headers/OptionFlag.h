@@ -98,15 +98,15 @@ namespace SLL
         /// Private Helper Methods \\\
 
         // OptionFlag String Getters
-        template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
+        template <class T>
         static const std::basic_string<T>& GetOptionFlagString(const size_t);
 
         // OptionFlag::NONE String Getters
-        template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
+        template <class T>
         static const std::basic_string<T>& GetEmptyMaskString( );
 
         // Separator Getters
-        template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
+        template <class T>
         static const std::basic_string<T>& GetSeparator( );
 
     public:

@@ -58,18 +58,18 @@ namespace SLL
 
     /// Getters \\\
 
-    // Get immutable ConfigPackage reference for StdOutLogger
-    template <>
-    const ConfigPackage& DualLogger::GetConfig<StdOutLogger>( ) const noexcept
-    {
-        return mStdOutLogger.GetConfig( );
-    }
-
     // Get immutable ConfigPackage reference for FileLogger
     template <>
     const ConfigPackage& DualLogger::GetConfig<FileLogger>( ) const noexcept
     {
         return mFileLogger.GetConfig( );
+    }
+
+    // Get immutable ConfigPackage reference for StdOutLogger
+    template <>
+    const ConfigPackage& DualLogger::GetConfig<StdOutLogger>( ) const noexcept
+    {
+        return mStdOutLogger.GetConfig( );
     }
 
     /// Public Methods \\\

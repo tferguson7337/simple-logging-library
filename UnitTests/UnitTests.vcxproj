@@ -20,6 +20,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Headers\ColorTests.h" />
+    <ClInclude Include="Headers\ConfigPackageTests.h" />
+    <ClInclude Include="Headers\DualLoggerTests.h" />
     <ClInclude Include="Headers\FileLoggerTests.h" />
     <ClInclude Include="Headers\LoggerBaseTests.h" />
     <ClInclude Include="Headers\OptionFlagTests.h" />
@@ -28,6 +30,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\ColorTests.cpp" />
+    <ClCompile Include="Source\ConfigPackageTests.cpp" />
+    <ClCompile Include="Source\DualLoggerTests.cpp" />
     <ClCompile Include="Source\FileLoggerTests.cpp" />
     <ClCompile Include="Source\LoggerBaseTests.cpp" />
     <ClCompile Include="Source\OptionFlagTests.cpp" />

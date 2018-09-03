@@ -36,9 +36,10 @@ namespace SLL
 
     // Default Ctor
     ConfigPackage::ConfigPackage( ) :
-        mVerbosityColors(static_cast<size_t>(VerbosityLevel::MAX), Color::WHITE),
+        mVerbosityColors(static_cast<size_t>(VerbosityLevel::MAX), Color::DEFAULT),
         mOptionMask(OptionFlag::NONE),
-        mVerbosityThreshold(VerbosityLevel::INFO)
+        mVerbosityThreshold(VerbosityLevel::INFO),
+        mLogFile(std::wstring( ))
     { }
 
     // Copy Ctor
@@ -60,21 +61,27 @@ namespace SLL
     // Copy Assignment
     ConfigPackage& ConfigPackage::operator=(const ConfigPackage& src)
     {
-        mLogFile            = src.mLogFile;
-        mVerbosityColors    = src.mVerbosityColors;
-        mOptionMask         = src.mOptionMask;
-        mVerbosityThreshold = src.mVerbosityThreshold;
+        if ( this != &src )
+        {
+            mLogFile            = src.mLogFile;
+            mVerbosityColors    = src.mVerbosityColors;
+            mOptionMask         = src.mOptionMask;
+            mVerbosityThreshold = src.mVerbosityThreshold;
+        }
 
         return *this;
     }
 
     // Move Assignment
-    ConfigPackage& ConfigPackage::operator=(ConfigPackage&& src)
+    ConfigPackage& ConfigPackage::operator=(ConfigPackage&& src) noexcept
     {
-        mLogFile            = std::move(src.mLogFile);
-        mVerbosityColors    = std::move(src.mVerbosityColors);
-        mOptionMask         = src.mOptionMask;
-        mVerbosityThreshold = src.mVerbosityThreshold;
+        if ( this != &src )
+        {
+            mLogFile            = std::move(src.mLogFile);
+            mVerbosityColors    = std::move(src.mVerbosityColors);
+            mOptionMask         = src.mOptionMask;
+            mVerbosityThreshold = src.mVerbosityThreshold;
+        }
 
         return *this;
     }
@@ -97,21 +104,27 @@ namespace SLL
         }
 
         // Compare verbosity-color vectors.
-        for ( auto itr_l = mVerbosityColors.cbegin( ), end_l = mVerbosityColors.cend( ), itr_r = other.mVerbosityColors.cbegin( ), end_r = other.mVerbosityColors.cend( ); itr_l != end_l && itr_r != end_r; itr_l++, itr_r++ )
+        if ( mVerbosityColors.size( ) != other.mVerbosityColors.size( ) )
         {
-            if ( itr_l == end_l || itr_r == end_r )
+            return false;
+        }
+        else
+        {
+            for ( size_t i = 0; i < mVerbosityColors.size( ); i++ )
             {
-                return false;
-            }
-
-            if ( *itr_l != *itr_r )
-            {
-                return false;
+                if ( mVerbosityColors[i] != other.mVerbosityColors[i] )
+                {
+                    return false;
+                }
             }
         }
 
         // Compare target logfiles.
-        if ( mLogFile != other.mLogFile )
+        if ( mLogFile.size( ) != other.mLogFile.size( ) )
+        {
+            return false;
+        }
+        else if ( mLogFile != other.mLogFile )
         {
             return false;
         }
