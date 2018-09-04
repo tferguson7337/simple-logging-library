@@ -98,7 +98,7 @@ namespace SLL
         {
             if ( !WindowsConsoleHelper::Initialize( ) )
             {
-                GetConfig( ).Disable(OptionFlag::LogInColor);
+                LoggerBase::GetConfig( ).Disable(OptionFlag::LogInColor);
             }
         }
 
@@ -378,6 +378,12 @@ namespace SLL
         mStream << L"\n";
     }
 
+    template <class StreamType>
+    ConfigPackage& StreamLogger<StreamType>::GetConfig( ) noexcept
+    {
+        return LoggerBase::GetConfig( );
+    }
+
     /// Constructors \\\
 
     // ConfigPackage Constructor [C] - stdout.
@@ -487,6 +493,14 @@ namespace SLL
         return *this;
     }
 
+    /// Public Getter \\\
+
+    template <class StreamType>
+    const ConfigPackage& StreamLogger<StreamType>::GetConfig( ) const noexcept
+    {
+        return LoggerBase::GetConfig( );
+    }
+
     /// Public Methods \\\
 
     template <class StreamType>
@@ -580,6 +594,12 @@ namespace SLL
     }
 
     /// Explicit Template Instantiations \\\
+
+    // GetConfig Instantiations
+    template ConfigPackage& StdOutLogger::GetConfig( ) noexcept;
+    template const ConfigPackage& StdOutLogger::GetConfig( ) const noexcept;
+    template ConfigPackage& FileLogger::GetConfig( ) noexcept;
+    template const ConfigPackage& FileLogger::GetConfig( ) const noexcept;
 
     // Log Instantiations - Variadic Arguments
     template bool StdOutLogger::Log<char>(const VerbosityLevel& lvl, const char* pFormat, ...);

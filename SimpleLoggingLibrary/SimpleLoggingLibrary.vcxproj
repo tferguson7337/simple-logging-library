@@ -29,8 +29,10 @@
     <ClInclude Include="Headers\DualLogger.h" />
     <ClInclude Include="Headers\Interfaces\ILogger.h" />
     <ClInclude Include="Headers\LoggerBase.h" />
+    <ClInclude Include="Headers\LoggerFactory.h" />
     <ClInclude Include="Headers\OptionFlag.h" />
     <ClInclude Include="Headers\StreamLogger.h" />
+    <ClInclude Include="Headers\SyncLogger.h" />
     <ClInclude Include="Headers\VerbosityLevel.h" />
     <ClInclude Include="Headers\WindowsConsoleHelper.h" />
   </ItemGroup>
@@ -39,8 +41,10 @@
     <ClCompile Include="Source\ConfigPackage.cpp" />
     <ClCompile Include="Source\DualLogger.cpp" />
     <ClCompile Include="Source\LoggerBase.cpp" />
+    <ClCompile Include="Source\LoggerFactory.cpp" />
     <ClCompile Include="Source\OptionFlag.cpp" />
     <ClCompile Include="Source\StreamLogger.cpp" />
+    <ClCompile Include="Source\SyncLogger.cpp" />
     <ClCompile Include="Source\VerbosityLevel.cpp" />
     <ClCompile Include="Source\WindowsConsoleHelper.cpp" />
   </ItemGroup>

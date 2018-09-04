@@ -82,6 +82,9 @@ namespace SLL
         template <class T>
         void LogMessage(const T*, va_list);
 
+    protected:
+        ConfigPackage& GetConfig( ) noexcept;
+
     public:
         /// Constructors \\\
 
@@ -103,6 +106,10 @@ namespace SLL
 
         // Move Assignment
         StreamLogger& operator=(StreamLogger&&);
+
+        /// Public Getter \\\
+
+        const ConfigPackage& GetConfig( ) const noexcept;
 
         /// Public Methods \\\
 

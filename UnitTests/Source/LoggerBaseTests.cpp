@@ -1057,7 +1057,7 @@ namespace LoggerBaseTests
 
             try
             {
-                str = LoggerBase::BuildFormattedMessage<T>(pFormat.get( ));
+                str = Tester::BuildFormattedMessage<T>(pFormat.get( ));
             }
             catch ( const std::exception& e )
             {
@@ -1081,7 +1081,7 @@ namespace LoggerBaseTests
                 int arg1 = -5000;
                 size_t arg2 = 5000;
 
-                str = LoggerBase::BuildFormattedMessage<T>(pFormat.get( ), arg1, arg2);
+                str = Tester::BuildFormattedMessage<T>(pFormat.get( ), arg1, arg2);
             }
             catch ( const std::exception& e )
             {
@@ -1105,7 +1105,7 @@ namespace LoggerBaseTests
                 float arg1 = 12.5255f;
                 double arg2 = -30.1502051;
 
-                str = LoggerBase::BuildFormattedMessage<T>(pFormat.get( ), arg1, arg2);
+                str = Tester::BuildFormattedMessage<T>(pFormat.get( ), arg1, arg2);
             }
             catch ( const std::exception& e )
             {
@@ -1129,7 +1129,7 @@ namespace LoggerBaseTests
                 const std::unique_ptr<T[ ]> arg1 = StringUtil::ConvertAndCopy<T>("Test string #1");
                 const wchar_t* arg2 = L"\"Test string #2\"";
 
-                str = LoggerBase::BuildFormattedMessage<T>(pFormat.get( ), arg1.get( ), arg2);
+                str = Tester::BuildFormattedMessage<T>(pFormat.get( ), arg1.get( ), arg2);
             }
             catch ( const std::exception& e )
             {

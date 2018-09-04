@@ -440,6 +440,42 @@ namespace LoggerBaseTests
             return str;
         }
 
+        // Build user's formatted log message (w/ va_list).
+        template<class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
+        static std::unique_ptr<T[ ]> BuildFormattedMessage(const T* pFormat, va_list args)
+        {
+            return LoggerBase::BuildFormattedMessage<T>(pFormat, args);
+        }
+
+        // Build user's formatted log message (w/o va_list).
+        template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
+        static std::unique_ptr<T[ ]> BuildFormattedMessage(const T* pFormat, ...)
+        {
+            std::unique_ptr<T[ ]> str;
+            va_list a;
+
+            va_start(a, pFormat);
+
+            try
+            {
+                str = Tester::BuildFormattedMessage<T>(pFormat, a);
+            }
+            catch ( const std::invalid_argument& )
+            {
+                va_end(a);
+                throw;
+            }
+            catch ( const std::exception& )
+            {
+                va_end(a);
+                throw;
+            }
+
+            va_end(a);
+
+            return str;
+        }
+
         /// LoggerBase Non-Static Wrappers \\\
 
         // Wrapper for BuildMessagePrefixes.

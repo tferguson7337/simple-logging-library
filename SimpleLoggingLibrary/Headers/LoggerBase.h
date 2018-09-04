@@ -15,6 +15,12 @@ namespace LoggerBaseTests
     class Tester;
 }
 
+namespace StreamLoggerTests
+{
+    template <class LoggerType, class StreamType>
+    class Tester;
+}
+
 namespace SLL
 {
     ///
@@ -27,8 +33,11 @@ namespace SLL
     ///
     class LoggerBase : public virtual ILogger
     {
-        // Friend class, intended to expose non-public methods for testing.
+        // Friend classes, intended to expose non-public methods for testing.
         friend class ::LoggerBaseTests::Tester;
+
+        template <class LoggerType, class StreamType>
+        friend class ::StreamLoggerTests::Tester;
 
     private:
         /// Common Private Data Member \\\
@@ -97,9 +106,10 @@ namespace SLL
         // Move Assignment
         LoggerBase& operator=(LoggerBase&&);
 
-        /// Common Protected Getter \\\
+        /// Common Protected Getters \\\
 
         ConfigPackage& GetConfig( ) noexcept;
+        const ConfigPackage& GetConfig( ) const noexcept;
 
         /// Common Protected Helper Methods \\\
 
@@ -112,16 +122,8 @@ namespace SLL
         template<class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
         static std::unique_ptr<T[ ]> BuildFormattedMessage(const T* pFormat, va_list args);
 
-    public:
-
-        /// Common Public Helper Methods \\\
-
         // Build user's formatted log message (w/o va_list).
         template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
-        static std::unique_ptr<T[ ]> BuildFormattedMessage(const T* pFormat, ...);
-
-        /// Common Getter \\\
-
-        const ConfigPackage& GetConfig( ) const noexcept;
+        static std::unique_ptr<T[ ]> BuildFormattedMessage(const T* pFormat, ...);        
     };
 }
