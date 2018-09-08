@@ -47,6 +47,9 @@
     <ClInclude Include="Headers\VerbosityLevelTests.h">
       <Filter>Configuration Tests\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Headers\SyncLoggerTests.h">
+      <Filter>Logger Tests\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\LoggerBaseTests.cpp">
@@ -73,6 +76,9 @@
     </ClCompile>
     <ClCompile Include="Source\ConfigPackageTests.cpp">
       <Filter>Configuration Tests\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SyncLoggerTests.cpp">
+      <Filter>Logger Tests\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

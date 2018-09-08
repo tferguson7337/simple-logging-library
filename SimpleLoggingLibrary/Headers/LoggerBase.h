@@ -6,9 +6,6 @@
 // Variadic Arguments
 #include <cstdarg>
 
-// STL - std::thread::id
-#include <thread>
-
 // Forward declaration of unit-testing helper-class.
 namespace LoggerBaseTests
 {
@@ -124,6 +121,50 @@ namespace SLL
 
         // Build user's formatted log message (w/o va_list).
         template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
-        static std::unique_ptr<T[ ]> BuildFormattedMessage(const T* pFormat, ...);        
+        static std::unique_ptr<T[ ]> BuildFormattedMessage(const T* pFormat, ...);     
+
+    public:
+
+        /// Dummy Log Methods For Unit Tests (adhere to ILogger interface) \\\
+
+        bool Log(const VerbosityLevel&, const char*, ...)
+        {
+            return false;
+        }
+
+        bool Log(const VerbosityLevel&, const wchar_t*, ...)
+        {
+            return false;
+        }
+
+        bool Log(const VerbosityLevel&, const std::thread::id&, const char*, ...)
+        {
+            return false;
+        }
+
+        bool Log(const VerbosityLevel&, const std::thread::id&, const wchar_t*, ...)
+        {
+            return false;
+        }
+
+        bool Log(const VerbosityLevel&, const char*, va_list)
+        {
+            return false;
+        }
+
+        bool Log(const VerbosityLevel&, const wchar_t*, va_list)
+        {
+            return false;
+        }
+
+        bool Log(const VerbosityLevel&, const std::thread::id&, const char*, va_list)
+        {
+            return false;
+        }
+
+        bool Log(const VerbosityLevel&, const std::thread::id&, const wchar_t*, va_list)
+        {
+            return false;
+        }
     };
 }

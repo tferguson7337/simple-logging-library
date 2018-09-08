@@ -1,5 +1,7 @@
 #include <DualLogger.h>
 
+#include <thread>
+
 namespace SLL
 {
     /// Constructors \\\
@@ -74,15 +76,8 @@ namespace SLL
 
     /// Public Methods \\\
 
-    template <class T, typename>
-    bool DualLogger::Log(const VerbosityLevel& lvl, const T* pFormat, va_list pArgs)
-    {    
-        // Both StreamLogger objects handle sanity checks and errors.
-        return mStdOutLogger.Log(lvl, pFormat, pArgs) && mFileLogger.Log(lvl, pFormat, pArgs);
-    }
-
-    template <class T, typename>
-    bool DualLogger::Log(const VerbosityLevel& lvl, const T* pFormat, ...)
+     // Submit log message to stream(s) (variadic arguments, narrow).
+    bool DualLogger::Log(const VerbosityLevel& lvl, const char* pFormat, ...)
     {
         bool ret = false;
 
@@ -103,5 +98,103 @@ namespace SLL
         va_end(pArgs);
 
         return ret;
+    }
+
+    // Submit log message to stream(s) (variadic arguments, wide).
+    bool DualLogger::Log(const VerbosityLevel& lvl, const wchar_t* pFormat, ...)
+    {
+        bool ret = false;
+
+        va_list pArgs;
+        va_start(pArgs, pFormat);
+
+        try
+        {
+            ret = Log(lvl, pFormat, pArgs);
+        }
+        catch ( const std::exception& )
+        {
+            // Cleanup and pass the exception further down the call stack.
+            va_end(pArgs);
+            throw;
+        }
+
+        va_end(pArgs);
+
+        return ret;
+    }
+
+    // Submit log message to stream(s) (variadic arguments, explicit thread ID, narrow).
+    bool DualLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const char* pFormat, ...)
+    {
+        bool ret = false;
+
+        va_list pArgs;
+        va_start(pArgs, pFormat);
+
+        try
+        {
+            ret = Log(lvl, tid, pFormat, pArgs);
+        }
+        catch ( const std::exception& )
+        {
+            // Cleanup and pass the exception further down the call stack.
+            va_end(pArgs);
+            throw;
+        }
+
+        va_end(pArgs);
+
+        return ret;
+    }
+
+    // Submit log message to stream(s) (variadic arguments, explicit thread ID, wide).
+    bool DualLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const wchar_t* pFormat, ...)
+    {
+        bool ret = false;
+
+        va_list pArgs;
+        va_start(pArgs, pFormat);
+
+        try
+        {
+            ret = Log(lvl, tid, pFormat, pArgs);
+        }
+        catch ( const std::exception& )
+        {
+            // Cleanup and pass the exception further down the call stack.
+            va_end(pArgs);
+            throw;
+        }
+
+        va_end(pArgs);
+
+        return ret;
+    }
+
+    // Submit log message to stream(s) (va_list, narrow).
+    bool DualLogger::Log(const VerbosityLevel& lvl, const char* pFormat, va_list pArgs)
+    {
+        return Log(lvl, std::this_thread::get_id( ), pFormat, pArgs);
+    }
+
+    // Submit log message to stream(s) (va_list, wide).
+    bool DualLogger::Log(const VerbosityLevel& lvl, const wchar_t* pFormat, va_list pArgs)
+    {
+        return Log(lvl, std::this_thread::get_id( ), pFormat, pArgs);
+    }
+
+    // Submit log message to stream(s) (va_list, explicit thread ID, narrow).
+    bool DualLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const char* pFormat, va_list pArgs)
+    {
+        // Both StreamLogger objects handle sanity checks and errors.
+        return mStdOutLogger.Log(lvl, tid, pFormat, pArgs) && mFileLogger.Log(lvl, tid, pFormat, pArgs);
+    }
+
+    // Submit log message to stream(s) (va_list, explicit thread ID, wide).
+    bool DualLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const wchar_t* pFormat, va_list pArgs)
+    {
+        // Both StreamLogger objects handle sanity checks and errors.
+        return mStdOutLogger.Log(lvl, tid, pFormat, pArgs) && mFileLogger.Log(lvl, tid, pFormat, pArgs);
     }
 }

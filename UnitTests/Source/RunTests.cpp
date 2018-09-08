@@ -14,6 +14,7 @@
 #include <FileLoggerTests.h>
 #include <StdOutLoggerTests.h>
 #include <DualLoggerTests.h>
+#include <SyncLoggerTests.h>
 
 
 void GetUnitTests(UnitTestRunner<char>& utr)
@@ -31,6 +32,7 @@ void GetUnitTests(UnitTestRunner<char>& utr)
     utr.AddUnitTests(FileLoggerTests::GetTests( ));
     utr.AddUnitTests(StdOutLoggerTests::GetTests( ));
     utr.AddUnitTests(DualLoggerTests::GetTests( ));
+    utr.AddUnitTests(SyncLoggerTests::GetTests( ));
 }
 
 int main( )

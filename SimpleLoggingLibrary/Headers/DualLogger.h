@@ -54,12 +54,20 @@ namespace SLL
 
         /// Public Methods \\\
 
-        // Log [va_list]
-        template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
-        bool Log(const VerbosityLevel& lvl, const T* pFormat, va_list pArgs);
+        // Submit log message to stream(s) (variadic arguments).
+        bool Log(const VerbosityLevel&, const char*, ...);
+        bool Log(const VerbosityLevel&, const wchar_t*, ...);
 
-        // Log [variadic arguments]
-        template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
-        bool Log(const VerbosityLevel& lvl, const T* pFormat, ...);
+        // Submit log message to stream(s) (variadic arguments, explicit thread ID).
+        bool Log(const VerbosityLevel&, const std::thread::id&, const char*, ...);
+        bool Log(const VerbosityLevel&, const std::thread::id&, const wchar_t*, ...);
+
+        // Submit log message to stream(s) (va_list).
+        bool Log(const VerbosityLevel&, const char*, va_list);
+        bool Log(const VerbosityLevel&, const wchar_t*, va_list);
+
+        // Submit log message to stream(s) (va_list, explicit thread ID).
+        bool Log(const VerbosityLevel&, const std::thread::id&, const char*, va_list);
+        bool Log(const VerbosityLevel&, const std::thread::id&, const wchar_t*, va_list);
     };
 }

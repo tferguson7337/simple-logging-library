@@ -74,11 +74,15 @@ namespace SLL
         template <class T>
         const std::basic_string<T>& GetColorSequence(const Color&) const;
 
+        // Internal Logging Implementation.
+        template <class T>
+        bool LogInternal(const VerbosityLevel&, const std::thread::id&, const T*, va_list);
+
         // Log Prefixes to Stream.
         template <class T>
         void LogPrefixes(const VerbosityLevel&, const std::thread::id&);
 
-        // Log User Message To File.
+        // Log User Message To Stream.
         template <class T>
         void LogMessage(const T*, va_list);
 
@@ -113,10 +117,20 @@ namespace SLL
 
         /// Public Methods \\\
 
-        template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
-        bool Log(const VerbosityLevel& lvl, const T* pFormat, va_list pArgs);
+        // Submit log message to stream(s) (variadic arguments).
+        bool Log(const VerbosityLevel& lvl, const char* pFormat, ...);
+        bool Log(const VerbosityLevel& lvl, const wchar_t* pFormat, ...);
 
-        template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
-        bool Log(const VerbosityLevel& lvl, const T* pFormat, ...);
+        // Submit log message to stream(s) (variadic arguments, explicit thread ID).
+        bool Log(const VerbosityLevel& lvl, const std::thread::id& tid, const char* pFormat, ...);
+        bool Log(const VerbosityLevel& lvl, const std::thread::id& tid, const wchar_t* pFormat, ...);
+
+        // Submit log message to stream(s) (va_list).
+        bool Log(const VerbosityLevel& lvl, const char* pFormat, va_list pArgs);
+        bool Log(const VerbosityLevel& lvl, const wchar_t* pFormat, va_list pArgs);
+
+        // Submit log message to stream(s) (va_list, explicit thread ID).
+        bool Log(const VerbosityLevel& lvl, const std::thread::id& tid, const char* pFormat, va_list pArgs);
+        bool Log(const VerbosityLevel& lvl, const std::thread::id& tid, const wchar_t* pFormat, va_list pArgs);
     };
 }

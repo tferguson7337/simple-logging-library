@@ -1036,7 +1036,7 @@ namespace FileLoggerTests
 
             try
             {
-                ret = t.GetLogger( ).Log<T>(VerbosityLevel::INFO, pFormat.get( ), 1);
+                ret = t.GetLogger( ).Log(VerbosityLevel::INFO, pFormat.get( ), 1);
             }
             catch ( const std::exception& e )
             {
@@ -1072,7 +1072,7 @@ namespace FileLoggerTests
 
             try
             {
-                ret = t.GetLogger( ).Log<T>(VerbosityLevel::INFO, pFormat.get( ), 1);
+                ret = t.GetLogger( ).Log(VerbosityLevel::INFO, pFormat.get( ), 1);
             }
             catch ( const std::exception& e )
             {
@@ -1106,7 +1106,7 @@ namespace FileLoggerTests
 
             try
             {
-                t.GetLogger( ).Log<T>(VerbosityLevel::MAX, pFormat.get( ), 1);
+                t.GetLogger( ).Log(VerbosityLevel::MAX, pFormat.get( ), 1);
             }
             catch ( const std::exception& )
             {
@@ -1133,7 +1133,7 @@ namespace FileLoggerTests
 
             try
             {
-                t.GetLogger( ).Log<T>(VerbosityLevel::INFO, pFormat.get( ), 1);
+                t.GetLogger( ).Log(VerbosityLevel::INFO, pFormat.get( ), 1);
             }
             catch ( const std::exception& )
             {
@@ -1189,7 +1189,7 @@ namespace FileLoggerTests
 
                     try
                     {
-                        ret = t.GetLogger( ).Log<T>(lvl, pFormat.get( ));
+                        ret = t.GetLogger( ).Log(lvl, pFormat.get( ));
                         t.GetStream( ).flush( );
                     }
                     catch ( const std::exception& e )
@@ -1238,7 +1238,7 @@ namespace FileLoggerTests
 
                     try
                     {
-                        ret = t.GetLogger( ).Log<T>(lvl, pFormat.get( ));
+                        ret = t.GetLogger( ).Log(lvl, pFormat.get( ));
                         t.GetStream( ).flush( );
                     }
                     catch ( const std::exception& e )
@@ -1287,7 +1287,7 @@ namespace FileLoggerTests
 
                     try
                     {
-                        ret = t.GetLogger( ).Log<T>(lvl, pFormat.get( ), -500, 300000ull);
+                        ret = t.GetLogger( ).Log(lvl, pFormat.get( ), -500, 300000ull);
                         t.GetStream( ).flush( );
                     }
                     catch ( const std::exception& e )
@@ -1336,7 +1336,7 @@ namespace FileLoggerTests
 
                     try
                     {
-                        ret = t.GetLogger( ).Log<T>(lvl, pFormat.get( ), -35.019, 1.577789);
+                        ret = t.GetLogger( ).Log(lvl, pFormat.get( ), -35.019, 1.577789);
                         t.GetStream( ).flush( );
                     }
                     catch ( const std::exception& e )
@@ -1398,7 +1398,7 @@ namespace FileLoggerTests
 
                     try
                     {
-                        ret = t.GetLogger( ).Log<T>(lvl, pFormat.get( ), arg1.get( ), arg2);
+                        ret = t.GetLogger( ).Log(lvl, pFormat.get( ), arg1.get( ), arg2);
                         t.GetStream( ).flush( );
                     }
                     catch ( const std::exception& e )
@@ -1456,7 +1456,7 @@ namespace FileLoggerTests
 
                     try
                     {
-                        ret = t.GetLogger( ).Log<T>(lvl, pFormat.get( ), 1);
+                        ret = t.GetLogger( ).Log(lvl, pFormat.get( ), 1);
                         t.GetStream( ).flush( );
                     }
                     catch ( const std::exception& e )
@@ -1506,7 +1506,7 @@ namespace FileLoggerTests
 
                     try
                     {
-                        ret = t.GetLogger( ).Log<T>(lvl, pFormat.get( ), 1);
+                        ret = t.GetLogger( ).Log(lvl, pFormat.get( ), 1);
                         t.GetStream( ).flush( );
                     }
                     catch ( const std::exception& e )
@@ -1558,7 +1558,7 @@ namespace FileLoggerTests
 
                         try
                         {
-                            ret = t.GetLogger( ).Log<T>(lvl, pFormat.get( ), 1);
+                            ret = t.GetLogger( ).Log(lvl, pFormat.get( ), 1);
                             t.GetStream( ).flush( );
                         }
                         catch ( const std::exception& e )
@@ -1617,7 +1617,7 @@ namespace FileLoggerTests
 
                     try
                     {
-                        ret = t.GetLogger( ).Log<T>(lvl, pFormat.get( ), 1);
+                        ret = t.GetLogger( ).Log(lvl, pFormat.get( ), 1);
                     }
                     catch ( const std::exception& e )
                     {
@@ -1678,8 +1678,8 @@ namespace FileLoggerTests
 
                     try
                     {
-                        ret1 = t.GetLogger( ).Log<T>(lvl, pFormat.get( ), 1);
-                        ret2 = t.GetLogger( ).Log<T>(lvl, pFormat.get( ), 2);
+                        ret1 = t.GetLogger( ).Log(lvl, pFormat.get( ), 1);
+                        ret2 = t.GetLogger( ).Log(lvl, pFormat.get( ), 2);
                         t.GetStream( ).flush( );
                     }
                     catch ( const std::exception& e )

@@ -23,7 +23,7 @@ namespace SLL
     //                  
     //
     ///
-    class SyncLogger : public LoggerBase
+    class SyncLogger : public virtual LoggerBase, public virtual ILogger
     {
         /// No move.
         SyncLogger(SyncLogger&&) = delete;
@@ -42,16 +42,19 @@ namespace SLL
         private:
             VerbosityLevel lvl;
             std::unique_ptr<wchar_t[ ]> str;
+            std::thread::id tid;
 
             LogMessage( ) noexcept :
                 lvl(VerbosityLevel::MAX),
-                str(nullptr)
+                str(nullptr),
+                tid(std::thread::id( ))
             { }
 
         public:
-            LogMessage(const VerbosityLevel& l, std::unique_ptr<wchar_t[ ]>&& s) :
+            LogMessage(const VerbosityLevel& l, std::unique_ptr<wchar_t[ ]>&& s, const std::thread::id& t) :
                 lvl(l),
-                str(std::move(s))
+                str(std::move(s)),
+                tid(t)
             { }
 
             LogMessage(LogMessage&& src) noexcept :
@@ -68,8 +71,10 @@ namespace SLL
                 {
                     lvl = src.lvl;
                     str = std::move(src.str);
+                    tid = std::move(src.tid);
 
                     src.lvl = VerbosityLevel::MAX;
+                    src.tid = std::thread::id( );
                 }
 
                 return *this;
@@ -84,6 +89,11 @@ namespace SLL
             {
                 return str.get( );
             }
+
+            const std::thread::id& GetThreadID( ) const noexcept
+            {
+                return tid;
+            }
         };
 
         /// Private Data Members \\\
@@ -96,7 +106,8 @@ namespace SLL
         
         // Message Queue
         std::queue<LogMessage> mMsgQueue;
-        std::mutex mMsgQueueLock;
+        std::mutex mMsgQueueMutex;
+        std::atomic<size_t> mMsgQueueSize;
 
         // Worker Thread
         std::thread mWorkerThread;
@@ -109,9 +120,10 @@ namespace SLL
         void WorkerLogLoop( );
         void WaitForMsgs( );
         bool WaitPredicate( ) const noexcept;
+        bool TerminatePredicate( );
         void PushMsg(LogMessage&& msg);
-        LogMessage PopMsg( );
-        void LogNextMsg( );
+        std::queue<LogMessage> GetQueuedMsgs( );
+        void LogMsgs(std::queue<LogMessage>&&);
 
     public:
         /// Constructors \\\
@@ -128,10 +140,20 @@ namespace SLL
 
         /// Public Methods \\\
 
-        template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
-        bool Log(const VerbosityLevel& lvl, const T* pFormat, ...);
+        // Submit log message to stream(s) (variadic arguments).
+        bool Log(const VerbosityLevel& lvl, const char* pFormat, ...);
+        bool Log(const VerbosityLevel& lvl, const wchar_t* pFormat, ...);
 
-        template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
-        bool Log(const VerbosityLevel& lvl, const T* pFormat, va_list pArgs);
+        // Submit log message to stream(s) (variadic arguments, explicit thread ID).
+        bool Log(const VerbosityLevel& lvl, const std::thread::id& tid, const char* pFormat, ...);
+        bool Log(const VerbosityLevel& lvl, const std::thread::id& tid, const wchar_t* pFormat, ...);
+
+        // Submit log message to stream(s) (va_list).
+        bool Log(const VerbosityLevel& lvl, const char* pFormat, va_list pArgs);
+        bool Log(const VerbosityLevel& lvl, const wchar_t* pFormat, va_list pArgs);
+
+        // Submit log message to stream(s) (va_list, explicit thread ID).
+        bool Log(const VerbosityLevel& lvl, const std::thread::id& tid, const char* pFormat, va_list pArgs);
+        bool Log(const VerbosityLevel& lvl, const std::thread::id& tid, const wchar_t* pFormat, va_list pArgs);
     };
 }

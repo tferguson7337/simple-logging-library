@@ -6,8 +6,7 @@
 #include <WindowsConsoleHelper.h>
 
 // STL synchronization
-#include <atomic>
-#include <mutex>
+#include <thread>
 
 namespace SLL
 {
@@ -300,6 +299,74 @@ namespace SLL
         return mColorSequencesW[ColorConverter::ToScalar(clr)];
     }
 
+    template <class StreamType>
+    template <class T>
+    bool StreamLogger<StreamType>::LogInternal(const VerbosityLevel& lvl, const std::thread::id& tid, const T* pFormat, va_list pArgs)
+    {
+        // Ensure verbosity level is valid.
+        if ( lvl < VerbosityLevel::BEGIN || lvl >= VerbosityLevel::MAX )
+        {
+            throw std::invalid_argument(
+                __FUNCTION__" - Invalid verbosity level argument (" +
+                std::to_string(static_cast<VerbosityLevelType>(lvl)) +
+                ")."
+            );
+        }
+
+        // Ensure we have a valid format string.
+        if ( !pFormat )
+        {
+            throw std::invalid_argument(__FUNCTION__ " - Invalid format string (nullptr).");
+        }
+
+        // Ensure the arg list is valid.
+        if ( !pArgs )
+        {
+            throw std::invalid_argument(__FUNCTION__ " - Invalid argument list (nullptr).");
+        }
+
+        // Don't log if message level is below the configured verbosity threshold.
+        if ( lvl < GetConfig( ).GetVerbosityThreshold( ) )
+        {
+            return true;
+        }
+
+        // Check if the stream is still open and in a good state, attempt to recover if not.
+        if ( !IsStreamGood( ) && !RestoreStream( ) )
+        {
+            return false;
+        }
+
+        // Log message prefix strings.
+        try
+        {
+            LogPrefixes<T>(lvl, tid);
+        }
+        catch ( const std::exception& )
+        {
+            // Best effort - we'll attempt to restore to a good state next log.
+            mStream.setstate(std::ios_base::badbit);
+            return IsStreamGood( );
+        }
+
+        // If file stream state is still good, log user message.
+        try
+        {
+            LogMessage<T>(pFormat, pArgs);
+        }
+        catch ( const std::exception& )
+        {
+            // Best effort - we'll attempt to restore to a good state next log.
+            mStream.setstate(std::ios_base::badbit);
+            return IsStreamGood( );
+        }
+
+        // Flush messages to file periodically, or if the message is likely important.
+        Flush(lvl);
+
+        return IsStreamGood( );
+    }
+
     // Log Prefixes to Stream.
     template <class StreamType>
     template <class T>
@@ -503,94 +570,116 @@ namespace SLL
 
     /// Public Methods \\\
 
+    // Submit log message to stream(s) (variadic arguments, narrow).
     template <class StreamType>
-    template <class T, typename>
-    bool StreamLogger<StreamType>::Log(const VerbosityLevel& lvl, const T* pFormat, va_list pArgs)
+    bool StreamLogger<StreamType>::Log(const VerbosityLevel& lvl, const char* pFormat, ...)
     {
-        // Ensure verbosity level is valid.
-        if ( lvl < VerbosityLevel::BEGIN || lvl >= VerbosityLevel::MAX )
-        {
-            throw std::invalid_argument(
-                __FUNCTION__" - Invalid verbosity level argument (" +
-                std::to_string(static_cast<VerbosityLevelType>(lvl)) +
-                ")."
-            );
-        }
-
-        // Ensure we have a valid format string.
-        if ( !pFormat )
-        {
-            throw std::invalid_argument(__FUNCTION__ " - Invalid format string (nullptr).");
-        }
-
-        // Ensure the arg list is valid.
-        if ( !pArgs )
-        {
-            throw std::invalid_argument(__FUNCTION__ " - Invalid argument list (nullptr).");
-        }
-
-        // Don't log if message level is below the configured verbosity threshold.
-        if ( lvl < GetConfig( ).GetVerbosityThreshold( ) )
-        {
-            return true;
-        }
-
-        // Check if the file stream is still open and in a good state, attempt to recover if not.
-        if ( !IsStreamGood( ) && !RestoreStream( ) )
-        {
-            return false;
-        }
-
-        // Log message prefix strings.
-        try
-        {
-            LogPrefixes<T>(lvl, std::this_thread::get_id( ));
-        }
-        catch ( const std::exception& )
-        {
-            // Best effort - we'll attempt to restore to a good state next log.
-            mStream.setstate(std::ios_base::badbit);
-            return IsStreamGood( );
-        }
-
-        // If file stream state is still good, log user message.
-        try
-        {
-            LogMessage<T>(pFormat, pArgs);
-        }
-        catch ( const std::exception& )
-        {
-            // Best effort - we'll attempt to restore to a good state next log.
-            mStream.setstate(std::ios_base::badbit);
-            return IsStreamGood( );
-        }
-
-        // Flush messages to file periodically, or if the message is likely important.
-        Flush(lvl);
-
-        return IsStreamGood( );
-    }
-
-    template <class StreamType>
-    template <class T, typename>
-    bool StreamLogger<StreamType>::Log(const VerbosityLevel& lvl, const T* pFormat, ...)
-    {
+        bool ret = false;
         va_list pArgs;
-
+        va_start(pArgs, pFormat);
         try
         {
-            // Get arguments, send to va_list, cleanup, return result.
-            va_start(pArgs, pFormat);
-            bool ret = Log<T>(lvl, pFormat, pArgs);
-            va_end(pArgs);
-            return ret;
+            ret = LogInternal(lvl, std::this_thread::get_id( ), pFormat, pArgs);
         }
         catch ( const std::exception& )
         {
-            // Cleanup, rethrow exception.
             va_end(pArgs);
             throw;
         }
+
+        va_end(pArgs);
+        return ret;
+    }
+
+    // Submit log message to stream(s) (variadic arguments, wide).
+    template <class StreamType>
+    bool StreamLogger<StreamType>::Log(const VerbosityLevel& lvl, const wchar_t* pFormat, ...)
+    {
+        bool ret = false;
+        va_list pArgs;
+        va_start(pArgs, pFormat);
+        try
+        {
+            ret = LogInternal(lvl, std::this_thread::get_id( ), pFormat, pArgs);
+        }
+        catch ( const std::exception& )
+        {
+            va_end(pArgs);
+            throw;
+        }
+
+        va_end(pArgs);
+        return ret;
+    }
+
+    // Submit log message to stream(s) (variadic arguments, narrow, explicit thread ID).
+    template <class StreamType>
+    bool StreamLogger<StreamType>::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const char* pFormat, ...)
+    {
+        bool ret = false;
+        va_list pArgs;
+        va_start(pArgs, pFormat);
+        try
+        {
+            ret = LogInternal(lvl, tid, pFormat, pArgs);
+        }
+        catch ( const std::exception& )
+        {
+            va_end(pArgs);
+            throw;
+        }
+
+        va_end(pArgs);
+        return ret;
+    }
+
+    // Submit log message to stream(s) (variadic arguments, explicit thread ID).
+    template <class StreamType>
+    bool StreamLogger<StreamType>::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const wchar_t* pFormat, ...)
+    {
+        bool ret = false;
+        va_list pArgs;
+        va_start(pArgs, pFormat);
+        try
+        {
+            ret = LogInternal(lvl, tid, pFormat, pArgs);
+        }
+        catch ( const std::exception& )
+        {
+            va_end(pArgs);
+            throw;
+        }
+
+        va_end(pArgs);
+        return ret;
+    }
+
+    // Submit log message to stream(s) (va_list, narrow).
+    template <class StreamType>
+    bool StreamLogger<StreamType>::Log(const VerbosityLevel& lvl, const char* pFormat, va_list pArgs)
+    {
+        return LogInternal(lvl, std::this_thread::get_id( ), pFormat, pArgs);
+    }
+
+    // Submit log message to stream(s) (va_list, wide).
+    template <class StreamType>
+    bool StreamLogger<StreamType>::Log(const VerbosityLevel& lvl, const wchar_t* pFormat, va_list pArgs)
+    {
+        return LogInternal(lvl, std::this_thread::get_id( ), pFormat , pArgs);
+    }
+
+    // Submit log message to stream(s) (va_list, narrow, explicit thread ID).
+    template <class StreamType>
+    bool StreamLogger<StreamType>::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const char* pFormat, va_list pArgs)
+    {
+        return LogInternal(lvl, tid, pFormat, pArgs);
+    }
+
+    // Submit log message to stream(s) (va_list, wide, explicit thread ID).
+    template <class StreamType>
+    bool StreamLogger<StreamType>::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const wchar_t* pFormat, va_list pArgs)
+    {
+        return LogInternal(lvl, tid, pFormat, pArgs);
     }
 
     /// Explicit Template Instantiations \\\
@@ -602,8 +691,26 @@ namespace SLL
     template const ConfigPackage& FileLogger::GetConfig( ) const noexcept;
 
     // Log Instantiations - Variadic Arguments
-    template bool StdOutLogger::Log<char>(const VerbosityLevel& lvl, const char* pFormat, ...);
-    template bool StdOutLogger::Log<wchar_t>(const VerbosityLevel& lvl, const wchar_t* pFormat, ...);
-    template bool FileLogger::Log<char>(const VerbosityLevel& lvl, const char* pFormat, ...);
-    template bool FileLogger::Log<wchar_t>(const VerbosityLevel& lvl, const wchar_t* pFormat, ...);
+    template bool StdOutLogger::Log(const VerbosityLevel& lvl, const char* pFormat, ...);
+    template bool StdOutLogger::Log(const VerbosityLevel& lvl, const wchar_t* pFormat, ...);
+    template bool FileLogger::Log(const VerbosityLevel& lvl, const char* pFormat, ...);
+    template bool FileLogger::Log(const VerbosityLevel& lvl, const wchar_t* pFormat, ...);
+
+    // Log Instantiations - Variadic Arguments, Explicit Thread ID
+    template bool StdOutLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const char* pFormat, ...);
+    template bool StdOutLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const wchar_t* pFormat, ...);
+    template bool FileLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const char* pFormat, ...);
+    template bool FileLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const wchar_t* pFormat, ...);
+
+    // Log Instantiations - va_list
+    template bool StdOutLogger::Log(const VerbosityLevel& lvl, const char* pFormat, va_list pArgs);
+    template bool StdOutLogger::Log(const VerbosityLevel& lvl, const wchar_t* pFormat, va_list pArgs);
+    template bool FileLogger::Log(const VerbosityLevel& lvl, const char* pFormat, va_list pArgs);
+    template bool FileLogger::Log(const VerbosityLevel& lvl, const wchar_t* pFormat, va_list pArgs);
+
+    // Log Instantiations - va_list, Explicit Thread ID
+    template bool StdOutLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const char* pFormat, va_list pArgs);
+    template bool StdOutLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const wchar_t* pFormat, va_list pArgs);
+    template bool FileLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const char* pFormat, va_list pArgs);
+    template bool FileLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const wchar_t* pFormat, va_list pArgs);
 }

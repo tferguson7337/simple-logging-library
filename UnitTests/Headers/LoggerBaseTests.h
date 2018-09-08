@@ -484,11 +484,5 @@ namespace LoggerBaseTests
         {
             return LoggerBase::BuildMessagePrefixes<T>(lvl, tid);
         }
-
-        // Dummy Flush method to satisfy ILogger interface.
-        void Flush( )
-        {
-            __noop;
-        }
     };
 }
