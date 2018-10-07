@@ -11,52 +11,37 @@ namespace SLL
 {
     /// Common Private Helper Methods \\\
 
-    // Prefix - Timestamp Format Getter - Narrow
-    template <>
-    const std::basic_string<char>& LoggerBase::GetTimeFormat( )
+    // Prefix - Timestamp Format Getter
+    template <class T>
+    const std::basic_string<T>& LoggerBase::GetTimeFormat( )
     {
-        static const std::basic_string<char> timeFormatA = "[%D - %T]  ";
-        return timeFormatA;
+        static const SupportedStringTuple timeFormats(
+            MAKE_SUPSTR_TUPLE("[%D - %T]  ")
+        );
+
+        return std::get<std::basic_string<T>>(timeFormats);
     }
 
-    // Prefix - Timestamp Format Getter - Wide
-    template <>
-    const std::basic_string<wchar_t>& LoggerBase::GetTimeFormat( )
+    // Prefix - Thread ID Format Getter 
+    template <class T>
+    const std::basic_string<T>& LoggerBase::GetThreadIDFormat( )
     {
-        static const std::basic_string<wchar_t> timeFormatW = L"[%D - %T]  ";
-        return timeFormatW;
+        static const SupportedStringTuple threadIDFormats(
+            MAKE_SUPSTR_TUPLE("TID[%08X]  ")
+        );
+
+        return std::get<std::basic_string<T>>(threadIDFormats);
     }
 
-    // Prefix - Thread ID Format Getter - Narrow
-    template <>
-    const std::basic_string<char>& LoggerBase::GetThreadIDFormat( )
+    // Prefix - VerbosityLevel Format Getter
+    template <class T>
+    const std::basic_string<T>& LoggerBase::GetVerbosityLevelFormat( )
     {
-        static const std::basic_string<char> threadIDFormatA = "TID[%08X]  ";
-        return threadIDFormatA;
-    }
+        static const SupportedStringTuple verbosityLevelFormats(
+            MAKE_SUPSTR_TUPLE("Type[%5.5s]  ")
+        );
 
-    // Prefix - Thread ID Format Getter - Wide
-    template <>
-    const std::basic_string<wchar_t>& LoggerBase::GetThreadIDFormat( )
-    {
-        static const std::basic_string<wchar_t> threadIDFormatW = L"TID[%08X]  ";
-        return threadIDFormatW;
-    }
-
-    // Prefix - VerbosityLevel Format Getter - Narrow
-    template <>
-    const std::basic_string<char>& LoggerBase::GetVerbosityLevelFormat( )
-    {
-        static const std::basic_string<char> verbosityLevelFormatA = "Type[%5.5s]  ";
-        return verbosityLevelFormatA;
-    }
-
-    // Prefix - VerbosityLevel Format Getter - Wide
-    template <>
-    const std::basic_string<wchar_t>& LoggerBase::GetVerbosityLevelFormat( )
-    {
-        static const std::basic_string<wchar_t> verbosityLevelFormatW = L"Type[%5.5s]  ";
-        return verbosityLevelFormatW;
+        return std::get<std::basic_string<T>>(verbosityLevelFormats);
     }
 
     // Get Local Time String
@@ -87,9 +72,9 @@ namespace SLL
     // Extract Thread ID
     unsigned long LoggerBase::ExtractThreadID(const std::thread::id& tid)
     {
-        std::basic_ostringstream<char> oss;
+        std::basic_ostringstream<utf8> oss;
         oss << tid;
-        const std::basic_string<char>& str = oss.str( );
+        const std::basic_string<utf8>& str = oss.str( );
         if ( str.empty( ) )
         {
             throw std::runtime_error(__FUNCTION__" - Failed to extract thread id.");
@@ -100,7 +85,7 @@ namespace SLL
 
     // Returns number of characters required to hold formatted string, including null-terminator (narrow).
     template <>
-    size_t LoggerBase::GetRequiredBufferLength<char>(const char* pFormat, va_list pArgs)
+    size_t LoggerBase::GetRequiredBufferLength<utf8>(const utf8* pFormat, va_list pArgs)
     {
         if ( !pFormat )
         {
@@ -113,22 +98,22 @@ namespace SLL
 
     // Returns number of characters required to hold formatted string, including null-terminator (wide).
     template <>
-    size_t LoggerBase::GetRequiredBufferLength<wchar_t>(const wchar_t* pFormat, va_list pArgs)
+    size_t LoggerBase::GetRequiredBufferLength<utf16>(const utf16* pFormat, va_list pArgs)
     {
         if ( !pFormat )
         {
             throw std::invalid_argument(__FUNCTION__" - Invalid format string (nullptr).");
         }
 
-        int i = _vscwprintf(pFormat, pArgs);
+        int i = _vscwprintf(reinterpret_cast<const wchar_t*>(pFormat), pArgs);
         return (i < 0) ? 0 : static_cast<size_t>(i) + 1;
     }
 
     // Fills buffer with formatted string.  Expected to be used in conjunction with GetRequiredBufferLength( ) (narrow).
     template <>
-    std::unique_ptr<char[ ]> LoggerBase::StringPrintWrapper<char>(const size_t bufLen, const char* pFormat, va_list pArgs)
+    std::unique_ptr<utf8[ ]> LoggerBase::StringPrintWrapper<utf8>(const size_t bufLen, const utf8* pFormat, va_list pArgs)
     {
-        std::unique_ptr<char[ ]> buf;
+        std::unique_ptr<utf8[ ]> buf;
         int writeLen = 0;
 
         if ( bufLen == 0 )
@@ -140,7 +125,7 @@ namespace SLL
             throw std::invalid_argument(__FUNCTION__" - Invalid format string (nullptr).");
         }
 
-        buf = std::make_unique<char[ ]>(bufLen);
+        buf = std::make_unique<utf8[ ]>(bufLen);
 
         writeLen = vsnprintf(buf.get( ), bufLen, pFormat, pArgs);
 
@@ -168,9 +153,9 @@ namespace SLL
 
     // Fills buffer with formatted string.  Expected to be used in conjunction with GetRequiredBufferLength( ) (wide).
     template <>
-    std::unique_ptr<wchar_t[ ]> LoggerBase::StringPrintWrapper<wchar_t>(const size_t bufLen, const wchar_t* pFormat, va_list pArgs)
+    std::unique_ptr<utf16[ ]> LoggerBase::StringPrintWrapper<utf16>(const size_t bufLen, const utf16* pFormat, va_list pArgs)
     {
-        std::unique_ptr<wchar_t[ ]> buf;
+        std::unique_ptr<utf16[ ]> buf;
         int writeLen = 0;
 
         if ( bufLen == 0 )
@@ -182,9 +167,9 @@ namespace SLL
             throw std::invalid_argument(__FUNCTION__" - Invalid format string (nullptr).");
         }
 
-        buf = std::make_unique<wchar_t[ ]>(bufLen);
+        buf = std::make_unique<utf16[ ]>(bufLen);
 
-        writeLen = vswprintf(buf.get( ), bufLen, pFormat, pArgs);
+        writeLen = vswprintf(reinterpret_cast<wchar_t*>(buf.get( )), bufLen, reinterpret_cast<const wchar_t*>(pFormat), pArgs);
 
         if ( writeLen < 0 )
         {
@@ -356,14 +341,14 @@ namespace SLL
     /// Explicit Template Instantiation \\\
 
     // Build Time Prefix String
-    template std::unique_ptr<char[ ]> LoggerBase::BuildTimePrefix<char>( );
-    template std::unique_ptr<wchar_t[ ]> LoggerBase::BuildTimePrefix<wchar_t>( );
+    template std::unique_ptr<utf8[ ]> LoggerBase::BuildTimePrefix<utf8>( );
+    template std::unique_ptr<utf16[ ]> LoggerBase::BuildTimePrefix<utf16>( );
 
     // Build Message Prefix Strings
-    template std::vector<std::unique_ptr<char[ ]>> LoggerBase::BuildMessagePrefixes<char>(const VerbosityLevel&, const std::thread::id&) const;
-    template std::vector<std::unique_ptr<wchar_t[ ]>> LoggerBase::BuildMessagePrefixes<wchar_t>(const VerbosityLevel&, const std::thread::id&) const;
+    template std::vector<std::unique_ptr<utf8[ ]>> LoggerBase::BuildMessagePrefixes<utf8>(const VerbosityLevel&, const std::thread::id&) const;
+    template std::vector<std::unique_ptr<utf16[ ]>> LoggerBase::BuildMessagePrefixes<utf16>(const VerbosityLevel&, const std::thread::id&) const;
 
     // Build Formatted String
-    template std::unique_ptr<char[ ]> LoggerBase::BuildFormattedMessage<char>(const char*, va_list);
-    template std::unique_ptr<wchar_t[ ]> LoggerBase::BuildFormattedMessage<wchar_t>(const wchar_t*, va_list);
+    template std::unique_ptr<utf8[ ]> LoggerBase::BuildFormattedMessage<utf8>(const utf8*, va_list);
+    template std::unique_ptr<utf16[ ]> LoggerBase::BuildFormattedMessage<utf16>(const utf16*, va_list);
 }

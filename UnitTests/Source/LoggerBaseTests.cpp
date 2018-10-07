@@ -25,105 +25,105 @@ namespace LoggerBaseTests
             /// Get Required Buffer Length Tests \\\
             
             // Negative Tests
-            GetRequiredBufferLengthTests::NoFormat<char>,
-            GetRequiredBufferLengthTests::NoFormat<wchar_t>,
+            GetRequiredBufferLengthTests::NoFormat<utf8>,
+            GetRequiredBufferLengthTests::NoFormat<utf16>,
 
             // Positive Tests
-            GetRequiredBufferLengthTests::NoArgs<char>,
-            GetRequiredBufferLengthTests::NoArgs<wchar_t>,
+            GetRequiredBufferLengthTests::NoArgs<utf8>,
+            GetRequiredBufferLengthTests::NoArgs<utf16>,
 
-            GetRequiredBufferLengthTests::IntegralArgs<char>,
-            GetRequiredBufferLengthTests::IntegralArgs<wchar_t>,
+            GetRequiredBufferLengthTests::IntegralArgs<utf8>,
+            GetRequiredBufferLengthTests::IntegralArgs<utf16>,
 
-            GetRequiredBufferLengthTests::FloatingArgs<char>,
-            GetRequiredBufferLengthTests::FloatingArgs<wchar_t>,
+            GetRequiredBufferLengthTests::FloatingArgs<utf8>,
+            GetRequiredBufferLengthTests::FloatingArgs<utf16>,
 
-            GetRequiredBufferLengthTests::StringArgs<char>,
-            GetRequiredBufferLengthTests::StringArgs<wchar_t>,
+            GetRequiredBufferLengthTests::StringArgs<utf8>,
+            GetRequiredBufferLengthTests::StringArgs<utf16>,
 
-            GetRequiredBufferLengthTests::ThreadIDFormat<char>,
-            GetRequiredBufferLengthTests::ThreadIDFormat<wchar_t>,
+            GetRequiredBufferLengthTests::ThreadIDFormat<utf8>,
+            GetRequiredBufferLengthTests::ThreadIDFormat<utf16>,
 
-            GetRequiredBufferLengthTests::VerbosityLevelFormat<char>,
-            GetRequiredBufferLengthTests::VerbosityLevelFormat<wchar_t>,
+            GetRequiredBufferLengthTests::VerbosityLevelFormat<utf8>,
+            GetRequiredBufferLengthTests::VerbosityLevelFormat<utf16>,
 
             /// String Print Wrapper Tests \\\
 
             // Negative Tests
-            StringPrintWrapperTests::ZeroLength<char>,
-            StringPrintWrapperTests::ZeroLength<wchar_t>,
+            StringPrintWrapperTests::ZeroLength<utf8>,
+            StringPrintWrapperTests::ZeroLength<utf16>,
 
-            StringPrintWrapperTests::NoFormat<char>,
-            StringPrintWrapperTests::NoFormat<wchar_t>,
+            StringPrintWrapperTests::NoFormat<utf8>,
+            StringPrintWrapperTests::NoFormat<utf16>,
 
             // Positive Tests
-            StringPrintWrapperTests::NoArgs<char>,
-            StringPrintWrapperTests::NoArgs<wchar_t>,
+            StringPrintWrapperTests::NoArgs<utf8>,
+            StringPrintWrapperTests::NoArgs<utf16>,
 
-            StringPrintWrapperTests::IntegralArgs<char>,
-            StringPrintWrapperTests::IntegralArgs<wchar_t>,
+            StringPrintWrapperTests::IntegralArgs<utf8>,
+            StringPrintWrapperTests::IntegralArgs<utf16>,
 
-            StringPrintWrapperTests::FloatingArgs<char>,
-            StringPrintWrapperTests::FloatingArgs<wchar_t>,
+            StringPrintWrapperTests::FloatingArgs<utf8>,
+            StringPrintWrapperTests::FloatingArgs<utf16>,
 
-            StringPrintWrapperTests::StringArgs<char>,
-            StringPrintWrapperTests::StringArgs<wchar_t>,
+            StringPrintWrapperTests::StringArgs<utf8>,
+            StringPrintWrapperTests::StringArgs<utf16>,
 
-            StringPrintWrapperTests::ThreadIDFormat<char>,
-            StringPrintWrapperTests::ThreadIDFormat<wchar_t>,
+            StringPrintWrapperTests::ThreadIDFormat<utf8>,
+            StringPrintWrapperTests::ThreadIDFormat<utf16>,
 
-            StringPrintWrapperTests::VerbosityLevelFormat<char>,
-            StringPrintWrapperTests::VerbosityLevelFormat<wchar_t>,
+            StringPrintWrapperTests::VerbosityLevelFormat<utf8>,
+            StringPrintWrapperTests::VerbosityLevelFormat<utf16>,
 
             /// Build Message Prefix(es) Tests \\\
 
             // Negative Tests
-            BuildMessagePrefixesTests::BadVerbosityLevel<char>,
-            BuildMessagePrefixesTests::BadVerbosityLevel<wchar_t>,
+            BuildMessagePrefixesTests::BadVerbosityLevel<utf8>,
+            BuildMessagePrefixesTests::BadVerbosityLevel<utf16>,
 
             // Positive Tests
-            BuildMessagePrefixesTests::NoOptions<char>,
-            BuildMessagePrefixesTests::NoOptions<wchar_t>,
+            BuildMessagePrefixesTests::NoOptions<utf8>,
+            BuildMessagePrefixesTests::NoOptions<utf16>,
             
-            BuildMessagePrefixesTests::TimeOnly<char>,
-            BuildMessagePrefixesTests::TimeOnly<wchar_t>,
+            BuildMessagePrefixesTests::TimeOnly<utf8>,
+            BuildMessagePrefixesTests::TimeOnly<utf16>,
 
-            BuildMessagePrefixesTests::ThreadIDOnly<char>,
-            BuildMessagePrefixesTests::ThreadIDOnly<wchar_t>,
+            BuildMessagePrefixesTests::ThreadIDOnly<utf8>,
+            BuildMessagePrefixesTests::ThreadIDOnly<utf16>,
 
-            BuildMessagePrefixesTests::VerbosityLevelOnly<char>,
-            BuildMessagePrefixesTests::VerbosityLevelOnly<wchar_t>,
+            BuildMessagePrefixesTests::VerbosityLevelOnly<utf8>,
+            BuildMessagePrefixesTests::VerbosityLevelOnly<utf16>,
 
-            BuildMessagePrefixesTests::Time_ThreadID<char>,
-            BuildMessagePrefixesTests::Time_ThreadID<wchar_t>,
+            BuildMessagePrefixesTests::Time_ThreadID<utf8>,
+            BuildMessagePrefixesTests::Time_ThreadID<utf16>,
 
-            BuildMessagePrefixesTests::Time_VerbosityLevel<char>,
-            BuildMessagePrefixesTests::Time_VerbosityLevel<wchar_t>,
+            BuildMessagePrefixesTests::Time_VerbosityLevel<utf8>,
+            BuildMessagePrefixesTests::Time_VerbosityLevel<utf16>,
 
-            BuildMessagePrefixesTests::ThreadID_VerbosityLevel<char>,
-            BuildMessagePrefixesTests::ThreadID_VerbosityLevel<wchar_t>,
+            BuildMessagePrefixesTests::ThreadID_VerbosityLevel<utf8>,
+            BuildMessagePrefixesTests::ThreadID_VerbosityLevel<utf16>,
 
-            BuildMessagePrefixesTests::AllOptions<char>,
-            BuildMessagePrefixesTests::AllOptions<wchar_t>,
+            BuildMessagePrefixesTests::AllOptions<utf8>,
+            BuildMessagePrefixesTests::AllOptions<utf16>,
 
             /// Build Formatted Message Tests \\\
 
             // Negative Tests
-            BuildFormattedMessageTests::NoFormat<char>,
-            BuildFormattedMessageTests::NoFormat<wchar_t>,
+            BuildFormattedMessageTests::NoFormat<utf8>,
+            BuildFormattedMessageTests::NoFormat<utf16>,
 
             // Positive Tests
-            BuildFormattedMessageTests::NoArgs<char>,
-            BuildFormattedMessageTests::NoArgs<wchar_t>,
+            BuildFormattedMessageTests::NoArgs<utf8>,
+            BuildFormattedMessageTests::NoArgs<utf16>,
 
-            BuildFormattedMessageTests::IntegralArgs<char>,
-            BuildFormattedMessageTests::IntegralArgs<wchar_t>,
+            BuildFormattedMessageTests::IntegralArgs<utf8>,
+            BuildFormattedMessageTests::IntegralArgs<utf16>,
 
-            BuildFormattedMessageTests::FloatingArgs<char>,
-            BuildFormattedMessageTests::FloatingArgs<wchar_t>,
+            BuildFormattedMessageTests::FloatingArgs<utf8>,
+            BuildFormattedMessageTests::FloatingArgs<utf16>,
 
-            BuildFormattedMessageTests::StringArgs<char>,
-            BuildFormattedMessageTests::StringArgs<wchar_t>
+            BuildFormattedMessageTests::StringArgs<utf8>,
+            BuildFormattedMessageTests::StringArgs<utf16>
         };
 
         return testList;
@@ -133,12 +133,12 @@ namespace LoggerBaseTests
 
     UnitTestResult GetTimeFormat( )
     {
-        std::basic_string<char> narrow;
-        std::basic_string<wchar_t> wide;
+        std::basic_string<utf8> narrow;
+        std::basic_string<utf16> wide;
 
         // Get time formats.
-        narrow = Tester::GetTimeFormat<char>( );
-        wide = Tester::GetTimeFormat<wchar_t>( );
+        narrow = Tester::GetTimeFormat<utf8>( );
+        wide = Tester::GetTimeFormat<utf16>( );
 
         // Ensure we got the strings, and the lengths match up.
         SUTL_TEST_ASSERT(!narrow.empty( ));
@@ -146,8 +146,8 @@ namespace LoggerBaseTests
         SUTL_TEST_ASSERT(narrow.size( ) == wide.size( ));
 
         // Ensure that the narrow/wide strings are equivalent.
-        std::basic_string<wchar_t> narrowConvert = StringUtil::ConvertAndCopy<wchar_t>(narrow);
-        std::basic_string<char> wideConvert = StringUtil::ConvertAndCopy<char>(wide);
+        std::basic_string<utf16> narrowConvert = StringUtil::ConvertAndCopy<utf16>(narrow);
+        std::basic_string<utf8> wideConvert = StringUtil::ConvertAndCopy<utf8>(wide);
 
         SUTL_TEST_ASSERT(narrow == wideConvert);
         SUTL_TEST_ASSERT(wide == narrowConvert);
@@ -157,12 +157,12 @@ namespace LoggerBaseTests
 
     UnitTestResult GetThreadIDFormat( )
     {
-        std::basic_string<char> narrow;
-        std::basic_string<wchar_t> wide;
+        std::basic_string<utf8> narrow;
+        std::basic_string<utf16> wide;
 
         // Get thread ID formats.
-        narrow = Tester::GetThreadIDFormat<char>( );
-        wide = Tester::GetThreadIDFormat<wchar_t>( );
+        narrow = Tester::GetThreadIDFormat<utf8>( );
+        wide = Tester::GetThreadIDFormat<utf16>( );
 
         // Ensure we got the strings, and the lengths match up.
         SUTL_TEST_ASSERT(!narrow.empty( ));
@@ -170,8 +170,8 @@ namespace LoggerBaseTests
         SUTL_TEST_ASSERT(narrow.size( ) == wide.size( ));
 
         // Ensure that the narrow/wide strings are equivalent.
-        std::basic_string<wchar_t> narrowConvert = StringUtil::ConvertAndCopy<wchar_t>(narrow);
-        std::basic_string<char> wideConvert = StringUtil::ConvertAndCopy<char>(wide);
+        std::basic_string<utf16> narrowConvert = StringUtil::ConvertAndCopy<utf16>(narrow);
+        std::basic_string<utf8> wideConvert = StringUtil::ConvertAndCopy<utf8>(wide);
 
         SUTL_TEST_ASSERT(narrow == wideConvert);
         SUTL_TEST_ASSERT(wide == narrowConvert);
@@ -181,12 +181,12 @@ namespace LoggerBaseTests
 
     UnitTestResult GetVerbosityLevelFormat( )
     {
-        std::basic_string<char> narrow;
-        std::basic_string<wchar_t> wide;
+        std::basic_string<utf8> narrow;
+        std::basic_string<utf16> wide;
 
         // Get verbosity level formats.
-        narrow = Tester::GetVerbosityLevelFormat<char>( );
-        wide = Tester::GetVerbosityLevelFormat<wchar_t>( );
+        narrow = Tester::GetVerbosityLevelFormat<utf8>( );
+        wide = Tester::GetVerbosityLevelFormat<utf16>( );
 
         // Ensure we got the strings, and the lengths match up.
         SUTL_TEST_ASSERT(!narrow.empty( ));
@@ -194,8 +194,8 @@ namespace LoggerBaseTests
         SUTL_TEST_ASSERT(narrow.size( ) == wide.size( ));
 
         // Ensure that the narrow/wide strings are equivalent.
-        std::basic_string<wchar_t> narrowConvert = StringUtil::ConvertAndCopy<wchar_t>(narrow);
-        std::basic_string<char> wideConvert = StringUtil::ConvertAndCopy<char>(wide);
+        std::basic_string<utf16> narrowConvert = StringUtil::ConvertAndCopy<utf16>(narrow);
+        std::basic_string<utf8> wideConvert = StringUtil::ConvertAndCopy<utf8>(wide);
 
         SUTL_TEST_ASSERT(narrow == wideConvert);
         SUTL_TEST_ASSERT(wide == narrowConvert);
@@ -207,14 +207,14 @@ namespace LoggerBaseTests
 
     UnitTestResult GetLocalTime( )
     {
-        std::basic_string<char> narrow;
-        std::basic_string<wchar_t> wide;
+        std::basic_string<utf8> narrow;
+        std::basic_string<utf16> wide;
 
         // Get local time strings.
         try
         {
-            narrow = Tester::GetLocalTime<char>( );
-            wide = Tester::GetLocalTime<wchar_t>( );
+            narrow = Tester::GetLocalTime<utf8>( );
+            wide = Tester::GetLocalTime<utf16>( );
         }
         catch ( const std::exception& e )
         {
@@ -227,8 +227,8 @@ namespace LoggerBaseTests
         SUTL_TEST_ASSERT(narrow.size( ) == wide.size( ));
 
         // Ensure that the narrow/wide strings are equivalent.
-        std::basic_string<wchar_t> narrowConvert = StringUtil::ConvertAndCopy<wchar_t>(narrow);
-        std::basic_string<char> wideConvert = StringUtil::ConvertAndCopy<char>(wide);
+        std::basic_string<utf16> narrowConvert = StringUtil::ConvertAndCopy<utf16>(narrow);
+        std::basic_string<utf8> wideConvert = StringUtil::ConvertAndCopy<utf8>(wide);
 
         ///
         //
@@ -244,8 +244,8 @@ namespace LoggerBaseTests
 
     UnitTestResult BuildTimePrefix( )
     {
-        std::unique_ptr<char[ ]> narrow;
-        std::unique_ptr<wchar_t[ ]> wide;
+        std::unique_ptr<utf8[ ]> narrow;
+        std::unique_ptr<utf16[ ]> wide;
 
         size_t nLen = 0;
         size_t wLen = 0;
@@ -253,8 +253,8 @@ namespace LoggerBaseTests
         // Get time prefix strings
         try
         {
-            narrow = Tester::BuildTimePrefix<char>( );
-            wide = Tester::BuildTimePrefix<wchar_t>( );
+            narrow = Tester::BuildTimePrefix<utf8>( );
+            wide = Tester::BuildTimePrefix<utf16>( );
         }
         catch ( const std::exception& e )
         {
@@ -266,13 +266,13 @@ namespace LoggerBaseTests
         SUTL_TEST_ASSERT(wide);
 
         // Get narrow length.
-        for ( const char* p = narrow.get( ); *p != '\0'; p++ )
+        for ( const utf8* p = narrow.get( ); *p != '\0'; p++ )
         {
             nLen++;
         }
 
         // Get wide length.
-        for ( const wchar_t* p = wide.get( ); *p != L'\0'; p++ )
+        for ( const utf16* p = wide.get( ); *p != L'\0'; p++ )
         {
             wLen++;
         }
@@ -280,12 +280,12 @@ namespace LoggerBaseTests
         // Ensure the lengths match up.
         SUTL_TEST_ASSERT(++nLen == ++wLen);
 
-        std::unique_ptr<wchar_t[ ]> narrowConvert = StringUtil::ConvertAndCopy<wchar_t>(narrow.get( ), nLen);
-        std::unique_ptr<char[ ]> wideConvert = StringUtil::ConvertAndCopy<char>(wide.get( ), wLen);
+        std::unique_ptr<utf16[ ]> narrowConvert = StringUtil::ConvertAndCopy<utf16>(narrow.get( ), nLen);
+        std::unique_ptr<utf8[ ]> wideConvert = StringUtil::ConvertAndCopy<utf8>(wide.get( ), wLen);
 
         // Ensure the narrow and wide strings are equivalent.
-        SUTL_TEST_ASSERT(memcmp(narrow.get( ), wideConvert.get( ), sizeof(char) * nLen) == 0);
-        SUTL_TEST_ASSERT(memcmp(wide.get( ), narrowConvert.get( ), sizeof(wchar_t) * wLen) == 0);
+        SUTL_TEST_ASSERT(memcmp(narrow.get( ), wideConvert.get( ), sizeof(utf8) * nLen) == 0);
+        SUTL_TEST_ASSERT(memcmp(wide.get( ), narrowConvert.get( ), sizeof(utf16) * wLen) == 0);
 
         SUTL_TEST_SUCCESS( );
     }
@@ -406,7 +406,7 @@ namespace LoggerBaseTests
         {
             std::unique_ptr<T[ ]> pFormat(StringUtil::ConvertAndCopy<T>("Test string, thread-id specifier %X."));
             size_t len = 0;
-            std::basic_ostringstream<char> tidStream;
+            std::basic_ostringstream<utf8> tidStream;
 
             tidStream << std::this_thread::get_id( );
 
@@ -622,7 +622,7 @@ namespace LoggerBaseTests
             size_t len = 0;
 
             std::unique_ptr<T[ ]> arg1(StringUtil::ConvertAndCopy<T>("Test string #1"));
-            std::unique_ptr<wchar_t[ ]> arg2(StringUtil::ConvertAndCopy<wchar_t>("\"Test string #2\""));
+            std::unique_ptr<utf16[ ]> arg2(StringUtil::ConvertAndCopy<utf16>("\"Test string #2\""));
 
             try
             {
@@ -652,7 +652,7 @@ namespace LoggerBaseTests
         {
             auto HexTID = [ ] ( ) -> std::string
             {
-                std::basic_ostringstream<char> oss;
+                std::basic_ostringstream<utf8> oss;
                 oss << std::hex << std::uppercase;
                 oss << Tester::ExtractThreadID(std::this_thread::get_id( ));
                 return oss.str( );
@@ -700,7 +700,7 @@ namespace LoggerBaseTests
                 const std::basic_string<T> verbosityLevelString(SLL::VerbosityLevelConverter::ToString<T>(lvl));
                 const std::unique_ptr<T[ ]> expected(
                     StringUtil::ConvertAndCopy<T>(
-                    ("Test string, verbosity-level specifier " + SLL::VerbosityLevelConverter::ToString<char>(lvl) + ".").c_str( )));
+                    ("Test string, verbosity-level specifier " + SLL::VerbosityLevelConverter::ToString<utf8>(lvl) + ".").c_str( )));
 
                 try
                 {
@@ -1127,7 +1127,7 @@ namespace LoggerBaseTests
             try
             {
                 const std::unique_ptr<T[ ]> arg1 = StringUtil::ConvertAndCopy<T>("Test string #1");
-                const wchar_t* arg2 = L"\"Test string #2\"";
+                const utf16* arg2 = UTF16_LITERAL("\"Test string #2\"");
 
                 str = Tester::BuildFormattedMessage<T>(pFormat.get( ), arg1.get( ), arg2);
             }

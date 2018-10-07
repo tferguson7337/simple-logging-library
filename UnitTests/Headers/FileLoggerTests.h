@@ -163,38 +163,37 @@ namespace FileLoggerTests
     /// Helper Functions \\\
 
     // Build SLL::ConfigPackage object with specified filepath string and verbosity-threshold.
-    inline SLL::ConfigPackage BuildConfig(const std::wstring& f, SLL::VerbosityLevel t)
+    inline SLL::ConfigPackage BuildConfig(const std::filesystem::path& p, SLL::VerbosityLevel t)
     {
         SLL::ConfigPackage config;
 
-        config.SetFile(f);
+        config.SetFile(p);
         config.SetVerbosityThreshold(t);
 
         return config;
     }
 
     // Return (hopefully) valid (relative) file path string.
-    inline const std::wstring& GetGoodFileString( )
+    inline const std::filesystem::path& GetGoodFilePath( )
     {
-        static const std::wstring str(std::filesystem::current_path( ).wstring( ) + L"\\" + L"test_file.log");
+        static const std::filesystem::path goodPath(std::filesystem::current_path( ).u16string( ) + u"\\" + u"test_file.log");
 
-        return str;
+        return goodPath;
     }
 
-    // Return invalid file path string.
-    inline const std::wstring& GetBadFileString( )
+    inline const std::filesystem::path& GetBadFilePath( )
     {
-        static const std::wstring str(L"\\\\BAD\\PATH\\NOT\\USABLE\\test_file.log");
+        static const std::filesystem::path badPath(u"\\\\BADPATH\\PATH\\IS\\NO\\GOOD");
 
-        return str;
+        return badPath;
     }
 
     // Attempt to read test file contents and return them.
-    inline std::wstring ReadTestFile( )
+    inline std::basic_string<utf16> ReadTestFile( )
     {
-        std::basic_ifstream<wchar_t> fileStream(GetGoodFileString( ), std::ios_base::in);
-        std::wstring result;
-        std::wstring line;
+        std::basic_ifstream<utf16> fileStream(GetGoodFilePath( ), std::ios_base::in);
+        std::basic_string<utf16> result;
+        std::basic_string<utf16> line;
 
         while ( std::getline(fileStream, line) )
         {
@@ -218,7 +217,7 @@ namespace FileLoggerTests
     // Attempt to delete the test file.
     inline bool DeleteTestFile( )
     {
-        static const std::filesystem::path testFilePath(GetGoodFileString( ));
+        static const std::filesystem::path testFilePath(GetGoodFilePath( ));
 
         // Delete file, double-check that it doesn't exist after deletion.
         return std::filesystem::remove(testFilePath) && !std::filesystem::exists(testFilePath);
@@ -411,25 +410,11 @@ namespace StreamLoggerTests
         }
 
         // Logger Color Sequence Getter - const
-        template <class T>
-        const std::vector<std::basic_string<T>>& GetColorSequences( ) const;
-
-        // Logger Color Sequence Getter - narrow
-        template <>
-        const std::vector<std::basic_string<char>>& GetColorSequences<char>( ) const
+        const std::vector<SupportedStringTuple>& GetColorSequences( ) const
         {
             CheckForNullLogger(__FUNCTION__);
 
-            return mpLogger->mColorSequencesA;
-        }
-
-        // Logger Color Sequence Getter - wide
-        template <>
-        const std::vector<std::basic_string<wchar_t>>& GetColorSequences<wchar_t>( ) const
-        {
-            CheckForNullLogger(__FUNCTION__);
-
-            return mpLogger->mColorSequencesW;
+            return mpLogger->mColorSequences;
         }
 
         /// Setters \\\
@@ -452,11 +437,11 @@ namespace StreamLoggerTests
             mpLogger = std::make_unique<LoggerType>(std::move(config));
         }
 
-        void SetStreamBuffer(std::wstreambuf& buf)
+        void SetStreamBuffer(std::basic_streambuf<utf16>& buf)
         {
             CheckForNullLogger(__FUNCTION__);
 
-            mpLogger->mpWideStreamBuffer = &buf;
+            mpLogger->mpUTF16StreamBuffer = &buf;
         }
 
         /// StreamLogger Exposer Methods \\\

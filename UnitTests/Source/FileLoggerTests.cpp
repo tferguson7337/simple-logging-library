@@ -44,92 +44,92 @@ namespace FileLoggerTests
             /// LogPrefixes Tests \\\
 
             // Negative Tests
-            LogPrefixes::NoFile<char>,
-            LogPrefixes::NoFile<wchar_t>,
+            LogPrefixes::NoFile<utf8>,
+            LogPrefixes::NoFile<utf16>,
 
-            LogPrefixes::BadStream<char>,
-            LogPrefixes::BadStream<wchar_t>,
+            LogPrefixes::BadStream<utf8>,
+            LogPrefixes::BadStream<utf16>,
 
-            LogPrefixes::BadVerbosityLevel<char>,
-            LogPrefixes::BadVerbosityLevel<wchar_t>,
+            LogPrefixes::BadVerbosityLevel<utf8>,
+            LogPrefixes::BadVerbosityLevel<utf16>,
 
             // Positive Tests
-            LogPrefixes::GoodStream<char>,
-            LogPrefixes::GoodStream<wchar_t>,
+            LogPrefixes::GoodStream<utf8>,
+            LogPrefixes::GoodStream<utf16>,
 
             /// LogMessage Tests \\\
 
             // Negative Tests
-            LogMessage::NoFile<char>,
-            LogMessage::NoFile<wchar_t>,
+            LogMessage::NoFile<utf8>,
+            LogMessage::NoFile<utf16>,
 
-            LogMessage::BadStream<char>,
-            LogMessage::BadStream<wchar_t>,
+            LogMessage::BadStream<utf8>,
+            LogMessage::BadStream<utf16>,
 
-            LogMessage::BadFormat<char>,
-            LogMessage::BadFormat<wchar_t>,
+            LogMessage::BadFormat<utf8>,
+            LogMessage::BadFormat<utf16>,
 
             // Positive Tests
-            LogMessage::ZeroLengthFormat<char>,
-            LogMessage::ZeroLengthFormat<wchar_t>,
+            LogMessage::ZeroLengthFormat<utf8>,
+            LogMessage::ZeroLengthFormat<utf16>,
 
-            LogMessage::PlainFormat<char>,
-            LogMessage::PlainFormat<wchar_t>,
+            LogMessage::PlainFormat<utf8>,
+            LogMessage::PlainFormat<utf16>,
 
-            LogMessage::IntegralFormat<char>,
-            LogMessage::IntegralFormat<wchar_t>,
+            LogMessage::IntegralFormat<utf8>,
+            LogMessage::IntegralFormat<utf16>,
 
-            LogMessage::FloatingFormat<char>,
-            LogMessage::FloatingFormat<wchar_t>,
+            LogMessage::FloatingFormat<utf8>,
+            LogMessage::FloatingFormat<utf16>,
 
-            LogMessage::StringFormat<char>,
-            LogMessage::StringFormat<wchar_t>,
+            LogMessage::StringFormat<utf8>,
+            LogMessage::StringFormat<utf16>,
 
             /// Log Tests \\\
 
             // Negative Tests
-            Log::NoFile<char>,
-            Log::NoFile<wchar_t>,
+            Log::NoFile<utf8>,
+            Log::NoFile<utf16>,
 
-            Log::BadStream<char>,
-            Log::BadStream<wchar_t>,
+            Log::BadStream<utf8>,
+            Log::BadStream<utf16>,
 
-            Log::BadVerbosityLevel<char>,
-            Log::BadVerbosityLevel<wchar_t>,
+            Log::BadVerbosityLevel<utf8>,
+            Log::BadVerbosityLevel<utf16>,
 
-            Log::BadFormat<char>,
-            Log::BadFormat<wchar_t>,
+            Log::BadFormat<utf8>,
+            Log::BadFormat<utf16>,
 
             // Positive Tests
-            Log::ZeroLengthFormat<char>,
-            Log::ZeroLengthFormat<wchar_t>,
+            Log::ZeroLengthFormat<utf8>,
+            Log::ZeroLengthFormat<utf16>,
 
-            Log::PlainFormat<char>,
-            Log::PlainFormat<wchar_t>,
+            Log::PlainFormat<utf8>,
+            Log::PlainFormat<utf16>,
 
-            Log::IntegralFormat<char>,
-            Log::IntegralFormat<wchar_t>,
+            Log::IntegralFormat<utf8>,
+            Log::IntegralFormat<utf16>,
 
-            Log::FloatingFormat<char>,
-            Log::FloatingFormat<wchar_t>,
+            Log::FloatingFormat<utf8>,
+            Log::FloatingFormat<utf16>,
 
-            Log::StringFormat<char>,
-            Log::StringFormat<wchar_t>,
+            Log::StringFormat<utf8>,
+            Log::StringFormat<utf16>,
 
-            Log::RecoverFromNotOpen<char>,
-            Log::RecoverFromNotOpen<wchar_t>,
+            Log::RecoverFromNotOpen<utf8>,
+            Log::RecoverFromNotOpen<utf16>,
 
-            Log::RecoverFromBadState<char>,
-            Log::RecoverFromBadState<wchar_t>,
+            Log::RecoverFromBadState<utf8>,
+            Log::RecoverFromBadState<utf16>,
 
-            Log::NoLogBelowThreshold<char>,
-            Log::NoLogBelowThreshold<wchar_t>,
+            Log::NoLogBelowThreshold<utf8>,
+            Log::NoLogBelowThreshold<utf16>,
 
-            Log::FlushImportantMessage<char>,
-            Log::FlushImportantMessage<wchar_t>,
+            Log::FlushImportantMessage<utf8>,
+            Log::FlushImportantMessage<utf16>,
 
-            Log::AppendFileWrite<char>,
-            Log::AppendFileWrite<wchar_t>,
+            Log::AppendFileWrite<utf8>,
+            Log::AppendFileWrite<utf16>,
         };
 
         return testList;
@@ -142,18 +142,18 @@ namespace FileLoggerTests
 // Perform setup common to most unit tests.
 //  - Build new file logger, target (hopefully) good log test-file.
 //  - Setup-asserts to ensure target file is open and file stream is in a good state.
-#define FILE_LOGGER_TEST_COMMON_SETUP(t)                                                \
-    try                                                                                 \
-    {                                                                                   \
-        t.SetLogger(BuildConfig(GetGoodFileString( ), VerbosityLevel::INFO));           \
-    }                                                                                   \
-    catch ( const std::exception& e )                                                   \
-    {                                                                                   \
-        SUTL_SETUP_EXCEPTION(e.what( ));                                                \
-    }                                                                                   \
-                                                                                        \
-    SUTL_SETUP_ASSERT(!t.GetConfig( ).GetFile( ).empty( ));                             \
-    SUTL_SETUP_ASSERT(t.GetStream( ).good( ));                                          \
+#define FILE_LOGGER_TEST_COMMON_SETUP(t)                                    \
+    try                                                                     \
+    {                                                                       \
+        t.SetLogger(BuildConfig(GetGoodFilePath( ), VerbosityLevel::INFO)); \
+    }                                                                       \
+    catch ( const std::exception& e )                                       \
+    {                                                                       \
+        SUTL_SETUP_EXCEPTION(e.what( ));                                    \
+    }                                                                       \
+                                                                            \
+    SUTL_SETUP_ASSERT(!t.GetConfig( ).GetFile( ).empty( ));                 \
+    SUTL_SETUP_ASSERT(t.GetStream( ).good( ));                              \
     SUTL_SETUP_ASSERT(t.GetStream( ).is_open( ));
 
 
@@ -196,7 +196,7 @@ namespace FileLoggerTests
 
             SUTL_SETUP_ASSERT(!t.GetStream( ).is_open( ));
 
-            t.GetConfig( ).SetFile<wchar_t>(L"");
+            t.GetConfig( ).SetFile(L"");
 
             try
             {
@@ -233,7 +233,7 @@ namespace FileLoggerTests
 
             SUTL_SETUP_ASSERT(!t.GetStream( ).is_open( ));
 
-            t.GetConfig( ).SetFile(GetBadFileString( ));
+            t.GetConfig( ).SetFile(GetBadFilePath( ));
 
             try
             {
@@ -271,7 +271,7 @@ namespace FileLoggerTests
 
             SUTL_SETUP_ASSERT(!t.GetStream( ).is_open( ));
 
-            t.GetConfig( ).SetFile(GetGoodFileString( ));
+            t.GetConfig( ).SetFile(GetGoodFilePath( ));
 
             try
             {
@@ -301,7 +301,7 @@ namespace FileLoggerTests
 
             FILE_LOGGER_TEST_COMMON_SETUP(t);
 
-            t.GetConfig( ).SetFile<wchar_t>(L"");
+            t.GetConfig( ).SetFile(L"");
 
             try
             {
@@ -325,7 +325,7 @@ namespace FileLoggerTests
 
             FILE_LOGGER_TEST_COMMON_SETUP(t);
 
-            t.GetConfig( ).SetFile(GetBadFileString( ));
+            t.GetConfig( ).SetFile(GetBadFilePath( ));
 
             try
             {
@@ -351,7 +351,7 @@ namespace FileLoggerTests
 
             FILE_LOGGER_TEST_COMMON_SETUP(t);
 
-            t.GetConfig( ).SetFile(GetGoodFileString( ));
+            t.GetConfig( ).SetFile(GetGoodFilePath( ));
 
             try
             {
@@ -382,7 +382,7 @@ namespace FileLoggerTests
 
             FILE_LOGGER_TEST_COMMON_SETUP(t);
 
-            t.GetConfig( ).SetFile<wchar_t>(L"");
+            t.GetConfig( ).SetFile(L"");
 
             try
             {
@@ -480,7 +480,7 @@ namespace FileLoggerTests
 
         UnitTestResult GoodStream( )
         {
-            const std::wstring testStr = L"Test string";
+            static const std::basic_string<utf16> testStr(UTF16_LITERAL("Test string"));
             TesterHelper t;
 
             FILE_LOGGER_TEST_COMMON_SETUP(t);
@@ -525,7 +525,7 @@ namespace FileLoggerTests
 
             FILE_LOGGER_TEST_COMMON_SETUP(t);
 
-            t.GetConfig( ).SetFile<wchar_t>(L"");
+            t.GetConfig( ).SetFile(L"");
 
             try
             {
@@ -691,7 +691,7 @@ namespace FileLoggerTests
             }
 
             t.GetStream( ).close( );
-            t.GetConfig( ).SetFile<wchar_t>(L"");
+            t.GetConfig( ).SetFile(L"");
 
             try
             {
@@ -835,7 +835,7 @@ namespace FileLoggerTests
         UnitTestResult PlainFormat( )
         {
             std::unique_ptr<T[ ]> pFormat;
-            std::unique_ptr<wchar_t[ ]> pExpected;
+            std::unique_ptr<utf16[ ]> pExpected;
             TesterHelper t;
 
             FILE_LOGGER_TEST_COMMON_SETUP(t);
@@ -843,7 +843,7 @@ namespace FileLoggerTests
             try
             {
                 pFormat = StringUtil::ConvertAndCopy<T>("Test string #1\r\n");
-                pExpected = StringUtil::ConvertAndCopy<wchar_t>("Test string #1");
+                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string #1");
             }
             catch ( const std::exception& e )
             {
@@ -873,7 +873,7 @@ namespace FileLoggerTests
         UnitTestResult IntegralFormat( )
         {
             std::unique_ptr<T[ ]> pFormat;
-            std::unique_ptr<wchar_t[ ]> pExpected;
+            std::unique_ptr<utf16[ ]> pExpected;
             TesterHelper t;
 
             FILE_LOGGER_TEST_COMMON_SETUP(t);
@@ -881,7 +881,7 @@ namespace FileLoggerTests
             try
             {
                 pFormat = StringUtil::ConvertAndCopy<T>("Test string, integer specifiers %d %llu.\r\n");
-                pExpected = StringUtil::ConvertAndCopy<wchar_t>("Test string, integer specifiers -500 300000.");
+                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string, integer specifiers -500 300000.");
             }
             catch ( const std::exception& e )
             {
@@ -911,7 +911,7 @@ namespace FileLoggerTests
         UnitTestResult FloatingFormat( )
         {
             std::unique_ptr<T[ ]> pFormat;
-            std::unique_ptr<wchar_t[ ]> pExpected;
+            std::unique_ptr<utf16[ ]> pExpected;
             TesterHelper t;
 
             FILE_LOGGER_TEST_COMMON_SETUP(t);
@@ -919,7 +919,7 @@ namespace FileLoggerTests
             try
             {
                 pFormat = StringUtil::ConvertAndCopy<T>("Test string, floating-point specifiers %2.2f %1.5f.\r\n");
-                pExpected = StringUtil::ConvertAndCopy<wchar_t>("Test string, floating-point specifiers -35.02 1.57779.");
+                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string, floating-point specifiers -35.02 1.57779.");
             }
             catch ( const std::exception& e )
             {
@@ -949,7 +949,7 @@ namespace FileLoggerTests
         UnitTestResult StringFormat( )
         {
             std::unique_ptr<T[ ]> pFormat;
-            std::unique_ptr<wchar_t[ ]> pExpected;
+            std::unique_ptr<utf16[ ]> pExpected;
             std::unique_ptr<T[ ]> arg1;
 
             TesterHelper t;
@@ -959,7 +959,7 @@ namespace FileLoggerTests
             try
             {
                 pFormat = StringUtil::ConvertAndCopy<T>("Test string, string specifiers %s %ls.\r\n");
-                pExpected = StringUtil::ConvertAndCopy<wchar_t>("Test string, string specifiers Test string #1 \"Test %f %g string %p #2\".");
+                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string, string specifiers Test string #1 \"Test %f %g string %p #2\".");
             }
             catch ( const std::exception& e )
             {
@@ -1019,7 +1019,7 @@ namespace FileLoggerTests
             }
 
             t.GetStream( ).close( );
-            t.GetConfig( ).SetFile<wchar_t>(L"");
+            t.GetConfig( ).SetFile(L"");
 
             try
             {
@@ -1155,13 +1155,13 @@ namespace FileLoggerTests
         UnitTestResult ZeroLengthFormat( )
         {
             std::unique_ptr<T[ ]> pFormat;
-            std::unique_ptr<wchar_t[ ]> pExpected;
+            std::unique_ptr<utf16[ ]> pExpected;
             TesterHelper t;
 
             try
             {
                 pFormat = StringUtil::ConvertAndCopy<T>("");
-                pExpected = StringUtil::ConvertAndCopy<wchar_t>("");
+                pExpected = StringUtil::ConvertAndCopy<utf16>("");
             }
             catch ( const std::exception& e )
             {
@@ -1213,13 +1213,13 @@ namespace FileLoggerTests
         UnitTestResult PlainFormat( )
         {
             std::unique_ptr<T[ ]> pFormat;
-            std::unique_ptr<wchar_t[ ]> pExpected;
+            std::unique_ptr<utf16[ ]> pExpected;
             TesterHelper t;
 
             try
             {
                 pFormat = StringUtil::ConvertAndCopy<T>("Test string #1\r\n");
-                pExpected = StringUtil::ConvertAndCopy<wchar_t>("Test string #1");
+                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string #1");
             }
             catch ( const std::exception& e )
             {
@@ -1262,13 +1262,13 @@ namespace FileLoggerTests
         UnitTestResult IntegralFormat( )
         {
             std::unique_ptr<T[ ]> pFormat;
-            std::unique_ptr<wchar_t[ ]> pExpected;
+            std::unique_ptr<utf16[ ]> pExpected;
             TesterHelper t;
 
             try
             {
                 pFormat = StringUtil::ConvertAndCopy<T>("Test string, integer specifiers %d %llu.\r\n");
-                pExpected = StringUtil::ConvertAndCopy<wchar_t>("Test string, integer specifiers -500 300000.");
+                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string, integer specifiers -500 300000.");
             }
             catch ( const std::exception& e )
             {
@@ -1311,13 +1311,13 @@ namespace FileLoggerTests
         UnitTestResult FloatingFormat( )
         {
             std::unique_ptr<T[ ]> pFormat;
-            std::unique_ptr<wchar_t[ ]> pExpected;
+            std::unique_ptr<utf16[ ]> pExpected;
             TesterHelper t;
 
             try
             {
                 pFormat = StringUtil::ConvertAndCopy<T>("Test string, floating-point specifiers %2.2f %1.5f.\r\n");
-                pExpected = StringUtil::ConvertAndCopy<wchar_t>("Test string, floating-point specifiers -35.02 1.57779.");
+                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string, floating-point specifiers -35.02 1.57779.");
             }
             catch ( const std::exception& e )
             {
@@ -1360,17 +1360,17 @@ namespace FileLoggerTests
         UnitTestResult StringFormat( )
         {
             std::unique_ptr<T[ ]> pFormat;
-            std::unique_ptr<wchar_t[ ]> pExpected;
+            std::unique_ptr<utf16[ ]> pExpected;
 
             std::unique_ptr<T[ ]> arg1;
-            const wchar_t* arg2 = L"\"Test %f %g string %p #2\"";
+            const utf16* arg2 = UTF16_LITERAL("\"Test %f %g string %p #2\"");
 
             TesterHelper t;
 
             try
             {
                 pFormat = StringUtil::ConvertAndCopy<T>("Test string, string specifiers %s %ls.\r\n");
-                pExpected = StringUtil::ConvertAndCopy<wchar_t>("Test string, string specifiers Test string #1 \"Test %f %g string %p #2\".");
+                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string, string specifiers Test string #1 \"Test %f %g string %p #2\".");
             }
             catch ( const std::exception& e )
             {
@@ -1422,13 +1422,13 @@ namespace FileLoggerTests
         UnitTestResult RecoverFromNotOpen( )
         {
             std::unique_ptr<T[ ]> pFormat;
-            std::unique_ptr<wchar_t[ ]> pExpected;
+            std::unique_ptr<utf16[ ]> pExpected;
             TesterHelper t;
 
             try
             {
                 pFormat = StringUtil::ConvertAndCopy<T>("Test string #%d\n");
-                pExpected = StringUtil::ConvertAndCopy<wchar_t>("Test string #1");
+                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string #1");
             }
             catch ( const std::exception& e )
             {
@@ -1480,13 +1480,13 @@ namespace FileLoggerTests
         UnitTestResult RecoverFromBadState( )
         {
             std::unique_ptr<T[ ]> pFormat;
-            std::unique_ptr<wchar_t[ ]> pExpected;
+            std::unique_ptr<utf16[ ]> pExpected;
             TesterHelper t;
 
             try
             {
                 pFormat = StringUtil::ConvertAndCopy<T>("Test string #%d\n");
-                pExpected = StringUtil::ConvertAndCopy<wchar_t>("Test string #1");
+                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string #1");
             }
             catch ( const std::exception& e )
             {
@@ -1530,13 +1530,13 @@ namespace FileLoggerTests
         UnitTestResult NoLogBelowThreshold( )
         {
             std::unique_ptr<T[ ]> pFormat;
-            std::unique_ptr<wchar_t[ ]> pExpected;
+            std::unique_ptr<utf16[ ]> pExpected;
             TesterHelper t;
 
             try
             {
                 pFormat = StringUtil::ConvertAndCopy<T>("Test string #%d\n");
-                pExpected = StringUtil::ConvertAndCopy<wchar_t>("Test string #1");
+                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string #1");
             }
             catch ( const std::exception& e )
             {
@@ -1591,13 +1591,13 @@ namespace FileLoggerTests
         UnitTestResult FlushImportantMessage( )
         {
             std::unique_ptr<T[ ]> pFormat;
-            std::unique_ptr<wchar_t[ ]> pExpected;
+            std::unique_ptr<utf16[ ]> pExpected;
             TesterHelper t;
 
             try
             {
                 pFormat = StringUtil::ConvertAndCopy<T>("Test string #%d\n");
-                pExpected = StringUtil::ConvertAndCopy<wchar_t>("Test string #1");
+                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string #1");
             }
             catch ( const std::exception& e )
             {
@@ -1644,16 +1644,16 @@ namespace FileLoggerTests
         UnitTestResult AppendFileWrite( )
         {
             std::unique_ptr<T[ ]> pFormat;
-            std::unique_ptr<wchar_t[ ]> pExpected1;
-            std::unique_ptr<wchar_t[ ]> pExpected2;
+            std::unique_ptr<utf16[ ]> pExpected1;
+            std::unique_ptr<utf16[ ]> pExpected2;
 
             TesterHelper t;
 
             try
             {
                 pFormat = StringUtil::ConvertAndCopy<T>("Test string #%d\r\n");
-                pExpected1 = StringUtil::ConvertAndCopy<wchar_t>("Test string #1");
-                pExpected2 = StringUtil::ConvertAndCopy<wchar_t>("Test string #2");
+                pExpected1 = StringUtil::ConvertAndCopy<utf16>("Test string #1");
+                pExpected2 = StringUtil::ConvertAndCopy<utf16>("Test string #2");
             }
             catch ( const std::exception& e )
             {
@@ -1667,9 +1667,9 @@ namespace FileLoggerTests
                     bool ret1 = false;
                     bool ret2 = false;
 
-                    std::wstring fileContents;
-                    std::wstring line1;
-                    std::wstring line2;
+                    std::basic_string<utf16> fileContents;
+                    std::basic_string<utf16> line1;
+                    std::basic_string<utf16> line2;
                     size_t pos = 0;
 
                     FILE_LOGGER_TEST_COMMON_SETUP(t);
@@ -1696,7 +1696,7 @@ namespace FileLoggerTests
                     SUTL_TEST_ASSERT(!fileContents.empty( ));
 
                     pos = fileContents.find(L'\n');
-                    SUTL_TEST_ASSERT(pos != std::wstring::npos);
+                    SUTL_TEST_ASSERT(pos != std::basic_string<utf16>::npos);
 
                     line1 = fileContents.substr(0, pos);
                     line2 = fileContents.substr(pos + 1);

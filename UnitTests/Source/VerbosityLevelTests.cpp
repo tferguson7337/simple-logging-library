@@ -18,8 +18,8 @@ namespace VerbosityLevelTests
         static const std::list<std::function<UnitTestResult(void)>> testList
         {
             ConverterTests::ToScalar,
-            ConverterTests::ToString<char>,
-            ConverterTests::ToString<wchar_t>
+            ConverterTests::ToString<utf8>,
+            ConverterTests::ToString<utf16>
         };
 
         return testList;

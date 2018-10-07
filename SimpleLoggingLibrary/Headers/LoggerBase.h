@@ -127,42 +127,42 @@ namespace SLL
 
         /// Dummy Log Methods For Unit Tests (adhere to ILogger interface) \\\
 
-        bool Log(const VerbosityLevel&, const char*, ...)
+        bool Log(const VerbosityLevel&, const utf8*, ...)
         {
             return false;
         }
 
-        bool Log(const VerbosityLevel&, const wchar_t*, ...)
+        bool Log(const VerbosityLevel&, const utf16*, ...)
         {
             return false;
         }
 
-        bool Log(const VerbosityLevel&, const std::thread::id&, const char*, ...)
+        bool Log(const VerbosityLevel&, const std::thread::id&, const utf8*, ...)
         {
             return false;
         }
 
-        bool Log(const VerbosityLevel&, const std::thread::id&, const wchar_t*, ...)
+        bool Log(const VerbosityLevel&, const std::thread::id&, const utf16*, ...)
         {
             return false;
         }
 
-        bool Log(const VerbosityLevel&, const char*, va_list)
+        bool Log(const VerbosityLevel&, const utf8*, va_list)
         {
             return false;
         }
 
-        bool Log(const VerbosityLevel&, const wchar_t*, va_list)
+        bool Log(const VerbosityLevel&, const utf16*, va_list)
         {
             return false;
         }
 
-        bool Log(const VerbosityLevel&, const std::thread::id&, const char*, va_list)
+        bool Log(const VerbosityLevel&, const std::thread::id&, const utf8*, va_list)
         {
             return false;
         }
 
-        bool Log(const VerbosityLevel&, const std::thread::id&, const wchar_t*, va_list)
+        bool Log(const VerbosityLevel&, const std::thread::id&, const utf16*, va_list)
         {
             return false;
         }

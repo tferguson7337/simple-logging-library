@@ -151,7 +151,7 @@ namespace StdOutLoggerTests
 
 namespace StreamLoggerTests
 {
-    class TestStreamBuffer : public std::wstringbuf
+    class TestStreamBuffer : public std::basic_stringbuf<utf16>
     {
         // Follow basic_stringbuf - deleted copy.
         TestStreamBuffer(const TestStreamBuffer&) = delete;
@@ -167,13 +167,13 @@ namespace StreamLoggerTests
         // Default Constructor.
         TestStreamBuffer( ) :
             mFlushed(false),
-            std::wstringbuf( )
+            std::basic_stringbuf<utf16>( )
         { }
 
         // Move Constructor.
         TestStreamBuffer(TestStreamBuffer&& src) :
             mFlushed(false),
-            std::wstringbuf(std::move(src))
+            std::basic_stringbuf<utf16>(std::move(src))
         { 
             mFlushed = src.mFlushed;
         }
@@ -188,7 +188,7 @@ namespace StreamLoggerTests
         // Move Assignment.
         TestStreamBuffer& operator=(TestStreamBuffer&& src)
         {
-            std::wstringbuf::operator=(std::move(src));
+            std::basic_stringbuf<utf16>::operator=(std::move(src));
             mFlushed = src.mFlushed;
 
             return *this;
@@ -199,7 +199,7 @@ namespace StreamLoggerTests
         // Detect call to sync when the stream is flushed.
         virtual int sync( )
         {
-            int ret = std::wstringbuf::sync( );
+            int ret = std::basic_stringbuf<utf16>::sync( );
             if ( ret != -1 )
             {
                 mFlushed = true;

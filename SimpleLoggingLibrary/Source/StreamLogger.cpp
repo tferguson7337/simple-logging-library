@@ -15,51 +15,27 @@ namespace SLL
     // Color sequences for Windows 10 (Threshold 2 and beyond) console color output.
     // Defined in https://docs.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences (Text Formatting)
     template <class StreamType>
-    const std::vector<std::basic_string<char>> StreamLogger<StreamType>::mColorSequencesA
+    const std::vector<SupportedStringTuple> StreamLogger<StreamType>::mColorSequences
     {
-        "\x1b[30m",  // BLACK
-        "\x1b[31m",  // RED
-        "\x1b[32m",  // GREEN
-        "\x1b[33m",  // YELLOW
-        "\x1b[34m",  // BLUE
-        "\x1b[35m",  // MAGENTA
-        "\x1b[36m",  // CYAN
-        "\x1b[37m",  // WHITE
+        MAKE_SUPSTR_TUPLE("\x1b[30m"),  // BLACK
+        MAKE_SUPSTR_TUPLE("\x1b[31m"),  // RED
+        MAKE_SUPSTR_TUPLE("\x1b[32m"),  // GREEN
+        MAKE_SUPSTR_TUPLE("\x1b[33m"),  // YELLOW
+        MAKE_SUPSTR_TUPLE("\x1b[34m"),  // BLUE
+        MAKE_SUPSTR_TUPLE("\x1b[35m"),  // MAGENTA
+        MAKE_SUPSTR_TUPLE("\x1b[36m"),  // CYAN
+        MAKE_SUPSTR_TUPLE("\x1b[37m"),  // WHITE
 
-        "\x1b[90m",  // BRIGHT_BLACK
-        "\x1b[91m",  // BRIGHT_RED
-        "\x1b[92m",  // BRIGHT_GREEN
-        "\x1b[93m",  // BRIGHT_YELLOW
-        "\x1b[94m",  // BRIGHT_BLUE
-        "\x1b[95m",  // BRIGHT_MAGENTA
-        "\x1b[96m",  // BRIGHT_CYAN
-        "\x1b[97m",  // BRIGHT_WHITE
+        MAKE_SUPSTR_TUPLE("\x1b[90m"),  // BRIGHT_BLACK
+        MAKE_SUPSTR_TUPLE("\x1b[91m"),  // BRIGHT_RED
+        MAKE_SUPSTR_TUPLE("\x1b[92m"),  // BRIGHT_GREEN
+        MAKE_SUPSTR_TUPLE("\x1b[93m"),  // BRIGHT_YELLOW
+        MAKE_SUPSTR_TUPLE("\x1b[94m"),  // BRIGHT_BLUE
+        MAKE_SUPSTR_TUPLE("\x1b[95m"),  // BRIGHT_MAGENTA
+        MAKE_SUPSTR_TUPLE("\x1b[96m"),  // BRIGHT_CYAN
+        MAKE_SUPSTR_TUPLE("\x1b[97m"),  // BRIGHT_WHITE
 
-        "\x1b[39m",  // DEFAULT
-    };
-
-    template <class StreamType>
-    const std::vector<std::basic_string<wchar_t>> StreamLogger<StreamType>::mColorSequencesW
-    {
-        L"\x1b[30m",  // BLACK
-        L"\x1b[31m",  // RED
-        L"\x1b[32m",  // GREEN
-        L"\x1b[33m",  // YELLOW
-        L"\x1b[34m",  // BLUE
-        L"\x1b[35m",  // MAGENTA
-        L"\x1b[36m",  // CYAN
-        L"\x1b[37m",  // WHITE
-
-        L"\x1b[90m",  // BRIGHT_BLACK
-        L"\x1b[91m",  // BRIGHT_RED
-        L"\x1b[92m",  // BRIGHT_GREEN
-        L"\x1b[93m",  // BRIGHT_YELLOW
-        L"\x1b[94m",  // BRIGHT_BLUE
-        L"\x1b[95m",  // BRIGHT_MAGENTA
-        L"\x1b[96m",  // BRIGHT_CYAN
-        L"\x1b[97m",  // BRIGHT_WHITE
-
-        L"\x1b[39m",  // DEFAULT
+        MAKE_SUPSTR_TUPLE("\x1b[39m"),  // DEFAULT
     };
 
     /// Private Helper Methods - Specialization \\\
@@ -85,7 +61,7 @@ namespace SLL
         // Ensure the stream has a buffer (stdout).
         if ( !mStream.rdbuf( ) )
         {
-            mStream.set_rdbuf(mpWideStreamBuffer);
+            mStream.set_rdbuf(mpUTF16StreamBuffer);
 
             if ( !mStream.good( ) )
             {
@@ -108,7 +84,7 @@ namespace SLL
                 "good == " +
                 std::to_string(mStream.good( )) +
                 ", buffer == " +
-                StringUtil::UnsignedToString<char>(StringUtil::ConversionType::Hexidecimal, mStream.rdbuf( ))
+                StringUtil::UnsignedToString<utf8>(StringUtil::ConversionType::Hexidecimal, mStream.rdbuf( ))
             );
         }
     }
@@ -153,7 +129,7 @@ namespace SLL
                 ", is_open == " +
                 std::to_string(mStream.is_open( )) +
                 ", buffer == " +
-                StringUtil::UnsignedToString<char>(StringUtil::ConversionType::Hexidecimal, mStream.rdbuf( ))
+                StringUtil::UnsignedToString<utf8>(StringUtil::ConversionType::Hexidecimal, mStream.rdbuf( ))
             );
         }
     }
@@ -184,7 +160,7 @@ namespace SLL
                 failFreq++;
                 std::wcerr << L"\n\n   " << __FUNCTIONW__ << L" - Failed to restore stream from bad state ";
                 std::wcerr << L"(attempt " << ++failTotalCount << "): ";
-                std::wcerr << StringUtil::ConvertAndCopy<wchar_t>(e.what( )) << L"\n" << std::endl;
+                std::wcerr << StringUtil::ConvertAndCopy<utf16>(e.what( )) << L"\n" << std::endl;
             }
 
             return false;
@@ -235,68 +211,36 @@ namespace SLL
     }
 
 
-    // Get Color String - VerbosityLevel (StdOutStream, Narrow)
+    // Get Color String - VerbosityLevel (StdOutStream)
     template <>
-    template <>
-    const std::basic_string<char>& StreamLogger<StdOutStream>::GetColorSequence<char>(const VerbosityLevel& lvl) const
+    template <class T>
+    const std::basic_string<T>& StreamLogger<StdOutStream>::GetColorSequence(const VerbosityLevel& lvl) const
     {
         const ConfigPackage& config = GetConfig( );
 
         if ( !config.OptionEnabled(OptionFlag::LogInColor) )
         {
-            static const std::basic_string<char> emptyStr;
+            static const std::basic_string<T> emptyStr;
             return emptyStr;
         }
 
-        return mColorSequencesA[ColorConverter::ToScalar(config.GetColor(lvl))];
+        return std::get<std::basic_string<T>>(mColorSequences[ColorConverter::ToScalar(config.GetColor(lvl))]);
     }
 
-    // Get Color String - VerbosityLevel (StdOutStream, Wide)
+    // Get Color String - Color (StdOutStream)
     template <>
-    template <>
-    const std::basic_string<wchar_t>& StreamLogger<StdOutStream>::GetColorSequence<wchar_t>(const VerbosityLevel& lvl) const
+    template <class T>
+    const std::basic_string<T>& StreamLogger<StdOutStream>::GetColorSequence(const Color& clr) const
     {
         const ConfigPackage& config = GetConfig( );
 
         if ( !config.OptionEnabled(OptionFlag::LogInColor) )
         {
-            static const std::basic_string<wchar_t> emptyStr;
+            static const std::basic_string<T> emptyStr;
             return emptyStr;
         }
 
-        return mColorSequencesW[ColorConverter::ToScalar(config.GetColor(lvl))];
-    }
-
-    // Get Color String - Color (StdOutStream, Narrow)
-    template <>
-    template <>
-    const std::basic_string<char>& StreamLogger<StdOutStream>::GetColorSequence<char>(const Color& clr) const
-    {
-        const ConfigPackage& config = GetConfig( );
-
-        if ( !config.OptionEnabled(OptionFlag::LogInColor) )
-        {
-            static const std::basic_string<char> emptyStr;
-            return emptyStr;
-        }
-
-        return mColorSequencesA[ColorConverter::ToScalar(clr)];
-    }
-
-    // Get Color String - Color (StdOutStream, Wide)
-    template <>
-    template <>
-    const std::basic_string<wchar_t>& StreamLogger<StdOutStream>::GetColorSequence<wchar_t>(const Color& clr) const
-    {
-        const ConfigPackage& config = GetConfig( );
-
-        if ( !config.OptionEnabled(OptionFlag::LogInColor) )
-        {
-            static const std::basic_string<wchar_t> emptyStr;
-            return emptyStr;
-        }
-
-        return mColorSequencesW[ColorConverter::ToScalar(clr)];
+        return std::get<std::basic_string<T>>(mColorSequences[ColorConverter::ToScalar(clr)]);
     }
 
     template <class StreamType>
@@ -392,7 +336,7 @@ namespace SLL
         // Log in color if option is enabled (does nothing for FileLogger specialization).
         if ( GetConfig( ).OptionEnabled(OptionFlag::LogInColor) )
         {
-            mStream << GetColorSequence<wchar_t>(lvl).c_str( );
+            mStream << GetColorSequence<utf16>(lvl).c_str( );
         }
 
         for ( auto& p : prefixes )
@@ -439,7 +383,7 @@ namespace SLL
         // original console foreground color, in case other things are writting to stdout.
         if ( GetConfig( ).OptionEnabled(OptionFlag::LogInColor) )
         {
-            mStream << GetColorSequence<wchar_t>(Color::DEFAULT);
+            mStream << GetColorSequence<utf16>(Color::DEFAULT);
         }
 
         mStream << L"\n";
@@ -457,8 +401,8 @@ namespace SLL
     template <>
     StreamLogger<StdOutStream>::StreamLogger(const ConfigPackage& config) :
         LoggerBase(config),
-        mpWideStreamBuffer(std::wcout.rdbuf( )),
-        mStream(mpWideStreamBuffer)
+        mpUTF16StreamBuffer(reinterpret_cast<std::basic_streambuf<utf16>*>(std::wcout.rdbuf( ))),
+        mStream(mpUTF16StreamBuffer)
     {
         InitializeStream( );
     }
@@ -467,7 +411,7 @@ namespace SLL
     template <>
     StreamLogger<FileStream>::StreamLogger(const ConfigPackage& config) :
         LoggerBase(config),
-        mpWideStreamBuffer(nullptr)
+        mpUTF16StreamBuffer(nullptr)
     {
         InitializeStream( );
     }
@@ -476,8 +420,8 @@ namespace SLL
     template <>
     StreamLogger<StdOutStream>::StreamLogger(ConfigPackage&& config) :
         LoggerBase(std::move(config)),
-        mpWideStreamBuffer(std::wcout.rdbuf( )),
-        mStream(mpWideStreamBuffer)
+        mpUTF16StreamBuffer(reinterpret_cast<std::basic_streambuf<utf16>*>(std::wcout.rdbuf( ))),
+        mStream(mpUTF16StreamBuffer)
     {
         InitializeStream( );
     }
@@ -486,7 +430,7 @@ namespace SLL
     template <>
     StreamLogger<FileStream>::StreamLogger(ConfigPackage&& config) :
         LoggerBase(std::move(config)),
-        mpWideStreamBuffer(nullptr)
+        mpUTF16StreamBuffer(nullptr)
     {
         InitializeStream( );
     }
@@ -495,8 +439,8 @@ namespace SLL
     template <>
     StreamLogger<StdOutStream>::StreamLogger(StreamLogger&& src) :
         LoggerBase(std::move(src)),
-        mpWideStreamBuffer(std::wcout.rdbuf( )),
-        mStream(mpWideStreamBuffer)
+        mpUTF16StreamBuffer(reinterpret_cast<std::basic_streambuf<utf16>*>(std::wcout.rdbuf( ))),
+        mStream(mpUTF16StreamBuffer)
     {
         InitializeStream( );
     }
@@ -505,7 +449,7 @@ namespace SLL
     template <>
     StreamLogger<FileStream>::StreamLogger(StreamLogger&& src) :
         LoggerBase(std::move(src)),
-        mpWideStreamBuffer(nullptr)
+        mpUTF16StreamBuffer(nullptr)
     {
         InitializeStream( );
     }
@@ -539,7 +483,7 @@ namespace SLL
 
         LoggerBase::operator=(std::move(src));
         src.mStream.set_rdbuf(nullptr);
-        mpWideStreamBuffer = std::move(src.mpWideStreamBuffer);
+        mpUTF16StreamBuffer = std::move(src.mpUTF16StreamBuffer);
 
         return *this;
     }
@@ -555,7 +499,7 @@ namespace SLL
 
         LoggerBase::operator=(std::move(src));
         mStream = std::move(src.mStream);
-        mpWideStreamBuffer = std::move(src.mpWideStreamBuffer);
+        mpUTF16StreamBuffer = std::move(src.mpUTF16StreamBuffer);
 
         return *this;
     }
@@ -572,7 +516,7 @@ namespace SLL
 
     // Submit log message to stream(s) (variadic arguments, narrow).
     template <class StreamType>
-    bool StreamLogger<StreamType>::Log(const VerbosityLevel& lvl, const char* pFormat, ...)
+    bool StreamLogger<StreamType>::Log(const VerbosityLevel& lvl, const utf8* pFormat, ...)
     {
         bool ret = false;
         va_list pArgs;
@@ -593,7 +537,7 @@ namespace SLL
 
     // Submit log message to stream(s) (variadic arguments, wide).
     template <class StreamType>
-    bool StreamLogger<StreamType>::Log(const VerbosityLevel& lvl, const wchar_t* pFormat, ...)
+    bool StreamLogger<StreamType>::Log(const VerbosityLevel& lvl, const utf16* pFormat, ...)
     {
         bool ret = false;
         va_list pArgs;
@@ -614,7 +558,7 @@ namespace SLL
 
     // Submit log message to stream(s) (variadic arguments, narrow, explicit thread ID).
     template <class StreamType>
-    bool StreamLogger<StreamType>::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const char* pFormat, ...)
+    bool StreamLogger<StreamType>::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const utf8* pFormat, ...)
     {
         bool ret = false;
         va_list pArgs;
@@ -635,7 +579,7 @@ namespace SLL
 
     // Submit log message to stream(s) (variadic arguments, explicit thread ID).
     template <class StreamType>
-    bool StreamLogger<StreamType>::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const wchar_t* pFormat, ...)
+    bool StreamLogger<StreamType>::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const utf16* pFormat, ...)
     {
         bool ret = false;
         va_list pArgs;
@@ -656,28 +600,28 @@ namespace SLL
 
     // Submit log message to stream(s) (va_list, narrow).
     template <class StreamType>
-    bool StreamLogger<StreamType>::Log(const VerbosityLevel& lvl, const char* pFormat, va_list pArgs)
+    bool StreamLogger<StreamType>::Log(const VerbosityLevel& lvl, const utf8* pFormat, va_list pArgs)
     {
         return LogInternal(lvl, std::this_thread::get_id( ), pFormat, pArgs);
     }
 
     // Submit log message to stream(s) (va_list, wide).
     template <class StreamType>
-    bool StreamLogger<StreamType>::Log(const VerbosityLevel& lvl, const wchar_t* pFormat, va_list pArgs)
+    bool StreamLogger<StreamType>::Log(const VerbosityLevel& lvl, const utf16* pFormat, va_list pArgs)
     {
         return LogInternal(lvl, std::this_thread::get_id( ), pFormat , pArgs);
     }
 
     // Submit log message to stream(s) (va_list, narrow, explicit thread ID).
     template <class StreamType>
-    bool StreamLogger<StreamType>::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const char* pFormat, va_list pArgs)
+    bool StreamLogger<StreamType>::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const utf8* pFormat, va_list pArgs)
     {
         return LogInternal(lvl, tid, pFormat, pArgs);
     }
 
     // Submit log message to stream(s) (va_list, wide, explicit thread ID).
     template <class StreamType>
-    bool StreamLogger<StreamType>::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const wchar_t* pFormat, va_list pArgs)
+    bool StreamLogger<StreamType>::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const utf16* pFormat, va_list pArgs)
     {
         return LogInternal(lvl, tid, pFormat, pArgs);
     }
@@ -691,26 +635,26 @@ namespace SLL
     template const ConfigPackage& FileLogger::GetConfig( ) const noexcept;
 
     // Log Instantiations - Variadic Arguments
-    template bool StdOutLogger::Log(const VerbosityLevel& lvl, const char* pFormat, ...);
-    template bool StdOutLogger::Log(const VerbosityLevel& lvl, const wchar_t* pFormat, ...);
-    template bool FileLogger::Log(const VerbosityLevel& lvl, const char* pFormat, ...);
-    template bool FileLogger::Log(const VerbosityLevel& lvl, const wchar_t* pFormat, ...);
+    template bool StdOutLogger::Log(const VerbosityLevel& lvl, const utf8* pFormat, ...);
+    template bool StdOutLogger::Log(const VerbosityLevel& lvl, const utf16* pFormat, ...);
+    template bool FileLogger::Log(const VerbosityLevel& lvl, const utf8* pFormat, ...);
+    template bool FileLogger::Log(const VerbosityLevel& lvl, const utf16* pFormat, ...);
 
     // Log Instantiations - Variadic Arguments, Explicit Thread ID
-    template bool StdOutLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const char* pFormat, ...);
-    template bool StdOutLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const wchar_t* pFormat, ...);
-    template bool FileLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const char* pFormat, ...);
-    template bool FileLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const wchar_t* pFormat, ...);
+    template bool StdOutLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const utf8* pFormat, ...);
+    template bool StdOutLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const utf16* pFormat, ...);
+    template bool FileLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const utf8* pFormat, ...);
+    template bool FileLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const utf16* pFormat, ...);
 
     // Log Instantiations - va_list
-    template bool StdOutLogger::Log(const VerbosityLevel& lvl, const char* pFormat, va_list pArgs);
-    template bool StdOutLogger::Log(const VerbosityLevel& lvl, const wchar_t* pFormat, va_list pArgs);
-    template bool FileLogger::Log(const VerbosityLevel& lvl, const char* pFormat, va_list pArgs);
-    template bool FileLogger::Log(const VerbosityLevel& lvl, const wchar_t* pFormat, va_list pArgs);
+    template bool StdOutLogger::Log(const VerbosityLevel& lvl, const utf8* pFormat, va_list pArgs);
+    template bool StdOutLogger::Log(const VerbosityLevel& lvl, const utf16* pFormat, va_list pArgs);
+    template bool FileLogger::Log(const VerbosityLevel& lvl, const utf8* pFormat, va_list pArgs);
+    template bool FileLogger::Log(const VerbosityLevel& lvl, const utf16* pFormat, va_list pArgs);
 
     // Log Instantiations - va_list, Explicit Thread ID
-    template bool StdOutLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const char* pFormat, va_list pArgs);
-    template bool StdOutLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const wchar_t* pFormat, va_list pArgs);
-    template bool FileLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const char* pFormat, va_list pArgs);
-    template bool FileLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const wchar_t* pFormat, va_list pArgs);
+    template bool StdOutLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const utf8* pFormat, va_list pArgs);
+    template bool StdOutLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const utf16* pFormat, va_list pArgs);
+    template bool FileLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const utf8* pFormat, va_list pArgs);
+    template bool FileLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const utf16* pFormat, va_list pArgs);
 }

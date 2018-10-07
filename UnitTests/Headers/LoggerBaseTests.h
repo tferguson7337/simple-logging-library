@@ -156,13 +156,13 @@ namespace LoggerBaseTests
     bool IsDigit(const T);
 
     template <>
-    inline bool IsDigit<char>(const char c)
+    inline bool IsDigit<utf8>(const utf8 c)
     {
         return isdigit(c) != 0;
     }
 
     template <>
-    inline bool IsDigit<wchar_t>(const wchar_t c)
+    inline bool IsDigit<utf16>(const utf16 c)
     {
         return iswdigit(c) != 0;
     }
@@ -171,13 +171,13 @@ namespace LoggerBaseTests
     bool IsHex(const T);
 
     template <>
-    inline bool IsHex<char>(const char c)
+    inline bool IsHex<utf8>(const utf8 c)
     {
         return isalnum(c) != 0;
     }
 
     template <>
-    inline bool IsHex<wchar_t>(const wchar_t c)
+    inline bool IsHex<utf16>(const utf16 c)
     {
         return iswalnum(c) != 0;
     }
@@ -186,13 +186,13 @@ namespace LoggerBaseTests
     bool IsAlpha(const T);
 
     template <>
-    inline bool IsAlpha<char>(const char c)
+    inline bool IsAlpha<utf8>(const utf8 c)
     {
         return isalpha(c) != 0;
     }
 
     template <>
-    inline bool IsAlpha<wchar_t>(const wchar_t c)
+    inline bool IsAlpha<utf16>(const utf16 c)
     {
         return iswalpha(c) != 0;
     }
@@ -201,13 +201,13 @@ namespace LoggerBaseTests
     bool IsSpace(const T);
 
     template <>
-    inline bool IsSpace<char>(const char c)
+    inline bool IsSpace<utf8>(const utf8 c)
     {
         return isspace(c) != 0;
     }
 
     template <>
-    inline bool IsSpace<wchar_t>(const wchar_t c)
+    inline bool IsSpace<utf16>(const utf16 c)
     {
         return iswspace(c) != 0;
     }

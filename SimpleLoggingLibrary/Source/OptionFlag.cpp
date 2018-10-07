@@ -79,94 +79,55 @@ namespace SLL
 
     /// Private Helper Methods \\\
 
-    // OptionFlag String Getter - char
-    template <>
-    const std::basic_string<char>& OptionFlagConverter::GetOptionFlagString<char>(const size_t i)
+    // OptionFlag String Getter
+    template <class T>
+    const std::basic_string<T>& OptionFlagConverter::GetOptionFlagString(const size_t i)
     {
-        static const std::vector<std::basic_string<char>> optionFlagStringsA
+        static const std::vector<SupportedStringTuple> optionFlagStrings
         {
-            "LogToStdout",
-            "LogToFile",
-            "LogInColor",
-            "LogSynchronous",
-            "LogTimestamp",
-            "LogThreadID",
-            "LogVerbosityLevel"
+            MAKE_SUPSTR_TUPLE("LogToStdout"),
+            MAKE_SUPSTR_TUPLE("LogToFile"),
+            MAKE_SUPSTR_TUPLE("LogInColor"),
+            MAKE_SUPSTR_TUPLE("LogSynchronous"),
+            MAKE_SUPSTR_TUPLE("LogTimestamp"),
+            MAKE_SUPSTR_TUPLE("LogThreadID"),
+            MAKE_SUPSTR_TUPLE("LogVerbosityLevel")
         };
 
-        if ( i >= optionFlagStringsA.size( ) )
+        if ( i >= optionFlagStrings.size( ) )
         {
             throw std::range_error(
                 __FUNCTION__" - Index argument out of bounds.  Index = " +
                 std::to_string(i) +
                 ", Max = " +
-                std::to_string(optionFlagStringsA.size( ) - 1)
+                std::to_string(optionFlagStrings.size( ) - 1)
             );
         }
 
-        return optionFlagStringsA[i];
+        return std::get<std::basic_string<T>>(optionFlagStrings[i]);
     }
 
-    // OptionFlag String Getter - wchar_t
-    template <>
-    const std::basic_string<wchar_t>& OptionFlagConverter::GetOptionFlagString<wchar_t>(const size_t i)
+    // OptionFlag::NONE String Getter
+    template <class T>
+    const std::basic_string<T>& OptionFlagConverter::GetEmptyMaskString( )
     {
-        static const std::vector<std::basic_string<wchar_t>> optionFlagStringsW
-        {
-            L"LogToStdout",
-            L"LogToFile",
-            L"LogInColor",
-            L"LogSynchronous",
-            L"LogTimestamp",
-            L"LogThreadID",
-            L"LogVerbosityLevel"
-        };
+        static const SupportedStringTuple emptyMasks(
+            MAKE_SUPSTR_TUPLE("NONE")
+        );
 
-        if ( i >= optionFlagStringsW.size( ) )
-        {
-            throw std::range_error(
-                __FUNCTION__" - Index argument out of bounds.  Index = " +
-                std::to_string(i) +
-                ", Max = " +
-                std::to_string(optionFlagStringsW.size( ) - 1)
-            );
-        }
-
-        return optionFlagStringsW[i];
+        return std::get<std::basic_string<T>>(emptyMasks);
     }
 
-    // OptionFlag::NONE String Getter - char
-    template <>
-    const std::basic_string<char>& OptionFlagConverter::GetEmptyMaskString<char>( )
+    // Separator Getter
+    template <class T>
+    const std::basic_string<T>& OptionFlagConverter::GetSeparator( )
     {
-        static const std::basic_string<char> emptyMaskA("NONE");
-        return emptyMaskA;
-    }
+        static const SupportedStringTuple separators(
+            MAKE_SUPSTR_TUPLE(", ")
+        );
 
-    // OptionFlag::NONE String Getter - wchar_t
-    template <>
-    const std::basic_string<wchar_t>& OptionFlagConverter::GetEmptyMaskString<wchar_t>( )
-    {
-        static const std::basic_string<wchar_t> emptyMaskW(L"NONE");
-        return emptyMaskW;
+        return std::get<std::basic_string<T>>(separators);
     }
-
-    // Separator Getter - char
-    template <>
-    const std::basic_string<char>& OptionFlagConverter::GetSeparator<char>( )
-    {
-        static const std::basic_string<char> separatorA(", ");
-        return separatorA;
-    }
-
-    // Separator Getter - wchar_t
-    template <>
-    const std::basic_string<wchar_t>& OptionFlagConverter::GetSeparator<wchar_t>( )
-    {
-        static const std::basic_string<wchar_t> separatorW(L", ");
-        return separatorW;
-    }
-
 
     /// Public Methods \\\
 
@@ -186,7 +147,7 @@ namespace SLL
     }
 
     // Returns string names of OptionFlag mask argument.
-    template <class T, typename>
+    template <class T>
     std::basic_string<T> OptionFlagConverter::ToString(OptionFlag flag)
     {
         std::basic_string<T> str;
@@ -248,6 +209,6 @@ namespace SLL
 
     /// Explicit Template Instantiation \\\
 
-    template std::basic_string<char> OptionFlagConverter::ToString<char>(OptionFlag);
-    template std::basic_string<wchar_t> OptionFlagConverter::ToString<wchar_t>(OptionFlag);
+    template std::basic_string<utf8> OptionFlagConverter::ToString<utf8>(OptionFlag);
+    template std::basic_string<utf16> OptionFlagConverter::ToString<utf16>(OptionFlag);
 }

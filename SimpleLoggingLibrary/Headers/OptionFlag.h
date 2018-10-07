@@ -116,7 +116,7 @@ namespace SLL
         // Returns underlying scalar type value of OptionFlag mask argument.
         static OptionFlagType ToScalar(OptionFlag);
 
-        template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
+        template <class T>
         static std::basic_string<T> ToString(OptionFlag);
     };
 }

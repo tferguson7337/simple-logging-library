@@ -1,12 +1,12 @@
-// Class Declaration
-#include <WindowsConsoleHelper.h>
-
 // For enabling Virtual Terminal
 #include <Windows.h>
 
 // Synchronization.
 #include <atomic>
 #include <mutex>
+
+// Class Declaration
+#include <WindowsConsoleHelper.h>
 
 namespace SLL
 {

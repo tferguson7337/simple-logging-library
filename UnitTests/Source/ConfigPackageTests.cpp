@@ -192,15 +192,15 @@ namespace ConfigPackageTests
 
             SUTL_TEST_ASSERT(configL == configR);
 
-            configL.SetFile<wchar_t>(L"C:\\test.log");
+            configL.SetFile(L"C:\\test.log");
 
             SUTL_TEST_ASSERT(!(configL == configR));
 
-            configR.SetFile<wchar_t>(L"C:\\TEST.LOG");
+            configR.SetFile(L"C:\\TEST.LOG");
 
             SUTL_TEST_ASSERT(!(configL == configR));
 
-            configR.SetFile<wchar_t>(L"C:\\test.log");
+            configR.SetFile(L"C:\\test.log");
 
             SUTL_TEST_ASSERT(configL == configR);
 
@@ -279,15 +279,15 @@ namespace ConfigPackageTests
 
             SUTL_TEST_ASSERT(!(configL != configR));
 
-            configL.SetFile<wchar_t>(L"C:\\test.log");
+            configL.SetFile(L"C:\\test.log");
 
             SUTL_TEST_ASSERT(configL != configR);
 
-            configR.SetFile<wchar_t>(L"C:\\TEST.LOG");
+            configR.SetFile(L"C:\\TEST.LOG");
 
             SUTL_TEST_ASSERT(configL != configR);
 
-            configR.SetFile<wchar_t>(L"C:\\test.log");
+            configR.SetFile(L"C:\\test.log");
 
             SUTL_TEST_ASSERT(!(configL != configR));
 

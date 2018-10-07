@@ -38,8 +38,7 @@ namespace SLL
     ConfigPackage::ConfigPackage( ) :
         mVerbosityColors(static_cast<size_t>(VerbosityLevel::MAX), Color::DEFAULT),
         mOptionMask(OptionFlag::NONE),
-        mVerbosityThreshold(VerbosityLevel::INFO),
-        mLogFile(std::wstring( ))
+        mVerbosityThreshold(VerbosityLevel::INFO)
     { }
 
     // Copy Ctor
@@ -120,11 +119,7 @@ namespace SLL
         }
 
         // Compare target logfiles.
-        if ( mLogFile.size( ) != other.mLogFile.size( ) )
-        {
-            return false;
-        }
-        else if ( mLogFile != other.mLogFile )
+        if ( mLogFile != other.mLogFile )
         {
             return false;
         }
@@ -161,7 +156,7 @@ namespace SLL
     }
 
     // Getter - Target Log Filename
-    const std::wstring& ConfigPackage::GetFile( ) const noexcept
+    const std::filesystem::path& ConfigPackage::GetFile( ) const noexcept
     {
         return mLogFile;
     }
@@ -185,31 +180,14 @@ namespace SLL
         mVerbosityThreshold = lvl;
     }
 
-    // Setter ([C] Wide Conversion) - Set Target Log Filename
-    template <>
-    void ConfigPackage::SetFile<char>(const std::basic_string<char>& file)
-    {
-        mLogFile = StringUtil::ConvertAndCopy<wchar_t, char>(file);
-    }
-
-    // Setter ([M] Wide Conversion) - Set Target Log Filename
-    template <>
-    void ConfigPackage::SetFile<char>(std::basic_string<char>&& file)
-    {
-        mLogFile = StringUtil::ConvertAndCopy<wchar_t, char>(std::move(file));
-    }
-
-
-    // Setter (Copy) - Set Target Log Filename
-    template <>
-    void ConfigPackage::SetFile<wchar_t>(const std::basic_string<wchar_t>& file)
+    // Setter [C] - Set Target Log Filename
+    void ConfigPackage::SetFile(const std::filesystem::path& file)
     {
         mLogFile = file;
     }
 
-    // Setter (Move) - Set Target Log Filename
-    template <>
-    void ConfigPackage::SetFile<wchar_t>(std::basic_string<wchar_t>&& file)
+    // Setter [M] - Set Target Log Filename
+    void ConfigPackage::SetFile(std::filesystem::path&& file)
     {
         mLogFile = std::move(file);
     }
@@ -259,12 +237,4 @@ namespace SLL
 
         return (mOptionMask & opts) == opts;
     }
-
-    /// EXPLICIT TEMPLATE INSTANTIATION \\\
-
-    template void ConfigPackage::SetFile<char>(const std::basic_string<char>&);
-    template void ConfigPackage::SetFile<wchar_t>(const std::basic_string<wchar_t>&);
-
-    template void ConfigPackage::SetFile<char>(std::basic_string<char>&&);
-    template void ConfigPackage::SetFile<wchar_t>(std::basic_string<wchar_t>&&);
 }

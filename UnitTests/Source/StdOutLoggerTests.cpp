@@ -53,100 +53,100 @@ namespace StdOutLoggerTests
 
             /// Negative Tests \\\
 
-            LogPrefixes::NoBuffer<char>,
-            LogPrefixes::NoBuffer<wchar_t>,
+            LogPrefixes::NoBuffer<utf8>,
+            LogPrefixes::NoBuffer<utf16>,
 
-            LogPrefixes::BadStream<char>,
-            LogPrefixes::BadStream<wchar_t>,
+            LogPrefixes::BadStream<utf8>,
+            LogPrefixes::BadStream<utf16>,
 
-            LogPrefixes::BadVerbosityLevel<char>,
-            LogPrefixes::BadVerbosityLevel<wchar_t>,
+            LogPrefixes::BadVerbosityLevel<utf8>,
+            LogPrefixes::BadVerbosityLevel<utf16>,
 
             /// Positive Tests \\\
 
-            LogPrefixes::GoodStream<char>,
-            LogPrefixes::GoodStream<wchar_t>,
+            LogPrefixes::GoodStream<utf8>,
+            LogPrefixes::GoodStream<utf16>,
 
             // LogMessage Tests
 
             /// Negative Tests \\\
 
-            LogMessage::NoBuffer<char>,
-            LogMessage::NoBuffer<wchar_t>,
+            LogMessage::NoBuffer<utf8>,
+            LogMessage::NoBuffer<utf16>,
 
-            LogMessage::BadStream<char>,
-            LogMessage::BadStream<wchar_t>,
+            LogMessage::BadStream<utf8>,
+            LogMessage::BadStream<utf16>,
 
-            LogMessage::BadFormat<char>,
-            LogMessage::BadFormat<wchar_t>,
+            LogMessage::BadFormat<utf8>,
+            LogMessage::BadFormat<utf16>,
 
             /// Positive Tests \\\
                                                 
-            LogMessage::ZeroLengthFormat<char>,
-            LogMessage::ZeroLengthFormat<wchar_t>,
+            LogMessage::ZeroLengthFormat<utf8>,
+            LogMessage::ZeroLengthFormat<utf16>,
 
-            LogMessage::PlainFormat<char>,
-            LogMessage::PlainFormat<wchar_t>,
+            LogMessage::PlainFormat<utf8>,
+            LogMessage::PlainFormat<utf16>,
 
-            LogMessage::IntegralFormat<char>,
-            LogMessage::IntegralFormat<wchar_t>,
+            LogMessage::IntegralFormat<utf8>,
+            LogMessage::IntegralFormat<utf16>,
 
-            LogMessage::FloatingFormat<char>,
-            LogMessage::FloatingFormat<wchar_t>,
+            LogMessage::FloatingFormat<utf8>,
+            LogMessage::FloatingFormat<utf16>,
 
-            LogMessage::StringFormat<char>,
-            LogMessage::StringFormat<wchar_t>,
+            LogMessage::StringFormat<utf8>,
+            LogMessage::StringFormat<utf16>,
 
             // Log Tests
 
             /// Negative Tests \\\
 
-            Log::NoBuffer<char>,
-            Log::NoBuffer<wchar_t>,
+            Log::NoBuffer<utf8>,
+            Log::NoBuffer<utf16>,
 
-            Log::BadStream<char>,
-            Log::BadStream<wchar_t>,
+            Log::BadStream<utf8>,
+            Log::BadStream<utf16>,
 
-            Log::BadVerbosityLevel<char>,
-            Log::BadVerbosityLevel<wchar_t>,
+            Log::BadVerbosityLevel<utf8>,
+            Log::BadVerbosityLevel<utf16>,
 
-            Log::BadFormat<char>,
-            Log::BadFormat<wchar_t>,
+            Log::BadFormat<utf8>,
+            Log::BadFormat<utf16>,
 
             /// Positive Tests \\\
 
-            Log::ZeroLengthFormat<char>,
-            Log::ZeroLengthFormat<wchar_t>,
+            Log::ZeroLengthFormat<utf8>,
+            Log::ZeroLengthFormat<utf16>,
 
-            Log::PlainFormat<char>,
-            Log::PlainFormat<wchar_t>,
+            Log::PlainFormat<utf8>,
+            Log::PlainFormat<utf16>,
 
-            Log::IntegralFormat<char>,
-            Log::IntegralFormat<wchar_t>,
+            Log::IntegralFormat<utf8>,
+            Log::IntegralFormat<utf16>,
 
-            Log::FloatingFormat<char>,
-            Log::FloatingFormat<wchar_t>,
+            Log::FloatingFormat<utf8>,
+            Log::FloatingFormat<utf16>,
 
-            Log::StringFormat<char>,
-            Log::StringFormat<wchar_t>,
+            Log::StringFormat<utf8>,
+            Log::StringFormat<utf16>,
 
-            Log::RecoverFromNoBuffer<char>,
-            Log::RecoverFromNoBuffer<wchar_t>,
+            Log::RecoverFromNoBuffer<utf8>,
+            Log::RecoverFromNoBuffer<utf16>,
 
-            Log::RecoverFromBadState<char>,
-            Log::RecoverFromBadState<wchar_t>,
+            Log::RecoverFromBadState<utf8>,
+            Log::RecoverFromBadState<utf16>,
 
-            Log::NoLogBelowThreshold<char>,
-            Log::NoLogBelowThreshold<wchar_t>,
+            Log::NoLogBelowThreshold<utf8>,
+            Log::NoLogBelowThreshold<utf16>,
 
-            Log::FlushImportantMessage<char>,
-            Log::FlushImportantMessage<wchar_t>,
+            Log::FlushImportantMessage<utf8>,
+            Log::FlushImportantMessage<utf16>,
 
-            Log::AppendStreamWrite<char>,
-            Log::AppendStreamWrite<wchar_t>,
+            Log::AppendStreamWrite<utf8>,
+            Log::AppendStreamWrite<utf16>,
 
-            Log::ColorLog<char>,
-            Log::ColorLog<wchar_t>,
+            Log::ColorLog<utf8>,
+            Log::ColorLog<utf16>,
         };
 
         return testList;
@@ -177,16 +177,16 @@ namespace StdOutLoggerTests
     SUTL_SETUP_ASSERT(t.GetStream( ).rdbuf( ) == &buf);
 
     // Reset stream's buffer.
-#define STDOUT_LOGGER_TEST_RESET_BUFFER(buf)    \
-    buf = std::wstringbuf( )                    \
+#define STDOUT_LOGGER_TEST_RESET_BUFFER(buf)            \
+    buf = std::basic_stringbuf<utf16>( )                \
 
 
     // Return true if the buffer is completely filled with zero values, false otherwise.
-    bool StreamBufferIsZeroed(const std::wstringbuf& buf)
+    bool StreamBufferIsZeroed(const std::basic_stringbuf<utf16>& buf)
     {
         for ( auto c : buf.str( ) )
         {
-            if ( c != static_cast<wchar_t>('\0') )
+            if ( c != static_cast<utf16>('\0') )
             {
                 return false;
             }
@@ -196,7 +196,7 @@ namespace StdOutLoggerTests
     }
 
     template <class T>
-    bool CompareBufferWithString(const std::wstringbuf& buf, const std::basic_string<T>& str)
+    bool CompareBufferWithString(const std::basic_stringbuf<utf16>& buf, const std::basic_string<T>& str)
     {
         const std::basic_string<T> bufferString = StringUtil::ConvertAndCopy<T>(buf.str( ));
 
@@ -221,7 +221,7 @@ namespace StdOutLoggerTests
         UnitTestResult NoBuffer( )
         {
             TesterHelper t;
-            std::wstringbuf buf;
+            std::basic_stringbuf<utf16> buf;
 
             STDOUT_LOGGER_TEST_COMMON_SETUP(t, buf);
 
@@ -246,7 +246,7 @@ namespace StdOutLoggerTests
         UnitTestResult BadStream( )
         {
             TesterHelper t;
-            std::wstringbuf buf;
+            std::basic_stringbuf<utf16> buf;
             bool threw = false;
 
             STDOUT_LOGGER_TEST_COMMON_SETUP(t, buf);
@@ -280,7 +280,7 @@ namespace StdOutLoggerTests
         UnitTestResult GoodStream( )
         {
             TesterHelper t;
-            std::wstringbuf buf;
+            std::basic_stringbuf<utf16> buf;
 
             STDOUT_LOGGER_TEST_COMMON_SETUP(t, buf);
 
@@ -309,7 +309,7 @@ namespace StdOutLoggerTests
         UnitTestResult NoBuffer( )
         {
             TesterHelper t;
-            std::wstringbuf buf;
+            std::basic_stringbuf<utf16> buf;
 
             STDOUT_LOGGER_TEST_COMMON_SETUP(t, buf);
 
@@ -335,7 +335,7 @@ namespace StdOutLoggerTests
         UnitTestResult BadStream( )
         {
             TesterHelper t;
-            std::wstringbuf buf;
+            std::basic_stringbuf<utf16> buf;
 
             STDOUT_LOGGER_TEST_COMMON_SETUP(t, buf);
 
@@ -364,7 +364,7 @@ namespace StdOutLoggerTests
         UnitTestResult GoodStream( )
         {
             TesterHelper t;
-            std::wstringbuf buf;
+            std::basic_stringbuf<utf16> buf;
 
             STDOUT_LOGGER_TEST_COMMON_SETUP(t, buf);
 
@@ -393,7 +393,7 @@ namespace StdOutLoggerTests
         UnitTestResult NoBuffer( )
         {
             TesterHelper t;
-            std::wstringbuf buf;
+            std::basic_stringbuf<utf16> buf;
 
             STDOUT_LOGGER_TEST_COMMON_SETUP(t, buf);
 
@@ -422,7 +422,7 @@ namespace StdOutLoggerTests
         UnitTestResult BadStream( )
         {
             TesterHelper t;
-            std::wstringbuf buf;
+            std::basic_stringbuf<utf16> buf;
 
             STDOUT_LOGGER_TEST_COMMON_SETUP(t, buf);
 
@@ -457,7 +457,7 @@ namespace StdOutLoggerTests
         UnitTestResult NoContent( )
         {
             TesterHelper t;
-            std::wstringbuf buf;
+            std::basic_stringbuf<utf16> buf;
 
             STDOUT_LOGGER_TEST_COMMON_SETUP(t, buf);
 
@@ -490,7 +490,7 @@ namespace StdOutLoggerTests
         UnitTestResult NoBuffer( )
         {
             TesterHelper t;
-            std::wstringbuf buf;
+            std::basic_stringbuf<utf16> buf;
 
             STDOUT_LOGGER_TEST_COMMON_SETUP(t, buf);
 
@@ -523,7 +523,7 @@ namespace StdOutLoggerTests
         UnitTestResult BadStream( )
         {
             TesterHelper t;
-            std::wstringbuf buf;
+            std::basic_stringbuf<utf16> buf;
 
             STDOUT_LOGGER_TEST_COMMON_SETUP(t, buf);
 
@@ -560,7 +560,7 @@ namespace StdOutLoggerTests
         UnitTestResult BadVerbosityLevel( )
         {
             TesterHelper t;
-            std::wstringbuf buf;
+            std::basic_stringbuf<utf16> buf;
 
             STDOUT_LOGGER_TEST_COMMON_SETUP(t, buf);
 
@@ -587,7 +587,7 @@ namespace StdOutLoggerTests
         UnitTestResult GoodStream( )
         {
             TesterHelper t;
-            std::wstringbuf buf;
+            std::basic_stringbuf<utf16> buf;
 
             STDOUT_LOGGER_TEST_COMMON_SETUP(t, buf);
 
@@ -609,7 +609,7 @@ namespace StdOutLoggerTests
                 SUTL_TEST_ASSERT(t.GetStream( ).rdbuf( ));
                 SUTL_TEST_ASSERT(t.GetStream( ).rdbuf( ) == &buf);
                 SUTL_TEST_ASSERT(!StreamBufferIsZeroed(buf));
-                SUTL_TEST_ASSERT(StreamLoggerTests::ValidatePrefixes<wchar_t>(t.GetConfig( ), buf.str( )));
+                SUTL_TEST_ASSERT(StreamLoggerTests::ValidatePrefixes<utf16>(t.GetConfig( ), buf.str( )));
 
                 STDOUT_LOGGER_TEST_RESET_BUFFER(buf);
             }
@@ -626,7 +626,7 @@ namespace StdOutLoggerTests
         UnitTestResult NoBuffer( )
         {
             TesterHelper t;
-            std::wstringbuf buf;
+            std::basic_stringbuf<utf16> buf;
             std::unique_ptr<T[ ]> pFormat(StringUtil::ConvertAndCopy<T>("Test string #%d"));
             bool threw = false;
 
@@ -656,7 +656,7 @@ namespace StdOutLoggerTests
         UnitTestResult BadStream( )
         {
             TesterHelper t;
-            std::wstringbuf buf;
+            std::basic_stringbuf<utf16> buf;
             std::unique_ptr<T[ ]> pFormat;
 
             STDOUT_LOGGER_TEST_COMMON_SETUP(t, buf);
@@ -700,7 +700,7 @@ namespace StdOutLoggerTests
         UnitTestResult BadFormat( )
         {
             TesterHelper t;
-            std::wstringbuf buf;
+            std::basic_stringbuf<utf16> buf;
 
             STDOUT_LOGGER_TEST_COMMON_SETUP(t, buf);
 
@@ -730,7 +730,7 @@ namespace StdOutLoggerTests
         UnitTestResult ZeroLengthFormat( )
         {
             TesterHelper t;
-            std::wstringbuf buf;
+            std::basic_stringbuf<utf16> buf;
             std::unique_ptr<T[ ]> pFormat;
 
             STDOUT_LOGGER_TEST_COMMON_SETUP(t, buf);
@@ -756,7 +756,7 @@ namespace StdOutLoggerTests
             SUTL_TEST_ASSERT(t.GetStream( ).good( ));
             SUTL_TEST_ASSERT(t.GetStream( ).rdbuf( ));
             SUTL_TEST_ASSERT(t.GetStream( ).rdbuf( ) == &buf);
-            SUTL_TEST_ASSERT(CompareBufferWithString<char>(buf, "\n"));
+            SUTL_TEST_ASSERT(CompareBufferWithString<utf8>(buf, "\n"));
 
             SUTL_TEST_SUCCESS( );
         }
@@ -765,7 +765,7 @@ namespace StdOutLoggerTests
         UnitTestResult PlainFormat( )
         {
             TesterHelper t;
-            std::wstringbuf buf;
+            std::basic_stringbuf<utf16> buf;
             std::unique_ptr<T[ ]> pFormat;
 
             STDOUT_LOGGER_TEST_COMMON_SETUP(t, buf);
@@ -791,7 +791,7 @@ namespace StdOutLoggerTests
             SUTL_TEST_ASSERT(t.GetStream( ).good( ));
             SUTL_TEST_ASSERT(t.GetStream( ).rdbuf( ));
             SUTL_TEST_ASSERT(t.GetStream( ).rdbuf( ) == &buf);
-            SUTL_TEST_ASSERT(CompareBufferWithString<char>(buf, "Test string, no format specifiers.\n"));
+            SUTL_TEST_ASSERT(CompareBufferWithString<utf8>(buf, "Test string, no format specifiers.\n"));
 
             SUTL_TEST_SUCCESS( );
         }
@@ -800,7 +800,7 @@ namespace StdOutLoggerTests
         UnitTestResult IntegralFormat( )
         {
             TesterHelper t;
-            std::wstringbuf buf;
+            std::basic_stringbuf<utf16> buf;
             std::unique_ptr<T[ ]> pFormat;
 
             STDOUT_LOGGER_TEST_COMMON_SETUP(t, buf);
@@ -826,7 +826,7 @@ namespace StdOutLoggerTests
             SUTL_TEST_ASSERT(t.GetStream( ).good( ));
             SUTL_TEST_ASSERT(t.GetStream( ).rdbuf( ));
             SUTL_TEST_ASSERT(t.GetStream( ).rdbuf( ) == &buf);
-            SUTL_TEST_ASSERT(CompareBufferWithString<char>(buf, "Test string, integer specifiers -500 300000.\n"));
+            SUTL_TEST_ASSERT(CompareBufferWithString<utf8>(buf, "Test string, integer specifiers -500 300000.\n"));
 
             SUTL_TEST_SUCCESS( );
         }
@@ -835,7 +835,7 @@ namespace StdOutLoggerTests
         UnitTestResult FloatingFormat( )
         {
             TesterHelper t;
-            std::wstringbuf buf;
+            std::basic_stringbuf<utf16> buf;
             std::unique_ptr<T[ ]> pFormat;
 
             STDOUT_LOGGER_TEST_COMMON_SETUP(t, buf);
@@ -861,7 +861,7 @@ namespace StdOutLoggerTests
             SUTL_TEST_ASSERT(t.GetStream( ).good( ));
             SUTL_TEST_ASSERT(t.GetStream( ).rdbuf( ));
             SUTL_TEST_ASSERT(t.GetStream( ).rdbuf( ) == &buf);
-            SUTL_TEST_ASSERT(CompareBufferWithString<char>(buf, "Test string, floating-point specifiers -35.02 1.57779.\n"));
+            SUTL_TEST_ASSERT(CompareBufferWithString<utf8>(buf, "Test string, floating-point specifiers -35.02 1.57779.\n"));
 
             SUTL_TEST_SUCCESS( );
         }
@@ -870,7 +870,7 @@ namespace StdOutLoggerTests
         UnitTestResult StringFormat( )
         {
             TesterHelper t;
-            std::wstringbuf buf;
+            std::basic_stringbuf<utf16> buf;
             std::unique_ptr<T[ ]> pFormat;
             std::unique_ptr<T[ ]> arg1;
 
@@ -898,7 +898,7 @@ namespace StdOutLoggerTests
             SUTL_TEST_ASSERT(t.GetStream( ).good( ));
             SUTL_TEST_ASSERT(t.GetStream( ).rdbuf( ));
             SUTL_TEST_ASSERT(t.GetStream( ).rdbuf( ) == &buf);
-            SUTL_TEST_ASSERT(CompareBufferWithString<char>(buf, "Test string, string specifiers Test string #1 \"Test %f %g string %p #2\".\n"));
+            SUTL_TEST_ASSERT(CompareBufferWithString<utf8>(buf, "Test string, string specifiers Test string #1 \"Test %f %g string %p #2\".\n"));
 
             SUTL_TEST_SUCCESS( );
         }
@@ -912,16 +912,16 @@ namespace StdOutLoggerTests
         UnitTestResult NoBuffer( )
         {
             TesterHelper t;
-            std::wstringbuf buf;
+            std::basic_stringbuf<utf16> buf;
             std::unique_ptr<T[ ]> pFormat;
-            std::unique_ptr<wchar_t[ ]> pExpected;
+            std::unique_ptr<utf16[ ]> pExpected;
 
             STDOUT_LOGGER_TEST_COMMON_SETUP(t, buf);
 
             try
             {
                 pFormat = StringUtil::ConvertAndCopy<T>("Test string #%d.");
-                pExpected = StringUtil::ConvertAndCopy<wchar_t>("Test string #1.\n");
+                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string #1.\n");
             }
             catch ( const std::exception& e )
             {
@@ -951,7 +951,7 @@ namespace StdOutLoggerTests
                     SUTL_TEST_ASSERT(t.GetStream( ).good( ));
                     SUTL_TEST_ASSERT(t.GetStream( ).rdbuf( ));
                     SUTL_TEST_ASSERT(t.GetStream( ).rdbuf( ) == &buf);
-                    SUTL_TEST_ASSERT(StreamLoggerTests::ValidateLog<wchar_t>(t.GetConfig( ), buf.str( ), pExpected));
+                    SUTL_TEST_ASSERT(StreamLoggerTests::ValidateLog<utf16>(t.GetConfig( ), buf.str( ), pExpected));
 
                     STDOUT_LOGGER_TEST_RESET_BUFFER(buf);
                 }
@@ -964,16 +964,16 @@ namespace StdOutLoggerTests
         UnitTestResult BadStream( )
         {
             TesterHelper t;
-            std::wstringbuf buf;
+            std::basic_stringbuf<utf16> buf;
             std::unique_ptr<T[ ]> pFormat;
-            std::unique_ptr<wchar_t[ ]> pExpected;
+            std::unique_ptr<utf16[ ]> pExpected;
 
             STDOUT_LOGGER_TEST_COMMON_SETUP(t, buf);
 
             try
             {
                 pFormat = StringUtil::ConvertAndCopy<T>("Test string #%d.");
-                pExpected = StringUtil::ConvertAndCopy<wchar_t>("Test string #1.\n");
+                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string #1.\n");
             }
             catch ( const std::exception& e )
             {
@@ -1003,7 +1003,7 @@ namespace StdOutLoggerTests
                         SUTL_TEST_ASSERT(t.GetStream( ).good( ));
                         SUTL_TEST_ASSERT(t.GetStream( ).rdbuf( ));
                         SUTL_TEST_ASSERT(t.GetStream( ).rdbuf( ) == &buf);
-                        SUTL_TEST_ASSERT(StreamLoggerTests::ValidateLog<wchar_t>(t.GetConfig( ), buf.str( ), pExpected));
+                        SUTL_TEST_ASSERT(StreamLoggerTests::ValidateLog<utf16>(t.GetConfig( ), buf.str( ), pExpected));
 
                         STDOUT_LOGGER_TEST_RESET_BUFFER(buf);
                     }
@@ -1017,7 +1017,7 @@ namespace StdOutLoggerTests
         UnitTestResult BadVerbosityLevel( )
         {
             TesterHelper t;
-            std::wstringbuf buf;
+            std::basic_stringbuf<utf16> buf;
             std::unique_ptr<T[ ]> pFormat;
             bool threw = false;
 
@@ -1054,7 +1054,7 @@ namespace StdOutLoggerTests
         UnitTestResult BadFormat( )
         {
             TesterHelper t;
-            std::wstringbuf buf;
+            std::basic_stringbuf<utf16> buf;
             bool threw = false;
 
             STDOUT_LOGGER_TEST_COMMON_SETUP(t, buf);
@@ -1094,16 +1094,16 @@ namespace StdOutLoggerTests
         UnitTestResult ZeroLengthFormat( )
         {
             TesterHelper t;
-            std::wstringbuf buf;
+            std::basic_stringbuf<utf16> buf;
             std::unique_ptr<T[ ]> pFormat;
-            std::unique_ptr<wchar_t[ ]> pExpected;
+            std::unique_ptr<utf16[ ]> pExpected;
 
             STDOUT_LOGGER_TEST_COMMON_SETUP(t, buf);
 
             try
             {
                 pFormat = StringUtil::ConvertAndCopy<T>("");
-                pExpected = StringUtil::ConvertAndCopy<wchar_t>("\n");
+                pExpected = StringUtil::ConvertAndCopy<utf16>("\n");
             }
             catch ( const std::exception& e )
             {
@@ -1132,7 +1132,7 @@ namespace StdOutLoggerTests
                     SUTL_TEST_ASSERT(t.GetStream( ).good( ));
                     SUTL_TEST_ASSERT(t.GetStream( ).rdbuf( ));
                     SUTL_TEST_ASSERT(t.GetStream( ).rdbuf( ) == &buf);
-                    SUTL_TEST_ASSERT(StreamLoggerTests::ValidateLog<wchar_t>(t.GetConfig( ), buf.str( ), pExpected));
+                    SUTL_TEST_ASSERT(StreamLoggerTests::ValidateLog<utf16>(t.GetConfig( ), buf.str( ), pExpected));
 
                     STDOUT_LOGGER_TEST_RESET_BUFFER(buf);
                 }
@@ -1145,16 +1145,16 @@ namespace StdOutLoggerTests
         UnitTestResult PlainFormat( )
         {
             TesterHelper t;
-            std::wstringbuf buf;
+            std::basic_stringbuf<utf16> buf;
             std::unique_ptr<T[ ]> pFormat;
-            std::unique_ptr<wchar_t[ ]> pExpected;
+            std::unique_ptr<utf16[ ]> pExpected;
 
             STDOUT_LOGGER_TEST_COMMON_SETUP(t, buf);
 
             try
             {
                 pFormat = StringUtil::ConvertAndCopy<T>("Test string, no format specifiers.");
-                pExpected = StringUtil::ConvertAndCopy<wchar_t>("Test string, no format specifiers.\n");
+                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string, no format specifiers.\n");
             }
             catch ( const std::exception& e )
             {
@@ -1183,7 +1183,7 @@ namespace StdOutLoggerTests
                     SUTL_TEST_ASSERT(t.GetStream( ).good( ));
                     SUTL_TEST_ASSERT(t.GetStream( ).rdbuf( ));
                     SUTL_TEST_ASSERT(t.GetStream( ).rdbuf( ) == &buf);
-                    SUTL_TEST_ASSERT(StreamLoggerTests::ValidateLog<wchar_t>(t.GetConfig( ), buf.str( ), pExpected));
+                    SUTL_TEST_ASSERT(StreamLoggerTests::ValidateLog<utf16>(t.GetConfig( ), buf.str( ), pExpected));
 
                     STDOUT_LOGGER_TEST_RESET_BUFFER(buf);
                 }
@@ -1196,16 +1196,16 @@ namespace StdOutLoggerTests
         UnitTestResult IntegralFormat( )
         {
             TesterHelper t;
-            std::wstringbuf buf;
+            std::basic_stringbuf<utf16> buf;
             std::unique_ptr<T[ ]> pFormat;
-            std::unique_ptr<wchar_t[ ]> pExpected;
+            std::unique_ptr<utf16[ ]> pExpected;
 
             STDOUT_LOGGER_TEST_COMMON_SETUP(t, buf);
 
             try
             {
                 pFormat = StringUtil::ConvertAndCopy<T>("Test string, integer specifiers %d %llu.");
-                pExpected = StringUtil::ConvertAndCopy<wchar_t>("Test string, integer specifiers -500 300000.\n");
+                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string, integer specifiers -500 300000.\n");
             }
             catch ( const std::exception& e )
             {
@@ -1234,7 +1234,7 @@ namespace StdOutLoggerTests
                     SUTL_TEST_ASSERT(t.GetStream( ).good( ));
                     SUTL_TEST_ASSERT(t.GetStream( ).rdbuf( ));
                     SUTL_TEST_ASSERT(t.GetStream( ).rdbuf( ) == &buf);
-                    SUTL_TEST_ASSERT(StreamLoggerTests::ValidateLog<wchar_t>(t.GetConfig( ), buf.str( ), pExpected));
+                    SUTL_TEST_ASSERT(StreamLoggerTests::ValidateLog<utf16>(t.GetConfig( ), buf.str( ), pExpected));
 
                     STDOUT_LOGGER_TEST_RESET_BUFFER(buf);
                 }
@@ -1247,16 +1247,16 @@ namespace StdOutLoggerTests
         UnitTestResult FloatingFormat( )
         {
             TesterHelper t;
-            std::wstringbuf buf;
+            std::basic_stringbuf<utf16> buf;
             std::unique_ptr<T[ ]> pFormat;
-            std::unique_ptr<wchar_t[ ]> pExpected;
+            std::unique_ptr<utf16[ ]> pExpected;
 
             STDOUT_LOGGER_TEST_COMMON_SETUP(t, buf);
 
             try
             {
                 pFormat = StringUtil::ConvertAndCopy<T>("Test string, floating-point specifiers %2.2f %1.5f.");
-                pExpected = StringUtil::ConvertAndCopy<wchar_t>("Test string, floating-point specifiers -35.02 1.57779.\n");
+                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string, floating-point specifiers -35.02 1.57779.\n");
             }
             catch ( const std::exception& e )
             {
@@ -1285,7 +1285,7 @@ namespace StdOutLoggerTests
                     SUTL_TEST_ASSERT(t.GetStream( ).good( ));
                     SUTL_TEST_ASSERT(t.GetStream( ).rdbuf( ));
                     SUTL_TEST_ASSERT(t.GetStream( ).rdbuf( ) == &buf);
-                    SUTL_TEST_ASSERT(StreamLoggerTests::ValidateLog<wchar_t>(t.GetConfig( ), buf.str( ), pExpected));
+                    SUTL_TEST_ASSERT(StreamLoggerTests::ValidateLog<utf16>(t.GetConfig( ), buf.str( ), pExpected));
 
                     STDOUT_LOGGER_TEST_RESET_BUFFER(buf);
                 }
@@ -1298,9 +1298,9 @@ namespace StdOutLoggerTests
         UnitTestResult StringFormat( )
         {
             TesterHelper t;
-            std::wstringbuf buf;
+            std::basic_stringbuf<utf16> buf;
             std::unique_ptr<T[ ]> pFormat;
-            std::unique_ptr<wchar_t[ ]> pExpected;
+            std::unique_ptr<utf16[ ]> pExpected;
             std::unique_ptr<T[ ]> arg1;
 
             STDOUT_LOGGER_TEST_COMMON_SETUP(t, buf);
@@ -1308,7 +1308,7 @@ namespace StdOutLoggerTests
             try
             {
                 pFormat = StringUtil::ConvertAndCopy<T>("Test string, string specifiers %s %ls.");
-                pExpected = StringUtil::ConvertAndCopy<wchar_t>("Test string, string specifiers Test string #1 \"Test %f %g string %p #2\".\n");
+                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string, string specifiers Test string #1 \"Test %f %g string %p #2\".\n");
                 arg1 = StringUtil::ConvertAndCopy<T>("Test string #1");
             }
             catch ( const std::exception& e )
@@ -1338,7 +1338,7 @@ namespace StdOutLoggerTests
                     SUTL_TEST_ASSERT(t.GetStream( ).good( ));
                     SUTL_TEST_ASSERT(t.GetStream( ).rdbuf( ));
                     SUTL_TEST_ASSERT(t.GetStream( ).rdbuf( ) == &buf);
-                    SUTL_TEST_ASSERT(StreamLoggerTests::ValidateLog<wchar_t>(t.GetConfig( ), buf.str( ), pExpected));
+                    SUTL_TEST_ASSERT(StreamLoggerTests::ValidateLog<utf16>(t.GetConfig( ), buf.str( ), pExpected));
 
                     STDOUT_LOGGER_TEST_RESET_BUFFER(buf);
                 }
@@ -1351,16 +1351,16 @@ namespace StdOutLoggerTests
         UnitTestResult RecoverFromNoBuffer( )
         {
             TesterHelper t;
-            std::wstringbuf buf;
+            std::basic_stringbuf<utf16> buf;
             std::unique_ptr<T[ ]> pFormat;
-            std::unique_ptr<wchar_t[ ]> pExpected;
+            std::unique_ptr<utf16[ ]> pExpected;
 
             STDOUT_LOGGER_TEST_COMMON_SETUP(t, buf);
 
             try
             {
                 pFormat = StringUtil::ConvertAndCopy<T>("Test string, no format specifiers.");
-                pExpected = StringUtil::ConvertAndCopy<wchar_t>("Test string, no format specifiers.\n");
+                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string, no format specifiers.\n");
             }
             catch ( const std::exception& e )
             {
@@ -1391,7 +1391,7 @@ namespace StdOutLoggerTests
                     SUTL_TEST_ASSERT(t.GetStream( ).good( ));
                     SUTL_TEST_ASSERT(t.GetStream( ).rdbuf( ));
                     SUTL_TEST_ASSERT(t.GetStream( ).rdbuf( ) == &buf);
-                    SUTL_TEST_ASSERT(StreamLoggerTests::ValidateLog<wchar_t>(t.GetConfig( ), buf.str( ), pExpected));
+                    SUTL_TEST_ASSERT(StreamLoggerTests::ValidateLog<utf16>(t.GetConfig( ), buf.str( ), pExpected));
 
                     STDOUT_LOGGER_TEST_RESET_BUFFER(buf);
                 }
@@ -1404,16 +1404,16 @@ namespace StdOutLoggerTests
         UnitTestResult RecoverFromBadState( )
         {
             TesterHelper t;
-            std::wstringbuf buf;
+            std::basic_stringbuf<utf16> buf;
             std::unique_ptr<T[ ]> pFormat;
-            std::unique_ptr<wchar_t[ ]> pExpected;
+            std::unique_ptr<utf16[ ]> pExpected;
 
             STDOUT_LOGGER_TEST_COMMON_SETUP(t, buf);
 
             try
             {
                 pFormat = StringUtil::ConvertAndCopy<T>("Test string, no format specifiers.");
-                pExpected = StringUtil::ConvertAndCopy<wchar_t>("Test string, no format specifiers.\n");
+                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string, no format specifiers.\n");
             }
             catch ( const std::exception& e )
             {
@@ -1446,7 +1446,7 @@ namespace StdOutLoggerTests
                         SUTL_TEST_ASSERT(t.GetStream( ).good( ));
                         SUTL_TEST_ASSERT(t.GetStream( ).rdbuf( ));
                         SUTL_TEST_ASSERT(t.GetStream( ).rdbuf( ) == &buf);
-                        SUTL_TEST_ASSERT(StreamLoggerTests::ValidateLog<wchar_t>(t.GetConfig( ), buf.str( ), pExpected));
+                        SUTL_TEST_ASSERT(StreamLoggerTests::ValidateLog<utf16>(t.GetConfig( ), buf.str( ), pExpected));
 
                         STDOUT_LOGGER_TEST_RESET_BUFFER(buf);
                     }
@@ -1460,16 +1460,16 @@ namespace StdOutLoggerTests
         UnitTestResult NoLogBelowThreshold( )
         {
             TesterHelper t;
-            std::wstringbuf buf;
+            std::basic_stringbuf<utf16> buf;
             std::unique_ptr<T[ ]> pFormat;
-            std::unique_ptr<wchar_t[ ]> pExpected;
+            std::unique_ptr<utf16[ ]> pExpected;
 
             STDOUT_LOGGER_TEST_COMMON_SETUP(t, buf);
 
             try
             {
                 pFormat = StringUtil::ConvertAndCopy<T>("Test string, no format specifiers.");
-                pExpected = StringUtil::ConvertAndCopy<wchar_t>("Test string, no format specifiers.\n");
+                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string, no format specifiers.\n");
             }
             catch ( const std::exception& e )
             {
@@ -1508,7 +1508,7 @@ namespace StdOutLoggerTests
                         }
                         else
                         {
-                            SUTL_TEST_ASSERT(StreamLoggerTests::ValidateLog<wchar_t>(t.GetConfig( ), buf.str( ), pExpected));
+                            SUTL_TEST_ASSERT(StreamLoggerTests::ValidateLog<utf16>(t.GetConfig( ), buf.str( ), pExpected));
                         }
 
                         STDOUT_LOGGER_TEST_RESET_BUFFER(buf);
@@ -1525,14 +1525,14 @@ namespace StdOutLoggerTests
             TesterHelper t;
             StreamLoggerTests::TestStreamBuffer strbuf;
             std::unique_ptr<T[ ]> pFormat;
-            std::unique_ptr<wchar_t[ ]> pExpected;
+            std::unique_ptr<utf16[ ]> pExpected;
 
             STDOUT_LOGGER_TEST_COMMON_SETUP(t, strbuf);
 
             try
             {
                 pFormat = StringUtil::ConvertAndCopy<T>("Test string #%d.");
-                pExpected = StringUtil::ConvertAndCopy<wchar_t>("Test string #1.\n");
+                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string #1.\n");
             }
             catch ( const std::exception& e )
             {
@@ -1579,18 +1579,18 @@ namespace StdOutLoggerTests
         UnitTestResult AppendStreamWrite( )
         {
             TesterHelper t;
-            std::wstringbuf buf;
+            std::basic_stringbuf<utf16> buf;
             std::unique_ptr<T[ ]> pFormat;
-            std::unique_ptr<wchar_t[ ]> pExpected1;
-            std::unique_ptr<wchar_t[ ]> pExpected2;
+            std::unique_ptr<utf16[ ]> pExpected1;
+            std::unique_ptr<utf16[ ]> pExpected2;
 
             STDOUT_LOGGER_TEST_COMMON_SETUP(t, buf);
 
             try
             {
                 pFormat = StringUtil::ConvertAndCopy<T>("Test string #%d.");
-                pExpected1 = StringUtil::ConvertAndCopy<wchar_t>("Test string #1.\n");
-                pExpected2 = StringUtil::ConvertAndCopy<wchar_t>("Test string #2.\n");
+                pExpected1 = StringUtil::ConvertAndCopy<utf16>("Test string #1.\n");
+                pExpected2 = StringUtil::ConvertAndCopy<utf16>("Test string #2.\n");
             }
             catch ( const std::exception& e )
             {
@@ -1603,7 +1603,7 @@ namespace StdOutLoggerTests
                 {
                     bool ret1 = false;
                     bool ret2 = false;
-                    size_t pos = std::wstring::npos;
+                    size_t pos = std::basic_string<utf16>::npos;
 
                     t.GetConfig( ).Enable(mask);
 
@@ -1637,7 +1637,7 @@ namespace StdOutLoggerTests
 
                     pos = buf.str( ).find(L'\n');
 
-                    SUTL_TEST_ASSERT(pos != std::wstring::npos);
+                    SUTL_TEST_ASSERT(pos != std::basic_string<utf16>::npos);
                     SUTL_TEST_ASSERT(StreamLoggerTests::ValidateLog(t.GetConfig( ), buf.str( ).substr(0, pos + 1), pExpected1));
                     SUTL_TEST_ASSERT(StreamLoggerTests::ValidateLog(t.GetConfig( ), buf.str( ).substr(pos + 1), pExpected2));
 
@@ -1652,9 +1652,9 @@ namespace StdOutLoggerTests
         UnitTestResult ColorLog( )
         {
             TesterHelper t;
-            std::wstringbuf buf;
+            std::basic_stringbuf<utf16> buf;
             std::unique_ptr<T[ ]> pFormat;
-            std::unique_ptr<wchar_t[ ]> pExpected;
+            std::unique_ptr<utf16[ ]> pExpected;
 
             STDOUT_LOGGER_TEST_COMMON_SETUP(t, buf);
 
@@ -1663,7 +1663,7 @@ namespace StdOutLoggerTests
             try
             {
                 pFormat = StringUtil::ConvertAndCopy<T>("Test string #%d.");
-                pExpected = StringUtil::ConvertAndCopy<wchar_t>(("Test string #1." + t.GetColorSequences<char>( )[SLL::ColorConverter::ToScalar(Color::DEFAULT)] + "\n").c_str( ));
+                pExpected = StringUtil::ConvertAndCopy<utf16>(("Test string #1." + std::get<std::basic_string<utf8>>(t.GetColorSequences( )[SLL::ColorConverter::ToScalar(Color::DEFAULT)]) + "\n").c_str( ));
             }
             catch ( const std::exception& e )
             {
@@ -1679,9 +1679,9 @@ namespace StdOutLoggerTests
                 {
                     for ( Color clr = Color::BASIC_BEGIN; clr < Color::MAX; clr = static_cast<Color>(SLL::ColorConverter::ToScalar(clr) + 1) )
                     {
-                        const std::basic_string<wchar_t>& colorSequence = t.GetColorSequences<wchar_t>( )[SLL::ColorConverter::ToScalar(clr)];
+                        const std::basic_string<utf16>& colorSequence = std::get<std::basic_string<utf16>>(t.GetColorSequences( )[SLL::ColorConverter::ToScalar(clr)]);
                         bool ret = false;
-                        size_t pos = std::wstring::npos;
+                        size_t pos = std::basic_string<utf16>::npos;
 
                         t.GetConfig( ).SetColor(lvl, clr);
 
@@ -1696,7 +1696,7 @@ namespace StdOutLoggerTests
 
                         SUTL_TEST_ASSERT(ret);
 
-                        const std::wstring str = buf.str( );
+                        const std::basic_string<utf16> str = buf.str( );
                         SUTL_TEST_ASSERT(!str.empty( ));
 
                         pos = str.find(colorSequence);

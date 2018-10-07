@@ -9,6 +9,7 @@
 #include <StringUtil.hpp>
 
 // STL
+#include <filesystem>
 #include <vector>
 
 namespace SLL
@@ -32,8 +33,8 @@ namespace SLL
         // Verbosity level to specifiy desired logging threshold.
         VerbosityLevel mVerbosityThreshold;
 
-        // Wide string for target log filename.
-        std::wstring mLogFile;
+        // UTF-16 string for target log filename.
+        std::filesystem::path mLogFile;
 
         /// Private Helper Methods \\\
 
@@ -91,7 +92,7 @@ namespace SLL
         VerbosityLevel GetVerbosityThreshold( ) const noexcept;
 
         // Returns configured target file.
-        const std::wstring& GetFile( ) const noexcept;
+        const std::filesystem::path& GetFile( ) const noexcept;
 
         /// Setters \\\
 
@@ -102,12 +103,10 @@ namespace SLL
         void SetVerbosityThreshold(const VerbosityLevel);
 
         // Specifies file to log to [C].
-        template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
-        void SetFile(const std::basic_string<T>&);
+        void SetFile(const std::filesystem::path&);
 
         // Specifies file to log to [M].
-        template <class T, ENABLE_IF_SUPPORTED_CHARACTER_TYPE(T)>
-        void SetFile(std::basic_string<T>&&);
+        void SetFile(std::filesystem::path&&);
 
         /// Public Methods \\\
 

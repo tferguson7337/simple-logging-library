@@ -17,7 +17,7 @@
 #include <SyncLoggerTests.h>
 
 
-void GetUnitTests(UnitTestRunner<char>& utr)
+void GetUnitTests(UnitTestRunner<utf8>& utr)
 {
     // Enum Class Unit Tests
     utr.AddUnitTests(ColorTests::GetTests( ));
@@ -39,16 +39,13 @@ int main( )
 {
     bool pass = false;
 
-    UnitTestRunner<char> utr("SLL Unit Tests");
+    UnitTestRunner<utf8> utr("SLL Unit Tests");
 
     // Get Tests
     GetUnitTests(utr);
 
     // Run Tests
     pass = utr.RunUnitTests( );
-
-    // Print Results
-    utr.PrintTestLogs( );
 
     return (pass) ? 0 : -1;
 }

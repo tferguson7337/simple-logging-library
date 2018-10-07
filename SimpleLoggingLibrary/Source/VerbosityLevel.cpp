@@ -6,56 +6,35 @@ namespace SLL
 {
     /// Private Helper Methods \\\
 
-    // VerbosityLevel String Getter - char
-    template <>
-    const std::basic_string<char>& VerbosityLevelConverter::GetVerbosityLevelString<char>(const size_t i)
+    // VerbosityLevel String Getter
+    template <class T, typename>
+    const std::basic_string<T>& VerbosityLevelConverter::GetVerbosityLevelString(const size_t i)
     {
-        static const std::vector<std::basic_string<char>> VerbosityLevelStringsA
+        static const std::vector<SupportedStringTuple> VerbosityLevelStrings
         {
-            "INFO",
-            "WARN",
-            "ERROR",
-            "FATAL"
+            MAKE_SUPSTR_TUPLE("INFO"),
+            MAKE_SUPSTR_TUPLE("WARN"),
+            MAKE_SUPSTR_TUPLE("ERROR"),
+            MAKE_SUPSTR_TUPLE("FATAL")
         };
 
-        if ( i >= VerbosityLevelStringsA.size( ) )
+        if ( i >= VerbosityLevelStrings.size( ) )
         {
             throw std::range_error(
                 __FUNCTION__" - Index argument out of bounds.  Index = " +
                 std::to_string(i) +
                 ", Max = " +
-                std::to_string(VerbosityLevelStringsA.size( ) - 1)
+                std::to_string(VerbosityLevelStrings.size( ) - 1)
             );
         }
 
-        return VerbosityLevelStringsA[i];
-    }
-
-    // VerbosityLevel String Getter - wchar_t
-    template <>
-    const std::basic_string<wchar_t>& VerbosityLevelConverter::GetVerbosityLevelString<wchar_t>(const size_t i)
-    {
-        static const std::vector<std::basic_string<wchar_t>> VerbosityLevelStringsW
+        if constexpr ( !IsSupportedCharType<T>( ) )
         {
-            L"INFO",
-            L"WARN",
-            L"ERROR",
-            L"FATAL"
-        };
-
-        if ( i >= VerbosityLevelStringsW.size( ) )
-        {
-            throw std::range_error(
-                __FUNCTION__" - Index argument out of bounds.  Index = " +
-                std::to_string(i) +
-                ", Max = " +
-                std::to_string(VerbosityLevelStringsW.size( ) - 1)
-            );
+            throw std::runtime_error(__FUNCTION__": Unsupported template type.");
         }
 
-        return VerbosityLevelStringsW[i];
+        return std::get<std::basic_string<T>>(VerbosityLevelStrings[i]);
     }
-
 
     /// Public Methods \\\
 
@@ -93,6 +72,6 @@ namespace SLL
 
     /// Explicit Template Instantiation \\\
 
-    template const std::basic_string<char>& VerbosityLevelConverter::ToString<char>(VerbosityLevel);
-    template const std::basic_string<wchar_t>& VerbosityLevelConverter::ToString<wchar_t>(VerbosityLevel);
+    template const std::basic_string<utf8>& VerbosityLevelConverter::ToString<utf8>(VerbosityLevel);
+    template const std::basic_string<utf16>& VerbosityLevelConverter::ToString<utf16>(VerbosityLevel);
 }

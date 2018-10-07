@@ -42,15 +42,12 @@ namespace SLL
     // Worker thread's wait method.
     void SyncLogger::WaitForMsgs( )
     {
-        // Helper lambda for wait condition.
-        static const auto waitLambda = [this] ( ) -> bool
-        {
-            return this->WaitPredicate( );
-        };
-
         std::unique_lock<std::mutex> lock(mMsgQueueMutex);
 
-        mMsgCV.wait(lock, waitLambda);
+        mMsgCV.wait(lock, [this] ( ) -> bool
+        {
+            return this->WaitPredicate( );
+        });
     }
 
     // Worker thread's wait condition method.
@@ -79,6 +76,8 @@ namespace SLL
         {
             mWorkerThread = std::thread(&SyncLogger::WorkerLogLoop, this);
         }
+
+        mMsgCV.notify_one( );
     }
 
     // Worker thread's obtain-next-message method.
@@ -110,13 +109,13 @@ namespace SLL
             try
             {
                 // Log the queued message, capture success/failure.
-                success = mpLogger->Log(msg.GetVerbosityLevel( ), msg.GetThreadID( ), L"%s", msg.GetString( ));
+                success = mpLogger->Log(msg.GetVerbosityLevel( ), msg.GetThreadID( ), UTF16_LITERAL("%s"), msg.GetString( ));
             }
             catch ( const std::exception& e )
             {
                 try
                 {
-                    static const char* errFormat = __FUNCTION__" - Failed to log message: exception \"%s\", msg \"%ls\".";
+                    static const utf8* errFormat = __FUNCTION__" - Failed to log message: exception \"%s\", msg \"%ls\".";
                     // Try to log that we failed with exception string and original message.
                     mpLogger->Log(VerbosityLevel::WARN, errFormat, e.what( ), msg.GetString( ));
                 }
@@ -210,7 +209,7 @@ namespace SLL
     /// Public Methods \\\
 
     // Submit log message to stream(s) (variadic arguments, narrow).
-    bool SyncLogger::Log(const VerbosityLevel& lvl, const char* pFormat, ...)
+    bool SyncLogger::Log(const VerbosityLevel& lvl, const utf8* pFormat, ...)
     {
         bool ret = false;
         va_list pArgs;
@@ -231,7 +230,7 @@ namespace SLL
     }
 
     // Submit log message to stream(s) (variadic arguments, wide).
-    bool SyncLogger::Log(const VerbosityLevel& lvl, const wchar_t* pFormat, ...)
+    bool SyncLogger::Log(const VerbosityLevel& lvl, const utf16* pFormat, ...)
     {
         bool ret = false;
         va_list pArgs;
@@ -252,7 +251,7 @@ namespace SLL
     }
 
     // Submit log message to stream(s) (variadic arguments, narrow, explicit thread ID).
-    bool SyncLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const char* pFormat, ...)
+    bool SyncLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const utf8* pFormat, ...)
     {
         bool ret = false;
         va_list pArgs;
@@ -273,7 +272,7 @@ namespace SLL
     }
 
     // Submit log message to stream(s) (variadic arguments, wide, explicit thread ID).
-    bool SyncLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const wchar_t* pFormat, ...)
+    bool SyncLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const utf16* pFormat, ...)
     {
         bool ret = false;
         va_list pArgs;
@@ -294,9 +293,9 @@ namespace SLL
     }
 
     // Submit log message to stream(s) (va_list, narrow).
-    bool SyncLogger::Log(const VerbosityLevel& lvl, const char* pFormat, va_list pArgs)
+    bool SyncLogger::Log(const VerbosityLevel& lvl, const utf8* pFormat, va_list pArgs)
     {
-        std::unique_ptr<wchar_t[ ]> str;
+        std::unique_ptr<utf16[ ]> str;
 
         if ( !pFormat )
         {
@@ -304,7 +303,7 @@ namespace SLL
         }
 
         // Build the log message.
-        str = LoggerBase::BuildFormattedMessage<wchar_t>(StringUtil::ConvertAndCopy<wchar_t>(pFormat).get( ), pArgs);
+        str = LoggerBase::BuildFormattedMessage<utf16>(StringUtil::ConvertAndCopy<utf16>(pFormat).get( ), pArgs);
 
         // Push the message into the queue.
         PushMsg(LogMessage(lvl, std::move(str), std::this_thread::get_id( )));
@@ -313,9 +312,9 @@ namespace SLL
     }
 
     // Submit log message to stream(s) (va_list, wide).
-    bool SyncLogger::Log(const VerbosityLevel& lvl, const wchar_t* pFormat, va_list pArgs)
+    bool SyncLogger::Log(const VerbosityLevel& lvl, const utf16* pFormat, va_list pArgs)
     {
-        std::unique_ptr<wchar_t[ ]> str;
+        std::unique_ptr<utf16[ ]> str;
 
         if ( !pFormat )
         {
@@ -323,7 +322,7 @@ namespace SLL
         }
 
         // Build the log message.
-        str = LoggerBase::BuildFormattedMessage<wchar_t>(pFormat, pArgs);
+        str = LoggerBase::BuildFormattedMessage<utf16>(pFormat, pArgs);
 
         // Push the message into the queue.
         PushMsg(LogMessage(lvl, std::move(str), std::this_thread::get_id( )));
@@ -332,9 +331,9 @@ namespace SLL
     }
 
     // Submit log message to stream(s) (va_list, explicit thread ID).
-    bool SyncLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const char* pFormat, va_list pArgs)
+    bool SyncLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const utf8* pFormat, va_list pArgs)
     {
-        std::unique_ptr<wchar_t[ ]> str;
+        std::unique_ptr<utf16[ ]> str;
 
         if ( !pFormat )
         {
@@ -342,7 +341,7 @@ namespace SLL
         }
 
         // Build the log message.
-        str = LoggerBase::BuildFormattedMessage<wchar_t>(StringUtil::ConvertAndCopy<wchar_t>(pFormat).get( ), pArgs);
+        str = LoggerBase::BuildFormattedMessage<utf16>(StringUtil::ConvertAndCopy<utf16>(pFormat).get( ), pArgs);
 
         // Push the message into the queue.
         PushMsg(LogMessage(lvl, std::move(str), tid));
@@ -350,9 +349,9 @@ namespace SLL
         return true;
     }
 
-    bool SyncLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const wchar_t* pFormat, va_list pArgs)
+    bool SyncLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const utf16* pFormat, va_list pArgs)
     {
-        std::unique_ptr<wchar_t[ ]> str;
+        std::unique_ptr<utf16[ ]> str;
 
         if ( !pFormat )
         {
@@ -360,7 +359,7 @@ namespace SLL
         }
 
         // Build the log message.
-        str = LoggerBase::BuildFormattedMessage<wchar_t>(pFormat, pArgs);
+        str = LoggerBase::BuildFormattedMessage<utf16>(pFormat, pArgs);
 
         // Push the message into the queue.
         PushMsg(LogMessage(lvl, std::move(str), tid));

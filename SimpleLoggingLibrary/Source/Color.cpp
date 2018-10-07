@@ -78,92 +78,48 @@ namespace SLL
 
     /// Private Helper Methods \\\
 
-    // Color String Getter - char
-    template <>
-    const std::basic_string<char>& ColorConverter::GetColorString<char>(const size_t i)
+    // Color String Getter
+    template <class T>
+    const std::basic_string<T>& ColorConverter::GetColorString(const size_t i)
     {
-        static const std::vector<std::basic_string<char>> colorStringsA
+        static const std::vector<SupportedStringTuple> colorStrings
         {
             // Basic Colors
-            "BLACK",
-            "RED",
-            "GREEN",
-            "YELLOW",
-            "BLUE",
-            "MAGENTA",
-            "CYAN",
-            "WHITE",
+            MAKE_SUPSTR_TUPLE("BLACK"),
+            MAKE_SUPSTR_TUPLE("RED"),
+            MAKE_SUPSTR_TUPLE("GREEN"),
+            MAKE_SUPSTR_TUPLE("YELLOW"),
+            MAKE_SUPSTR_TUPLE("BLUE"),
+            MAKE_SUPSTR_TUPLE("MAGENTA"),
+            MAKE_SUPSTR_TUPLE("CYAN"),
+            MAKE_SUPSTR_TUPLE("WHITE"),
 
             // Bright Colors
-            "BRIGHT_BLACK",
-            "BRIGHT_RED",
-            "BRIGHT_GREEN",
-            "BRIGHT_YELLOW",
-            "BRIGHT_BLUE",
-            "BRIGHT_MAGENTA",
-            "BRIGHT_CYAN",
-            "BRIGHT_WHITE",
+            MAKE_SUPSTR_TUPLE("BRIGHT_BLACK"),
+            MAKE_SUPSTR_TUPLE("BRIGHT_RED"),
+            MAKE_SUPSTR_TUPLE("BRIGHT_GREEN"),
+            MAKE_SUPSTR_TUPLE("BRIGHT_YELLOW"),
+            MAKE_SUPSTR_TUPLE("BRIGHT_BLUE"),
+            MAKE_SUPSTR_TUPLE("BRIGHT_MAGENTA"),
+            MAKE_SUPSTR_TUPLE("BRIGHT_CYAN"),
+            MAKE_SUPSTR_TUPLE("BRIGHT_WHITE"),
 
             // Default
-            "DEFAULT"
+            MAKE_SUPSTR_TUPLE("DEFAULT")
         };
 
-        if ( i >= colorStringsA.size( ) )
+        if ( i >= colorStrings.size( ) )
         {
             throw std::range_error(
                 __FUNCTION__" - Index argument out of bounds.  Index = " +
                 std::to_string(i) +
                 ", Max = " +
-                std::to_string(colorStringsA.size( ) - 1)
+                std::to_string(colorStrings.size( ) - 1)
             );
         }
 
-        return colorStringsA[i];
+        return std::get<std::basic_string<T>>(colorStrings[i]);
     }
-
-    // Color String Getter - wchar_t
-    template <>
-    const std::basic_string<wchar_t>& ColorConverter::GetColorString<wchar_t>(const size_t i)
-    {
-        static const std::vector<std::basic_string<wchar_t>> colorStringsW
-        {
-            // Basic Colors
-            L"BLACK",
-            L"RED",
-            L"GREEN",
-            L"YELLOW",
-            L"BLUE",
-            L"MAGENTA",
-            L"CYAN",
-            L"WHITE",
-
-            // Bright Colors
-            L"BRIGHT_BLACK",
-            L"BRIGHT_RED",
-            L"BRIGHT_GREEN",
-            L"BRIGHT_YELLOW",
-            L"BRIGHT_BLUE",
-            L"BRIGHT_MAGENTA",
-            L"BRIGHT_CYAN",
-            L"BRIGHT_WHITE",
-
-            // Default
-            L"DEFAULT"
-        };
-
-        if ( i >= colorStringsW.size( ) )
-        {
-            throw std::range_error(
-                __FUNCTION__" - Index argument out of bounds.  Index = " +
-                std::to_string(i) +
-                ", Max = " +
-                std::to_string(colorStringsW.size( ) - 1)
-            );
-        }
-
-        return colorStringsW[i];
-    }
-
 
     /// Public Methods \\\
 
@@ -183,7 +139,7 @@ namespace SLL
     }
 
     // Returns string name of Color argument.
-    template <class T, typename>
+    template <class T>
     const std::basic_string<T>& ColorConverter::ToString(Color c)
     {
         if ( c >= Color::MAX )
@@ -201,6 +157,6 @@ namespace SLL
 
     /// Explicit Template Instantiation \\\
 
-    template const std::basic_string<char>& ColorConverter::ToString<char>(Color);
-    template const std::basic_string<wchar_t>& ColorConverter::ToString<wchar_t>(Color);
+    template const std::basic_string<utf8>& ColorConverter::ToString<utf8>(Color);
+    template const std::basic_string<utf16>& ColorConverter::ToString<utf16>(Color);
 }

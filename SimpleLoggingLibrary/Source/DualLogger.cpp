@@ -77,7 +77,7 @@ namespace SLL
     /// Public Methods \\\
 
      // Submit log message to stream(s) (variadic arguments, narrow).
-    bool DualLogger::Log(const VerbosityLevel& lvl, const char* pFormat, ...)
+    bool DualLogger::Log(const VerbosityLevel& lvl, const utf8* pFormat, ...)
     {
         bool ret = false;
 
@@ -101,7 +101,7 @@ namespace SLL
     }
 
     // Submit log message to stream(s) (variadic arguments, wide).
-    bool DualLogger::Log(const VerbosityLevel& lvl, const wchar_t* pFormat, ...)
+    bool DualLogger::Log(const VerbosityLevel& lvl, const utf16* pFormat, ...)
     {
         bool ret = false;
 
@@ -125,7 +125,7 @@ namespace SLL
     }
 
     // Submit log message to stream(s) (variadic arguments, explicit thread ID, narrow).
-    bool DualLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const char* pFormat, ...)
+    bool DualLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const utf8* pFormat, ...)
     {
         bool ret = false;
 
@@ -149,7 +149,7 @@ namespace SLL
     }
 
     // Submit log message to stream(s) (variadic arguments, explicit thread ID, wide).
-    bool DualLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const wchar_t* pFormat, ...)
+    bool DualLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const utf16* pFormat, ...)
     {
         bool ret = false;
 
@@ -173,26 +173,26 @@ namespace SLL
     }
 
     // Submit log message to stream(s) (va_list, narrow).
-    bool DualLogger::Log(const VerbosityLevel& lvl, const char* pFormat, va_list pArgs)
+    bool DualLogger::Log(const VerbosityLevel& lvl, const utf8* pFormat, va_list pArgs)
     {
         return Log(lvl, std::this_thread::get_id( ), pFormat, pArgs);
     }
 
     // Submit log message to stream(s) (va_list, wide).
-    bool DualLogger::Log(const VerbosityLevel& lvl, const wchar_t* pFormat, va_list pArgs)
+    bool DualLogger::Log(const VerbosityLevel& lvl, const utf16* pFormat, va_list pArgs)
     {
         return Log(lvl, std::this_thread::get_id( ), pFormat, pArgs);
     }
 
     // Submit log message to stream(s) (va_list, explicit thread ID, narrow).
-    bool DualLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const char* pFormat, va_list pArgs)
+    bool DualLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const utf8* pFormat, va_list pArgs)
     {
         // Both StreamLogger objects handle sanity checks and errors.
         return mStdOutLogger.Log(lvl, tid, pFormat, pArgs) && mFileLogger.Log(lvl, tid, pFormat, pArgs);
     }
 
     // Submit log message to stream(s) (va_list, explicit thread ID, wide).
-    bool DualLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const wchar_t* pFormat, va_list pArgs)
+    bool DualLogger::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const utf16* pFormat, va_list pArgs)
     {
         // Both StreamLogger objects handle sanity checks and errors.
         return mStdOutLogger.Log(lvl, tid, pFormat, pArgs) && mFileLogger.Log(lvl, tid, pFormat, pArgs);
