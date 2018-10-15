@@ -85,27 +85,27 @@ namespace SLL
         static const std::vector<SupportedStringTuple> colorStrings
         {
             // Basic Colors
-            MAKE_SUPSTR_TUPLE("BLACK"),
-            MAKE_SUPSTR_TUPLE("RED"),
-            MAKE_SUPSTR_TUPLE("GREEN"),
-            MAKE_SUPSTR_TUPLE("YELLOW"),
-            MAKE_SUPSTR_TUPLE("BLUE"),
-            MAKE_SUPSTR_TUPLE("MAGENTA"),
-            MAKE_SUPSTR_TUPLE("CYAN"),
-            MAKE_SUPSTR_TUPLE("WHITE"),
+            MAKE_STR_TUPLE("BLACK"),
+            MAKE_STR_TUPLE("RED"),
+            MAKE_STR_TUPLE("GREEN"),
+            MAKE_STR_TUPLE("YELLOW"),
+            MAKE_STR_TUPLE("BLUE"),
+            MAKE_STR_TUPLE("MAGENTA"),
+            MAKE_STR_TUPLE("CYAN"),
+            MAKE_STR_TUPLE("WHITE"),
 
             // Bright Colors
-            MAKE_SUPSTR_TUPLE("BRIGHT_BLACK"),
-            MAKE_SUPSTR_TUPLE("BRIGHT_RED"),
-            MAKE_SUPSTR_TUPLE("BRIGHT_GREEN"),
-            MAKE_SUPSTR_TUPLE("BRIGHT_YELLOW"),
-            MAKE_SUPSTR_TUPLE("BRIGHT_BLUE"),
-            MAKE_SUPSTR_TUPLE("BRIGHT_MAGENTA"),
-            MAKE_SUPSTR_TUPLE("BRIGHT_CYAN"),
-            MAKE_SUPSTR_TUPLE("BRIGHT_WHITE"),
+            MAKE_STR_TUPLE("BRIGHT_BLACK"),
+            MAKE_STR_TUPLE("BRIGHT_RED"),
+            MAKE_STR_TUPLE("BRIGHT_GREEN"),
+            MAKE_STR_TUPLE("BRIGHT_YELLOW"),
+            MAKE_STR_TUPLE("BRIGHT_BLUE"),
+            MAKE_STR_TUPLE("BRIGHT_MAGENTA"),
+            MAKE_STR_TUPLE("BRIGHT_CYAN"),
+            MAKE_STR_TUPLE("BRIGHT_WHITE"),
 
             // Default
-            MAKE_SUPSTR_TUPLE("DEFAULT")
+            MAKE_STR_TUPLE("DEFAULT")
         };
 
         if ( i >= colorStrings.size( ) )

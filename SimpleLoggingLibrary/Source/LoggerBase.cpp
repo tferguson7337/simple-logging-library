@@ -16,7 +16,7 @@ namespace SLL
     const std::basic_string<T>& LoggerBase::GetTimeFormat( )
     {
         static const SupportedStringTuple timeFormats(
-            MAKE_SUPSTR_TUPLE("[%D - %T]  ")
+            MAKE_STR_TUPLE("[%D - %T]  ")
         );
 
         return std::get<std::basic_string<T>>(timeFormats);
@@ -27,7 +27,7 @@ namespace SLL
     const std::basic_string<T>& LoggerBase::GetThreadIDFormat( )
     {
         static const SupportedStringTuple threadIDFormats(
-            MAKE_SUPSTR_TUPLE("TID[%08X]  ")
+            MAKE_STR_TUPLE("TID[%08X]  ")
         );
 
         return std::get<std::basic_string<T>>(threadIDFormats);
@@ -38,7 +38,7 @@ namespace SLL
     const std::basic_string<T>& LoggerBase::GetVerbosityLevelFormat( )
     {
         static const SupportedStringTuple verbosityLevelFormats(
-            MAKE_SUPSTR_TUPLE("Type[%5.5s]  ")
+            MAKE_STR_TUPLE("Type[%5.5s]  ")
         );
 
         return std::get<std::basic_string<T>>(verbosityLevelFormats);

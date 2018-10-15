@@ -17,25 +17,25 @@ namespace SLL
     template <class StreamType>
     const std::vector<SupportedStringTuple> StreamLogger<StreamType>::mColorSequences
     {
-        MAKE_SUPSTR_TUPLE("\x1b[30m"),  // BLACK
-        MAKE_SUPSTR_TUPLE("\x1b[31m"),  // RED
-        MAKE_SUPSTR_TUPLE("\x1b[32m"),  // GREEN
-        MAKE_SUPSTR_TUPLE("\x1b[33m"),  // YELLOW
-        MAKE_SUPSTR_TUPLE("\x1b[34m"),  // BLUE
-        MAKE_SUPSTR_TUPLE("\x1b[35m"),  // MAGENTA
-        MAKE_SUPSTR_TUPLE("\x1b[36m"),  // CYAN
-        MAKE_SUPSTR_TUPLE("\x1b[37m"),  // WHITE
+        MAKE_STR_TUPLE("\x1b[30m"),  // BLACK
+        MAKE_STR_TUPLE("\x1b[31m"),  // RED
+        MAKE_STR_TUPLE("\x1b[32m"),  // GREEN
+        MAKE_STR_TUPLE("\x1b[33m"),  // YELLOW
+        MAKE_STR_TUPLE("\x1b[34m"),  // BLUE
+        MAKE_STR_TUPLE("\x1b[35m"),  // MAGENTA
+        MAKE_STR_TUPLE("\x1b[36m"),  // CYAN
+        MAKE_STR_TUPLE("\x1b[37m"),  // WHITE
 
-        MAKE_SUPSTR_TUPLE("\x1b[90m"),  // BRIGHT_BLACK
-        MAKE_SUPSTR_TUPLE("\x1b[91m"),  // BRIGHT_RED
-        MAKE_SUPSTR_TUPLE("\x1b[92m"),  // BRIGHT_GREEN
-        MAKE_SUPSTR_TUPLE("\x1b[93m"),  // BRIGHT_YELLOW
-        MAKE_SUPSTR_TUPLE("\x1b[94m"),  // BRIGHT_BLUE
-        MAKE_SUPSTR_TUPLE("\x1b[95m"),  // BRIGHT_MAGENTA
-        MAKE_SUPSTR_TUPLE("\x1b[96m"),  // BRIGHT_CYAN
-        MAKE_SUPSTR_TUPLE("\x1b[97m"),  // BRIGHT_WHITE
+        MAKE_STR_TUPLE("\x1b[90m"),  // BRIGHT_BLACK
+        MAKE_STR_TUPLE("\x1b[91m"),  // BRIGHT_RED
+        MAKE_STR_TUPLE("\x1b[92m"),  // BRIGHT_GREEN
+        MAKE_STR_TUPLE("\x1b[93m"),  // BRIGHT_YELLOW
+        MAKE_STR_TUPLE("\x1b[94m"),  // BRIGHT_BLUE
+        MAKE_STR_TUPLE("\x1b[95m"),  // BRIGHT_MAGENTA
+        MAKE_STR_TUPLE("\x1b[96m"),  // BRIGHT_CYAN
+        MAKE_STR_TUPLE("\x1b[97m"),  // BRIGHT_WHITE
 
-        MAKE_SUPSTR_TUPLE("\x1b[39m"),  // DEFAULT
+        MAKE_STR_TUPLE("\x1b[39m"),  // DEFAULT
     };
 
     /// Private Helper Methods - Specialization \\\

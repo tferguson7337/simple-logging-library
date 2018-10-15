@@ -85,13 +85,13 @@ namespace SLL
     {
         static const std::vector<SupportedStringTuple> optionFlagStrings
         {
-            MAKE_SUPSTR_TUPLE("LogToStdout"),
-            MAKE_SUPSTR_TUPLE("LogToFile"),
-            MAKE_SUPSTR_TUPLE("LogInColor"),
-            MAKE_SUPSTR_TUPLE("LogSynchronous"),
-            MAKE_SUPSTR_TUPLE("LogTimestamp"),
-            MAKE_SUPSTR_TUPLE("LogThreadID"),
-            MAKE_SUPSTR_TUPLE("LogVerbosityLevel")
+            MAKE_STR_TUPLE("LogToStdout"),
+            MAKE_STR_TUPLE("LogToFile"),
+            MAKE_STR_TUPLE("LogInColor"),
+            MAKE_STR_TUPLE("LogSynchronous"),
+            MAKE_STR_TUPLE("LogTimestamp"),
+            MAKE_STR_TUPLE("LogThreadID"),
+            MAKE_STR_TUPLE("LogVerbosityLevel")
         };
 
         if ( i >= optionFlagStrings.size( ) )
@@ -112,7 +112,7 @@ namespace SLL
     const std::basic_string<T>& OptionFlagConverter::GetEmptyMaskString( )
     {
         static const SupportedStringTuple emptyMasks(
-            MAKE_SUPSTR_TUPLE("NONE")
+            MAKE_STR_TUPLE("NONE")
         );
 
         return std::get<std::basic_string<T>>(emptyMasks);
@@ -123,7 +123,7 @@ namespace SLL
     const std::basic_string<T>& OptionFlagConverter::GetSeparator( )
     {
         static const SupportedStringTuple separators(
-            MAKE_SUPSTR_TUPLE(", ")
+            MAKE_STR_TUPLE(", ")
         );
 
         return std::get<std::basic_string<T>>(separators);

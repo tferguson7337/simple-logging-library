@@ -12,10 +12,10 @@ namespace SLL
     {
         static const std::vector<SupportedStringTuple> VerbosityLevelStrings
         {
-            MAKE_SUPSTR_TUPLE("INFO"),
-            MAKE_SUPSTR_TUPLE("WARN"),
-            MAKE_SUPSTR_TUPLE("ERROR"),
-            MAKE_SUPSTR_TUPLE("FATAL")
+            MAKE_STR_TUPLE("INFO"),
+            MAKE_STR_TUPLE("WARN"),
+            MAKE_STR_TUPLE("ERROR"),
+            MAKE_STR_TUPLE("FATAL")
         };
 
         if ( i >= VerbosityLevelStrings.size( ) )
