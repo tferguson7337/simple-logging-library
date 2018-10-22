@@ -271,7 +271,7 @@ namespace StreamLoggerTests
             }
 
             // Get the target prefix substring.
-            prefixStr = StringUtil::ConvertAndCopy<T>(str.substr(i, size - 1).c_str( ), size);
+            prefixStr = StringUtil::Copy::ToCString<T>(str.substr(i, size - 1).c_str( ), size);
 
             // See if the prefix string is valid.
             if ( !func(prefixStr) )
@@ -319,7 +319,7 @@ namespace StreamLoggerTests
         }
 
         // Extract log string.
-        logStr = StringUtil::ConvertAndCopy<T>(str.substr(i).c_str( ), str.size( ) + 1 - i);
+        logStr = StringUtil::Copy::ToCString<T>(str.substr(i).c_str( ), str.size( ) + 1 - i);
 
         return memcmp(logStr.get( ), pExpected.get( ), sizeof(T) * (str.size( ) + 1 - i)) == 0;
     }

@@ -480,7 +480,7 @@ namespace FileLoggerTests
 
         UnitTestResult GoodStream( )
         {
-            static const std::basic_string<utf16> testStr(UTF16_LITERAL("Test string"));
+            static const std::basic_string<utf16> testStr(UTF16_LITERAL_STR("Test string"));
             TesterHelper t;
 
             FILE_LOGGER_TEST_COMMON_SETUP(t);
@@ -577,7 +577,7 @@ namespace FileLoggerTests
             for ( OptionFlag mask = OptionFlag::PREFIX_BEGIN; mask < OptionFlag::PREFIX_END; INCREMENT_OPTIONFLAG(mask) )
             {
                 bool threw = false;
-                
+
                 t.GetConfig( ).Disable(OptionFlag::PREFIX_MASK);
                 t.GetConfig( ).Enable(mask);
 
@@ -683,7 +683,15 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("Test string #%d\n");
+                if constexpr ( std::is_same<T, utf8>::value )
+                {
+                    pFormat = StringUtil::Copy::ToCString<T>("Test string #%d\n");
+                }
+                else
+                {
+                    pFormat = StringUtil::UTFConversion::ToCString<T>("Test string #%d\n");
+                }
+
             }
             catch ( const std::exception& e )
             {
@@ -736,7 +744,14 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("Test string #%d\n");
+                if constexpr ( std::is_same<T, utf8>::value )
+                {
+                    pFormat = StringUtil::Copy::ToCString<T>("Test string #%d\n");
+                }
+                else
+                {
+                    pFormat = StringUtil::UTFConversion::ToCString<T>("Test string #%d\n");
+                }
             }
             catch ( const std::exception& e )
             {
@@ -806,7 +821,15 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("");
+                if constexpr ( std::is_same<T, utf8>::value )
+                {
+                    pFormat = StringUtil::Copy::ToCString<T>("");
+                }
+                else
+                {
+                    pFormat = StringUtil::UTFConversion::ToCString<T>("");
+                }
+
             }
             catch ( const std::exception& e )
             {
@@ -842,8 +865,16 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("Test string #1\r\n");
-                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string #1");
+                if constexpr ( std::is_same<T, utf8>::value )
+                {
+                    pFormat = StringUtil::Copy::ToCString<T>("Test string #1\r\n");
+                }
+                else
+                {
+                    pFormat = StringUtil::UTFConversion::ToCString<T>("Test string #1\r\n");
+                }
+
+                pExpected = StringUtil::UTFConversion::ToCString<utf16>("Test string #1");
             }
             catch ( const std::exception& e )
             {
@@ -880,8 +911,16 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("Test string, integer specifiers %d %llu.\r\n");
-                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string, integer specifiers -500 300000.");
+                if constexpr ( std::is_same<T, utf8>::value )
+                {
+                    pFormat = StringUtil::Copy::ToCString<T>("Test string, integer specifiers %d %llu.\r\n");
+                }
+                else
+                {
+                    pFormat = StringUtil::UTFConversion::ToCString<T>("Test string, integer specifiers %d %llu.\r\n");
+                }
+
+                pExpected = StringUtil::UTFConversion::ToCString<utf16>("Test string, integer specifiers -500 300000.");
             }
             catch ( const std::exception& e )
             {
@@ -918,8 +957,16 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("Test string, floating-point specifiers %2.2f %1.5f.\r\n");
-                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string, floating-point specifiers -35.02 1.57779.");
+                if constexpr ( std::is_same<T, utf8>::value )
+                {
+                    pFormat = StringUtil::Copy::ToCString<T>("Test string, floating-point specifiers %2.2f %1.5f.\r\n");
+                }
+                else
+                {
+                    pFormat = StringUtil::UTFConversion::ToCString<T>("Test string, floating-point specifiers %2.2f %1.5f.\r\n");
+                }
+
+                pExpected = StringUtil::UTFConversion::ToCString<utf16>("Test string, floating-point specifiers -35.02 1.57779.");
             }
             catch ( const std::exception& e )
             {
@@ -958,8 +1005,16 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("Test string, string specifiers %s %ls.\r\n");
-                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string, string specifiers Test string #1 \"Test %f %g string %p #2\".");
+                if constexpr ( std::is_same<T, utf8>::value )
+                {
+                    pFormat = StringUtil::Copy::ToCString<T>("Test string, string specifiers %s %ls.\r\n");
+                }
+                else
+                {
+                    pFormat = StringUtil::UTFConversion::ToCString<T>("Test string, string specifiers %s %ls.\r\n");
+                }
+
+                pExpected = StringUtil::UTFConversion::ToCString<utf16>("Test string, string specifiers Test string #1 \"Test %f %g string %p #2\".");
             }
             catch ( const std::exception& e )
             {
@@ -968,7 +1023,15 @@ namespace FileLoggerTests
 
             try
             {
-                arg1 = StringUtil::ConvertAndCopy<T>("Test string #1");
+                if constexpr ( std::is_same<T, utf8>::value )
+                {
+                    arg1 = StringUtil::Copy::ToCString<T>("Test string #1");
+                }
+                else
+                {
+                    arg1 = StringUtil::UTFConversion::ToCString<T>("Test string #1");
+                }
+
             }
             catch ( const std::exception& e )
             {
@@ -1011,7 +1074,15 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("Test string #%d\n");
+                if constexpr ( std::is_same<T, utf8>::value )
+                {
+                    pFormat = StringUtil::Copy::ToCString<T>("Test string #%d\n");
+                }
+                else
+                {
+                    pFormat = StringUtil::UTFConversion::ToCString<T>("Test string #%d\n");
+                }
+
             }
             catch ( const std::exception& e )
             {
@@ -1041,7 +1112,7 @@ namespace FileLoggerTests
             catch ( const std::exception& e )
             {
                 SUTL_TEST_EXCEPTION(e.what( ));
-            }            
+            }
 
             SUTL_TEST_ASSERT(!ret);
             SUTL_TEST_ASSERT(!t.GetStream( ).is_open( ));
@@ -1061,7 +1132,15 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("Test string #%d\n");
+                if constexpr ( std::is_same<T, utf8>::value )
+                {
+                    pFormat = StringUtil::Copy::ToCString<T>("Test string #%d\n");
+                }
+                else
+                {
+                    pFormat = StringUtil::UTFConversion::ToCString<T>("Test string #%d\n");
+                }
+
             }
             catch ( const std::exception& e )
             {
@@ -1097,7 +1176,15 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("Test string #%d\n");
+                if constexpr ( std::is_same<T, utf8>::value )
+                {
+                    pFormat = StringUtil::Copy::ToCString<T>("Test string #%d\n");
+                }
+                else
+                {
+                    pFormat = StringUtil::UTFConversion::ToCString<T>("Test string #%d\n");
+                }
+
             }
             catch ( const std::exception& e )
             {
@@ -1160,8 +1247,16 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("");
-                pExpected = StringUtil::ConvertAndCopy<utf16>("");
+                if constexpr ( std::is_same<T, utf8>::value )
+                {
+                    pFormat = StringUtil::Copy::ToCString<T>("");
+                }
+                else
+                {
+                    pFormat = StringUtil::UTFConversion::ToCString<T>("");
+                }
+
+                pExpected = StringUtil::UTFConversion::ToCString<utf16>("");
             }
             catch ( const std::exception& e )
             {
@@ -1218,8 +1313,16 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("Test string #1\r\n");
-                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string #1");
+                if constexpr ( std::is_same<T, utf8>::value )
+                {
+                    pFormat = StringUtil::Copy::ToCString<T>("Test string #1\r\n");
+                }
+                else
+                {
+                    pFormat = StringUtil::UTFConversion::ToCString<T>("Test string #1\r\n");
+                }
+
+                pExpected = StringUtil::UTFConversion::ToCString<utf16>("Test string #1");
             }
             catch ( const std::exception& e )
             {
@@ -1267,8 +1370,16 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("Test string, integer specifiers %d %llu.\r\n");
-                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string, integer specifiers -500 300000.");
+                if constexpr ( std::is_same<T, utf8>::value )
+                {
+                    pFormat = StringUtil::Copy::ToCString<T>("Test string, integer specifiers %d %llu.\r\n");
+                }
+                else
+                {
+                    pFormat = StringUtil::UTFConversion::ToCString<T>("Test string, integer specifiers %d %llu.\r\n");
+                }
+
+                pExpected = StringUtil::UTFConversion::ToCString<utf16>("Test string, integer specifiers -500 300000.");
             }
             catch ( const std::exception& e )
             {
@@ -1316,8 +1427,16 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("Test string, floating-point specifiers %2.2f %1.5f.\r\n");
-                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string, floating-point specifiers -35.02 1.57779.");
+                if constexpr ( std::is_same<T, utf8>::value )
+                {
+                    pFormat = StringUtil::Copy::ToCString<T>("Test string, floating-point specifiers %2.2f %1.5f.\r\n");
+                }
+                else
+                {
+                    pFormat = StringUtil::UTFConversion::ToCString<T>("Test string, floating-point specifiers %2.2f %1.5f.\r\n");
+                }
+
+                pExpected = StringUtil::UTFConversion::ToCString<utf16>("Test string, floating-point specifiers -35.02 1.57779.");
             }
             catch ( const std::exception& e )
             {
@@ -1363,14 +1482,22 @@ namespace FileLoggerTests
             std::unique_ptr<utf16[ ]> pExpected;
 
             std::unique_ptr<T[ ]> arg1;
-            const utf16* arg2 = UTF16_LITERAL("\"Test %f %g string %p #2\"");
+            const utf16* arg2 = UTF16_LITERAL_STR("\"Test %f %g string %p #2\"");
 
             TesterHelper t;
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("Test string, string specifiers %s %ls.\r\n");
-                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string, string specifiers Test string #1 \"Test %f %g string %p #2\".");
+                if constexpr ( std::is_same<T, utf8>::value )
+                {
+                    pFormat = StringUtil::Copy::ToCString<T>("Test string, string specifiers %s %ls.\r\n");
+                }
+                else
+                {
+                    pFormat = StringUtil::UTFConversion::ToCString<T>("Test string, string specifiers %s %ls.\r\n");
+                }
+
+                pExpected = StringUtil::UTFConversion::ToCString<utf16>("Test string, string specifiers Test string #1 \"Test %f %g string %p #2\".");
             }
             catch ( const std::exception& e )
             {
@@ -1379,7 +1506,15 @@ namespace FileLoggerTests
 
             try
             {
-                arg1 = StringUtil::ConvertAndCopy<T>("Test string #1");
+                if constexpr ( std::is_same<T, utf8>::value )
+                {
+                    arg1 = StringUtil::Copy::ToCString<T>("Test string #1");
+                }
+                else
+                {
+                    arg1 = StringUtil::UTFConversion::ToCString<T>("Test string #1");
+                }
+
             }
             catch ( const std::exception& e )
             {
@@ -1427,8 +1562,16 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("Test string #%d\n");
-                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string #1");
+                if constexpr ( std::is_same<T, utf8>::value )
+                {
+                    pFormat = StringUtil::Copy::ToCString<T>("Test string #%d\n");
+                }
+                else
+                {
+                    pFormat = StringUtil::UTFConversion::ToCString<T>("Test string #%d\n");
+                }
+
+                pExpected = StringUtil::UTFConversion::ToCString<utf16>("Test string #1");
             }
             catch ( const std::exception& e )
             {
@@ -1485,8 +1628,16 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("Test string #%d\n");
-                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string #1");
+                if constexpr ( std::is_same<T, utf8>::value )
+                {
+                    pFormat = StringUtil::Copy::ToCString<T>("Test string #%d\n");
+                }
+                else
+                {
+                    pFormat = StringUtil::UTFConversion::ToCString<T>("Test string #%d\n");
+                }
+
+                pExpected = StringUtil::UTFConversion::ToCString<utf16>("Test string #1");
             }
             catch ( const std::exception& e )
             {
@@ -1535,8 +1686,16 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("Test string #%d\n");
-                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string #1");
+                if constexpr ( std::is_same<T, utf8>::value )
+                {
+                    pFormat = StringUtil::Copy::ToCString<T>("Test string #%d\n");
+                }
+                else
+                {
+                    pFormat = StringUtil::UTFConversion::ToCString<T>("Test string #%d\n");
+                }
+
+                pExpected = StringUtil::UTFConversion::ToCString<utf16>("Test string #1");
             }
             catch ( const std::exception& e )
             {
@@ -1596,8 +1755,16 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("Test string #%d\n");
-                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string #1");
+                if constexpr ( std::is_same<T, utf8>::value )
+                {
+                    pFormat = StringUtil::Copy::ToCString<T>("Test string #%d\n");
+                }
+                else
+                {
+                    pFormat = StringUtil::UTFConversion::ToCString<T>("Test string #%d\n");
+                }
+
+                pExpected = StringUtil::UTFConversion::ToCString<utf16>("Test string #1");
             }
             catch ( const std::exception& e )
             {
@@ -1651,9 +1818,17 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("Test string #%d\r\n");
-                pExpected1 = StringUtil::ConvertAndCopy<utf16>("Test string #1");
-                pExpected2 = StringUtil::ConvertAndCopy<utf16>("Test string #2");
+                if constexpr ( std::is_same<T, utf8>::value )
+                {
+                    pFormat = StringUtil::Copy::ToCString<T>("Test string #%d\r\n");
+                }
+                else
+                {
+                    pFormat = StringUtil::UTFConversion::ToCString<T>("Test string #%d\r\n");
+                }
+
+                pExpected1 = StringUtil::UTFConversion::ToCString<utf16>("Test string #1");
+                pExpected2 = StringUtil::UTFConversion::ToCString<utf16>("Test string #2");
             }
             catch ( const std::exception& e )
             {

@@ -9,6 +9,9 @@
 // SUTL
 #include <UnitTestResult.h>
 
+// For std::basic_stringbuf
+#include <sstream>
+
 namespace StdOutLoggerTests
 {
     std::list<std::function<UnitTestResult(void)>> GetTests( );

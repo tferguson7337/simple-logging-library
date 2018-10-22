@@ -109,7 +109,7 @@ namespace SLL
             try
             {
                 // Log the queued message, capture success/failure.
-                success = mpLogger->Log(msg.GetVerbosityLevel( ), msg.GetThreadID( ), UTF16_LITERAL("%s"), msg.GetString( ));
+                success = mpLogger->Log(msg.GetVerbosityLevel( ), msg.GetThreadID( ), UTF16_LITERAL_STR("%s"), msg.GetString( ));
             }
             catch ( const std::exception& e )
             {
@@ -303,7 +303,7 @@ namespace SLL
         }
 
         // Build the log message.
-        str = LoggerBase::BuildFormattedMessage<utf16>(StringUtil::ConvertAndCopy<utf16>(pFormat).get( ), pArgs);
+        str = LoggerBase::BuildFormattedMessage<utf16>(StringUtil::UTFConversion::ToCString<utf16>(pFormat).get( ), pArgs);
 
         // Push the message into the queue.
         PushMsg(LogMessage(lvl, std::move(str), std::this_thread::get_id( )));
@@ -341,7 +341,7 @@ namespace SLL
         }
 
         // Build the log message.
-        str = LoggerBase::BuildFormattedMessage<utf16>(StringUtil::ConvertAndCopy<utf16>(pFormat).get( ), pArgs);
+        str = LoggerBase::BuildFormattedMessage<utf16>(StringUtil::UTFConversion::ToCString<utf16>(pFormat).get( ), pArgs);
 
         // Push the message into the queue.
         PushMsg(LogMessage(lvl, std::move(str), tid));

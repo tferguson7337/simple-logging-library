@@ -84,7 +84,7 @@ namespace SLL
                 "good == " +
                 std::to_string(mStream.good( )) +
                 ", buffer == " +
-                StringUtil::UnsignedToString<utf8>(StringUtil::ConversionType::Hexidecimal, mStream.rdbuf( ))
+                StringUtil::NumberConversion::ToString<utf8>(StringUtil::NumberConversion::Base::Hexidecimal, reinterpret_cast<uintptr_t>(mStream.rdbuf( )))
             );
         }
     }
@@ -129,7 +129,7 @@ namespace SLL
                 ", is_open == " +
                 std::to_string(mStream.is_open( )) +
                 ", buffer == " +
-                StringUtil::UnsignedToString<utf8>(StringUtil::ConversionType::Hexidecimal, mStream.rdbuf( ))
+                StringUtil::NumberConversion::ToString<utf8>(StringUtil::NumberConversion::Base::Hexidecimal, reinterpret_cast<uintptr_t>(mStream.rdbuf( )))
             );
         }
     }
@@ -160,7 +160,7 @@ namespace SLL
                 failFreq++;
                 std::wcerr << L"\n\n   " << __FUNCTIONW__ << L" - Failed to restore stream from bad state ";
                 std::wcerr << L"(attempt " << ++failTotalCount << "): ";
-                std::wcerr << StringUtil::ConvertAndCopy<utf16>(e.what( )) << L"\n" << std::endl;
+                std::wcerr << StringUtil::UTFConversion::ToString<utf16>(e.what( )) << L"\n" << std::endl;
             }
 
             return false;

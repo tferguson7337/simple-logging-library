@@ -46,8 +46,8 @@ namespace SyncLoggerTests
         bool AllMessagesInFile(const std::filesystem::path& fileName)
         {
             // Substrings that we want to search for.
-            static const utf16* numBegin = UTF16_LITERAL("(#");
-            static const utf16* numEnd = UTF16_LITERAL(")");
+            static const utf16* numBegin = UTF16_LITERAL_STR("(#");
+            static const utf16* numEnd = UTF16_LITERAL_STR(")");
 
             unsigned long long msgMask = 0;
             size_t posBegin = 0;
@@ -110,7 +110,7 @@ namespace SyncLoggerTests
                 }
                 else if ( std::is_same_v<T, utf16> )
                 {
-                    return pLogger->Log(VerbosityLevel::INFO, UTF16_LITERAL("Test log message (#%zu)."), num);
+                    return pLogger->Log(VerbosityLevel::INFO, UTF16_LITERAL_STR("Test log message (#%zu)."), num);
                 }
                 else
                 {

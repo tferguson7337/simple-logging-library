@@ -198,7 +198,7 @@ namespace StdOutLoggerTests
     template <class T>
     bool CompareBufferWithString(const std::basic_stringbuf<utf16>& buf, const std::basic_string<T>& str)
     {
-        const std::basic_string<T> bufferString = StringUtil::ConvertAndCopy<T>(buf.str( ));
+        const std::basic_string<T> bufferString = StringUtil::UTFConversion::ToString<T>(buf.str( ));
 
         if ( str.empty( ) )
         {
@@ -627,7 +627,7 @@ namespace StdOutLoggerTests
         {
             TesterHelper t;
             std::basic_stringbuf<utf16> buf;
-            std::unique_ptr<T[ ]> pFormat(StringUtil::ConvertAndCopy<T>("Test string #%d"));
+            std::unique_ptr<T[ ]> pFormat(StringUtil::UTFConversion::ToCString<T>("Test string #%d"));
             bool threw = false;
 
             STDOUT_LOGGER_TEST_COMMON_SETUP(t, buf);
@@ -663,7 +663,7 @@ namespace StdOutLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("Test string #%d.");
+                pFormat = StringUtil::UTFConversion::ToCString<T>("Test string #%d.");
             }
             catch ( const std::exception& e )
             {
@@ -737,7 +737,7 @@ namespace StdOutLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("");
+                pFormat = StringUtil::UTFConversion::ToCString<T>("");
             }
             catch ( const std::exception& e )
             {
@@ -772,7 +772,7 @@ namespace StdOutLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("Test string, no format specifiers.");
+                pFormat = StringUtil::UTFConversion::ToCString<T>("Test string, no format specifiers.");
             }
             catch ( const std::exception& e )
             {
@@ -807,7 +807,7 @@ namespace StdOutLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("Test string, integer specifiers %d %llu.");
+                pFormat = StringUtil::UTFConversion::ToCString<T>("Test string, integer specifiers %d %llu.");
             }
             catch ( const std::exception& e )
             {
@@ -842,7 +842,7 @@ namespace StdOutLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("Test string, floating-point specifiers %2.2f %1.5f.");
+                pFormat = StringUtil::UTFConversion::ToCString<T>("Test string, floating-point specifiers %2.2f %1.5f.");
             }
             catch ( const std::exception& e )
             {
@@ -878,8 +878,8 @@ namespace StdOutLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("Test string, string specifiers %s %ls.");
-                arg1 = StringUtil::ConvertAndCopy<T>("Test string #1");
+                pFormat = StringUtil::UTFConversion::ToCString<T>("Test string, string specifiers %s %ls.");
+                arg1 = StringUtil::UTFConversion::ToCString<T>("Test string #1");
             }
             catch ( const std::exception& e )
             {
@@ -920,8 +920,8 @@ namespace StdOutLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("Test string #%d.");
-                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string #1.\n");
+                pFormat = StringUtil::UTFConversion::ToCString<T>("Test string #%d.");
+                pExpected = StringUtil::UTFConversion::ToCString<utf16>("Test string #1.\n");
             }
             catch ( const std::exception& e )
             {
@@ -972,8 +972,8 @@ namespace StdOutLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("Test string #%d.");
-                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string #1.\n");
+                pFormat = StringUtil::UTFConversion::ToCString<T>("Test string #%d.");
+                pExpected = StringUtil::UTFConversion::ToCString<utf16>("Test string #1.\n");
             }
             catch ( const std::exception& e )
             {
@@ -1025,7 +1025,7 @@ namespace StdOutLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("Test string #d.");
+                pFormat = StringUtil::UTFConversion::ToCString<T>("Test string #d.");
             }
             catch ( const std::exception& e )
             {
@@ -1102,8 +1102,8 @@ namespace StdOutLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("");
-                pExpected = StringUtil::ConvertAndCopy<utf16>("\n");
+                pFormat = StringUtil::UTFConversion::ToCString<T>("");
+                pExpected = StringUtil::UTFConversion::ToCString<utf16>("\n");
             }
             catch ( const std::exception& e )
             {
@@ -1153,8 +1153,8 @@ namespace StdOutLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("Test string, no format specifiers.");
-                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string, no format specifiers.\n");
+                pFormat = StringUtil::UTFConversion::ToCString<T>("Test string, no format specifiers.");
+                pExpected = StringUtil::UTFConversion::ToCString<utf16>("Test string, no format specifiers.\n");
             }
             catch ( const std::exception& e )
             {
@@ -1204,8 +1204,8 @@ namespace StdOutLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("Test string, integer specifiers %d %llu.");
-                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string, integer specifiers -500 300000.\n");
+                pFormat = StringUtil::UTFConversion::ToCString<T>("Test string, integer specifiers %d %llu.");
+                pExpected = StringUtil::UTFConversion::ToCString<utf16>("Test string, integer specifiers -500 300000.\n");
             }
             catch ( const std::exception& e )
             {
@@ -1255,8 +1255,8 @@ namespace StdOutLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("Test string, floating-point specifiers %2.2f %1.5f.");
-                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string, floating-point specifiers -35.02 1.57779.\n");
+                pFormat = StringUtil::UTFConversion::ToCString<T>("Test string, floating-point specifiers %2.2f %1.5f.");
+                pExpected = StringUtil::UTFConversion::ToCString<utf16>("Test string, floating-point specifiers -35.02 1.57779.\n");
             }
             catch ( const std::exception& e )
             {
@@ -1307,9 +1307,9 @@ namespace StdOutLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("Test string, string specifiers %s %ls.");
-                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string, string specifiers Test string #1 \"Test %f %g string %p #2\".\n");
-                arg1 = StringUtil::ConvertAndCopy<T>("Test string #1");
+                pFormat = StringUtil::UTFConversion::ToCString<T>("Test string, string specifiers %s %ls.");
+                pExpected = StringUtil::UTFConversion::ToCString<utf16>("Test string, string specifiers Test string #1 \"Test %f %g string %p #2\".\n");
+                arg1 = StringUtil::UTFConversion::ToCString<T>("Test string #1");
             }
             catch ( const std::exception& e )
             {
@@ -1359,8 +1359,8 @@ namespace StdOutLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("Test string, no format specifiers.");
-                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string, no format specifiers.\n");
+                pFormat = StringUtil::UTFConversion::ToCString<T>("Test string, no format specifiers.");
+                pExpected = StringUtil::UTFConversion::ToCString<utf16>("Test string, no format specifiers.\n");
             }
             catch ( const std::exception& e )
             {
@@ -1412,8 +1412,8 @@ namespace StdOutLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("Test string, no format specifiers.");
-                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string, no format specifiers.\n");
+                pFormat = StringUtil::UTFConversion::ToCString<T>("Test string, no format specifiers.");
+                pExpected = StringUtil::UTFConversion::ToCString<utf16>("Test string, no format specifiers.\n");
             }
             catch ( const std::exception& e )
             {
@@ -1468,8 +1468,8 @@ namespace StdOutLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("Test string, no format specifiers.");
-                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string, no format specifiers.\n");
+                pFormat = StringUtil::UTFConversion::ToCString<T>("Test string, no format specifiers.");
+                pExpected = StringUtil::UTFConversion::ToCString<utf16>("Test string, no format specifiers.\n");
             }
             catch ( const std::exception& e )
             {
@@ -1531,8 +1531,8 @@ namespace StdOutLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("Test string #%d.");
-                pExpected = StringUtil::ConvertAndCopy<utf16>("Test string #1.\n");
+                pFormat = StringUtil::UTFConversion::ToCString<T>("Test string #%d.");
+                pExpected = StringUtil::UTFConversion::ToCString<utf16>("Test string #1.\n");
             }
             catch ( const std::exception& e )
             {
@@ -1588,9 +1588,9 @@ namespace StdOutLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("Test string #%d.");
-                pExpected1 = StringUtil::ConvertAndCopy<utf16>("Test string #1.\n");
-                pExpected2 = StringUtil::ConvertAndCopy<utf16>("Test string #2.\n");
+                pFormat = StringUtil::UTFConversion::ToCString<T>("Test string #%d.");
+                pExpected1 = StringUtil::UTFConversion::ToCString<utf16>("Test string #1.\n");
+                pExpected2 = StringUtil::UTFConversion::ToCString<utf16>("Test string #2.\n");
             }
             catch ( const std::exception& e )
             {
@@ -1662,8 +1662,8 @@ namespace StdOutLoggerTests
 
             try
             {
-                pFormat = StringUtil::ConvertAndCopy<T>("Test string #%d.");
-                pExpected = StringUtil::ConvertAndCopy<utf16>(("Test string #1." + std::get<std::basic_string<utf8>>(t.GetColorSequences( )[SLL::ColorConverter::ToScalar(Color::DEFAULT)]) + "\n").c_str( ));
+                pFormat = StringUtil::UTFConversion::ToCString<T>("Test string #%d.");
+                pExpected = StringUtil::UTFConversion::ToCString<utf16>(("Test string #1." + std::get<std::basic_string<utf8>>(t.GetColorSequences( )[SLL::ColorConverter::ToScalar(Color::DEFAULT)]) + "\n").c_str( ));
             }
             catch ( const std::exception& e )
             {
