@@ -133,7 +133,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\SimpleLoggingLibrary\Common\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\Interfaces\;$(ProjectDir)SUTL\Headers;$(ProjectDir)SUTL\Headers\Interfaces;$(ProjectDir)Headers</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\SimpleLoggingLibrary\Common\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\Interfaces\;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers\Interfaces;$(ProjectDir)Headers</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <EnablePREfast>false</EnablePREfast>
@@ -144,7 +144,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>SLLD$(PlatformArchitecture).lib;SUTLD$(PlatformArchitecture).lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)SimpleLoggingLibrary\lib\;$(SolutionDir)UnitTests\SUTL\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\SimpleLoggingLibrary\lib\;$(ProjectDir)SUTL\SimpleUnitTestLibrary\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>$(TargetPath)</Command>
@@ -165,7 +165,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\SimpleLoggingLibrary\Common\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\Interfaces\;$(ProjectDir)SUTL\Headers;$(ProjectDir)SUTL\Headers\Interfaces;$(ProjectDir)Headers</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\SimpleLoggingLibrary\Common\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\Interfaces\;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers\Interfaces;$(ProjectDir)Headers</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <EnablePREfast>false</EnablePREfast>
@@ -176,7 +176,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>SLLD$(PlatformArchitecture).lib;SUTLD$(PlatformArchitecture).lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)SimpleLoggingLibrary\lib\;$(SolutionDir)UnitTests\SUTL\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\SimpleLoggingLibrary\lib\;$(ProjectDir)SUTL\SimpleUnitTestLibrary\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>$(TargetPath)</Command>
@@ -207,7 +207,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)SUTL\Common\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\;$(SolutionDir)SimpleLoggingLibrary\Headers\Interfaces\;$(ProjectDir)SUTL\Headers;$(ProjectDir)SUTL\Headers\Interfaces;$(ProjectDir)Headers</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\SimpleLoggingLibrary\Common\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\Interfaces\;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers\Interfaces;$(ProjectDir)Headers</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <EnablePREfast>false</EnablePREfast>
@@ -220,7 +220,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>SLL$(PlatformArchitecture).lib;SUTL$(PlatformArchitecture).lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)SimpleLoggingLibrary\lib\;$(SolutionDir)UnitTests\SUTL\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\SimpleLoggingLibrary\lib\;$(ProjectDir)SUTL\SimpleUnitTestLibrary\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>$(TargetPath)</Command>
@@ -243,7 +243,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)SUTL\Common\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\;$(SolutionDir)SimpleLoggingLibrary\Headers\Interfaces\;$(ProjectDir)SUTL\Headers;$(ProjectDir)SUTL\Headers\Interfaces;$(ProjectDir)Headers</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\SimpleLoggingLibrary\Common\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\Interfaces\;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers\Interfaces;$(ProjectDir)Headers</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <EnablePREfast>false</EnablePREfast>
@@ -256,7 +256,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>SLL$(PlatformArchitecture).lib;SUTL$(PlatformArchitecture).lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)SimpleLoggingLibrary\lib\;$(SolutionDir)UnitTests\SUTL\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\SimpleLoggingLibrary\lib\;$(ProjectDir)SUTL\SimpleUnitTestLibrary\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>$(TargetPath)</Command>
