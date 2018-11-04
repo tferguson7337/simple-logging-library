@@ -1,7 +1,7 @@
 #pragma once
 
 // Parent class
-#include <LoggerBase.h>
+#include "LoggerBase.h"
 
 // C++ STL Streams
 #include <fstream>

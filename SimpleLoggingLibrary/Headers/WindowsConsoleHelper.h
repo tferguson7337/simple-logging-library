@@ -1,7 +1,7 @@
 #pragma once
 
 // For SLL::Color.
-#include <Color.h>
+#include "Color.h"
 
 namespace SLL
 {

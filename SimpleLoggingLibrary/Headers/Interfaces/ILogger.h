@@ -1,7 +1,7 @@
 #pragma once
 
 // SLL Enum Classes
-#include <ConfigPackage.h>
+#include "../ConfigPackage.h"
 
 // STL - Thread ID
 #include <thread>

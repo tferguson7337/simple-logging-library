@@ -1,7 +1,7 @@
 #pragma once
 
 // Logger Interface
-#include <Interfaces\ILogger.h>
+#include "Interfaces\ILogger.h"
 
 // Variadic Arguments
 #include <cstdarg>

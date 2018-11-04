@@ -1,7 +1,6 @@
 #pragma once
 
-#include <ConfigPackage.h>
-#include <Interfaces\ILogger.h>
+#include "Interfaces\ILogger.h"
 
 namespace SLL
 {

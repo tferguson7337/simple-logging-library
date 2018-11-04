@@ -1,12 +1,12 @@
 #pragma once
 
 // Enum Class Definitions
-#include <Color.h>
-#include <OptionFlag.h>
-#include <VerbosityLevel.h>
+#include "Color.h"
+#include "OptionFlag.h"
+#include "VerbosityLevel.h"
 
 // String Conversion and Macros
-#include <StringUtil.hpp>
+#include "../Common/Headers/StringUtil.hpp"
 
 // STL
 #include <filesystem>

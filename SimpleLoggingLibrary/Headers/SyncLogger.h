@@ -1,8 +1,8 @@
 #pragma once
 
 // SLL
-#include <LoggerBase.h>
-#include <ConfigPackage.h>
+#include "LoggerBase.h"
+#include "ConfigPackage.h"
 
 // STL
 #include <atomic>
