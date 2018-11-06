@@ -46,8 +46,8 @@ namespace SLL
     private:
         /// Private Data Members \\\
 
-        StreamType mStream;
         std::basic_streambuf<utf16>* mpUTF16StreamBuffer;
+        StreamType mStream;
 
         static const std::vector<SupportedStringTuple> mColorSequences;
 
