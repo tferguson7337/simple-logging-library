@@ -84,7 +84,7 @@ namespace SLL
                 "good == " +
                 std::to_string(mStream.good( )) +
                 ", buffer == " +
-                StringUtil::NumberConversion::ToString<utf8>(StringUtil::NumberConversion::Base::Hexidecimal, reinterpret_cast<uintptr_t>(mStream.rdbuf( )))
+                StringUtil::NumberConversion::ToString<StringUtil::NumberConversion::Base::Hexadecimal, utf8, uintptr_t>(reinterpret_cast<uintptr_t>(mStream.rdbuf( )))
             );
         }
     }
@@ -129,7 +129,7 @@ namespace SLL
                 ", is_open == " +
                 std::to_string(mStream.is_open( )) +
                 ", buffer == " +
-                StringUtil::NumberConversion::ToString<utf8>(StringUtil::NumberConversion::Base::Hexidecimal, reinterpret_cast<uintptr_t>(mStream.rdbuf( )))
+                StringUtil::NumberConversion::ToString<StringUtil::NumberConversion::Base::Hexadecimal, utf8, uintptr_t>(reinterpret_cast<uintptr_t>(mStream.rdbuf( )))
             );
         }
     }
@@ -245,7 +245,7 @@ namespace SLL
 
     template <class StreamType>
     template <class T>
-    bool StreamLogger<StreamType>::LogInternal(const VerbosityLevel& lvl, const std::thread::id& tid, const T* pFormat, va_list pArgs)
+    bool StreamLogger<StreamType>::LogInternal(_In_ const VerbosityLevel& lvl, _In_ const std::thread::id& tid, _In_z_ _Printf_format_string_ const T* pFormat, _In_ va_list pArgs)
     {
         // Ensure verbosity level is valid.
         if ( lvl < VerbosityLevel::BEGIN || lvl >= VerbosityLevel::MAX )
@@ -314,7 +314,7 @@ namespace SLL
     // Log Prefixes to Stream.
     template <class StreamType>
     template <class T>
-    void StreamLogger<StreamType>::LogPrefixes(const VerbosityLevel& lvl, const std::thread::id& tid)
+    void StreamLogger<StreamType>::LogPrefixes(_In_ const VerbosityLevel& lvl, _In_ const std::thread::id& tid)
     {
         std::vector<std::unique_ptr<T[ ]>> prefixes;
 
@@ -353,7 +353,7 @@ namespace SLL
     // Log User Message To File.
     template <class StreamType>
     template <class T>
-    void StreamLogger<StreamType>::LogMessage(const T* pFormat, va_list pArgs)
+    void StreamLogger<StreamType>::LogMessage(_In_z_ _Printf_format_string_ const T* pFormat, _In_ va_list pArgs)
     {
         std::unique_ptr<T[ ]> message;
 
@@ -399,7 +399,7 @@ namespace SLL
 
     // ConfigPackage Constructor [C] - stdout.
     template <>
-    StreamLogger<StdOutStream>::StreamLogger(const ConfigPackage& config) :
+    StreamLogger<StdOutStream>::StreamLogger(_In_ const ConfigPackage& config) :
         LoggerBase(config),
         mpUTF16StreamBuffer(reinterpret_cast<std::basic_streambuf<utf16>*>(std::wcout.rdbuf( ))),
         mStream(mpUTF16StreamBuffer)
@@ -409,7 +409,7 @@ namespace SLL
 
     // ConfigPackage Constructor [C] - file.
     template <>
-    StreamLogger<FileStream>::StreamLogger(const ConfigPackage& config) :
+    StreamLogger<FileStream>::StreamLogger(_In_ const ConfigPackage& config) :
         LoggerBase(config),
         mpUTF16StreamBuffer(nullptr)
     {
@@ -418,7 +418,7 @@ namespace SLL
 
     // ConfigPackage Constructor [M] - stdout.
     template <>
-    StreamLogger<StdOutStream>::StreamLogger(ConfigPackage&& config) :
+    StreamLogger<StdOutStream>::StreamLogger(_In_ ConfigPackage&& config) :
         LoggerBase(std::move(config)),
         mpUTF16StreamBuffer(reinterpret_cast<std::basic_streambuf<utf16>*>(std::wcout.rdbuf( ))),
         mStream(mpUTF16StreamBuffer)
@@ -428,7 +428,7 @@ namespace SLL
 
     // ConfigPackage Constructor [M] - file.
     template <>
-    StreamLogger<FileStream>::StreamLogger(ConfigPackage&& config) :
+    StreamLogger<FileStream>::StreamLogger(_In_ ConfigPackage&& config) :
         LoggerBase(std::move(config)),
         mpUTF16StreamBuffer(nullptr)
     {
@@ -437,7 +437,7 @@ namespace SLL
 
     // Move Constructor - stdout.
     template <>
-    StreamLogger<StdOutStream>::StreamLogger(StreamLogger&& src) :
+    StreamLogger<StdOutStream>::StreamLogger(_In_ StreamLogger&& src) :
         LoggerBase(std::move(src)),
         mpUTF16StreamBuffer(reinterpret_cast<std::basic_streambuf<utf16>*>(std::wcout.rdbuf( ))),
         mStream(mpUTF16StreamBuffer)
@@ -447,7 +447,7 @@ namespace SLL
 
     // Move Constructor - file.
     template <>
-    StreamLogger<FileStream>::StreamLogger(StreamLogger&& src) :
+    StreamLogger<FileStream>::StreamLogger(_In_ StreamLogger&& src) :
         LoggerBase(std::move(src)),
         mpUTF16StreamBuffer(nullptr)
     {
@@ -474,7 +474,7 @@ namespace SLL
 
     // Move Assignment Overload - stdout.
     template <>
-    StreamLogger<StdOutStream>& StreamLogger<StdOutStream>::operator=(StreamLogger&& src)
+    StreamLogger<StdOutStream>& StreamLogger<StdOutStream>::operator=(_In_ StreamLogger&& src)
     {
         if ( this == &src )
         {
@@ -490,7 +490,7 @@ namespace SLL
 
     // Move Assignment Overload - file.
     template <>
-    StreamLogger<FileStream>& StreamLogger<FileStream>::operator=(StreamLogger&& src)
+    StreamLogger<FileStream>& StreamLogger<FileStream>::operator=(_In_ StreamLogger&& src)
     {
         if ( this == &src )
         {
@@ -516,7 +516,7 @@ namespace SLL
 
     // Submit log message to stream(s) (variadic arguments, narrow).
     template <class StreamType>
-    bool StreamLogger<StreamType>::Log(const VerbosityLevel& lvl, const utf8* pFormat, ...)
+    bool StreamLogger<StreamType>::Log(_In_ const VerbosityLevel& lvl, _In_z_ _Printf_format_string_ const utf8* pFormat, ...)
     {
         bool ret = false;
         va_list pArgs;
@@ -537,7 +537,7 @@ namespace SLL
 
     // Submit log message to stream(s) (variadic arguments, wide).
     template <class StreamType>
-    bool StreamLogger<StreamType>::Log(const VerbosityLevel& lvl, const utf16* pFormat, ...)
+    bool StreamLogger<StreamType>::Log(_In_ const VerbosityLevel& lvl, _In_z_ _Printf_format_string_ const utf16* pFormat, ...)
     {
         bool ret = false;
         va_list pArgs;
@@ -558,7 +558,7 @@ namespace SLL
 
     // Submit log message to stream(s) (variadic arguments, narrow, explicit thread ID).
     template <class StreamType>
-    bool StreamLogger<StreamType>::Log(const VerbosityLevel& lvl, const std::thread::id& tid, const utf8* pFormat, ...)
+    bool StreamLogger<StreamType>::Log(_In_ const VerbosityLevel& lvl, _In_ const std::thread::id& tid, _In_z_ _Printf_format_string_ const utf8* pFormat, ...)
     {
         bool ret = false;
         va_list pArgs;

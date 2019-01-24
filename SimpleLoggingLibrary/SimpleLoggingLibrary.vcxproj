@@ -21,9 +21,7 @@
   <ItemGroup>
     <ClInclude Include="Common\Headers\Macros.h" />
     <ClInclude Include="Common\Headers\Types.h" />
-    <ClInclude Include="Common\Headers\Uncopyable.h" />
-    <ClInclude Include="Common\Headers\Unmovable.h" />
-    <ClInclude Include="Common\Headers\StringUtil.hpp" />
+    <ClInclude Include="Common\Headers\StringUtil.h" />
     <ClInclude Include="Headers\Color.h" />
     <ClInclude Include="Headers\ConfigPackage.h" />
     <ClInclude Include="Headers\DualLogger.h" />
@@ -37,6 +35,7 @@
     <ClInclude Include="Headers\WindowsConsoleHelper.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Common\Source\StringUtil.cpp" />
     <ClCompile Include="Source\Color.cpp" />
     <ClCompile Include="Source\ConfigPackage.cpp" />
     <ClCompile Include="Source\DualLogger.cpp" />
@@ -105,13 +104,13 @@
     <OutDir>$(ProjectDir)lib\</OutDir>
     <IntDir>$(ProjectDir)BuildArtifacts\$(PlatformTarget)\$(Configuration)\</IntDir>
     <TargetName>SLLD$(PlatformArchitecture)</TargetName>
-    <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <TargetName>SLLD$(PlatformArchitecture)</TargetName>
-    <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <OutDir>$(ProjectDir)lib\</OutDir>
     <IntDir>$(ProjectDir)BuildArtifacts\$(PlatformTarget)\$(Configuration)\</IntDir>
@@ -121,13 +120,13 @@
     <OutDir>$(ProjectDir)lib\</OutDir>
     <IntDir>$(ProjectDir)BuildArtifacts\$(PlatformTarget)\$(Configuration)\</IntDir>
     <TargetName>SLL$(PlatformArchitecture)</TargetName>
-    <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <TargetName>SLL$(PlatformArchitecture)</TargetName>
-    <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <OutDir>$(ProjectDir)lib\</OutDir>
     <IntDir>$(ProjectDir)BuildArtifacts\$(PlatformTarget)\$(Configuration)\</IntDir>

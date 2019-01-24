@@ -16,7 +16,6 @@
 #include <DualLoggerTests.h>
 #include <SyncLoggerTests.h>
 
-
 void GetUnitTests(UnitTestRunner<utf8>& utr)
 {
     // Enum Class Unit Tests
@@ -48,4 +47,6 @@ int main( )
     pass = utr.RunUnitTests( );
 
     return (pass) ? 0 : -1;
+
+    return 0;
 }

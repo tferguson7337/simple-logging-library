@@ -2,9 +2,6 @@
 
 #include <LoggerBase.h>
 
-#include <Uncopyable.h>
-#include <Unmovable.h>
-
 #include <functional>
 #include <list>
 
