@@ -55,19 +55,19 @@ namespace SLL
         /// Public Methods \\\
 
         // Submit log message to stream(s) (variadic arguments).
-        bool Log(const VerbosityLevel&, const utf8*, ...);
-        bool Log(const VerbosityLevel&, const utf16*, ...);
+        bool Log(const VerbosityLevel&, const utf8*, ...) const;
+        bool Log(const VerbosityLevel&, const utf16*, ...) const;
 
         // Submit log message to stream(s) (va_list).
-        bool Log(const VerbosityLevel&, const utf8*, va_list);
-        bool Log(const VerbosityLevel&, const utf16*, va_list);
+        bool Log(const VerbosityLevel&, const utf8*, va_list) const;
+        bool Log(const VerbosityLevel&, const utf16*, va_list) const;
 
         // Submit log message to stream(s) (variadic arguments, explicit thread ID).
-        bool Log(const VerbosityLevel&, const std::thread::id&, const utf8*, ...);
-        bool Log(const VerbosityLevel&, const std::thread::id&, const utf16*, ...);
+        bool Log(const VerbosityLevel&, const std::thread::id&, const utf8*, ...) const;
+        bool Log(const VerbosityLevel&, const std::thread::id&, const utf16*, ...) const;
 
         // Submit log message to stream(s) (va_list, explicit thread ID).
-        bool Log(const VerbosityLevel&, const std::thread::id&, const utf8*, va_list);
-        bool Log(const VerbosityLevel&, const std::thread::id&, const utf16*, va_list);
+        bool Log(const VerbosityLevel&, const std::thread::id&, const utf8*, va_list) const;
+        bool Log(const VerbosityLevel&, const std::thread::id&, const utf16*, va_list) const;
     };
 }

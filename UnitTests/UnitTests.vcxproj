@@ -26,7 +26,7 @@
     <ClInclude Include="Headers\LoggerBaseTests.h" />
     <ClInclude Include="Headers\OptionFlagTests.h" />
     <ClInclude Include="Headers\StdOutLoggerTests.h" />
-    <ClInclude Include="Headers\SyncLoggerTests.h" />
+    <ClInclude Include="Headers\AsyncLoggerTests.h" />
     <ClInclude Include="Headers\VerbosityLevelTests.h" />
   </ItemGroup>
   <ItemGroup>
@@ -38,7 +38,7 @@
     <ClCompile Include="Source\OptionFlagTests.cpp" />
     <ClCompile Include="Source\RunTests.cpp" />
     <ClCompile Include="Source\StdOutLoggerTests.cpp" />
-    <ClCompile Include="Source\SyncLoggerTests.cpp" />
+    <ClCompile Include="Source\AsyncLoggerTests.cpp" />
     <ClCompile Include="Source\VerbosityLevelTests.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -154,6 +154,7 @@
     </CustomBuildStep>
     <CustomBuildStep>
       <Outputs>dummyfile</Outputs>
+      <Message>Force Rebuild Everytime</Message>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -185,6 +186,7 @@
     </CustomBuildStep>
     <CustomBuildStep>
       <Outputs>dummyfile</Outputs>
+      <Message>Force Rebuild Everytime</Message>
     </CustomBuildStep>
     <PreLinkEvent>
       <Command>
@@ -228,6 +230,7 @@
     </CustomBuildStep>
     <CustomBuildStep>
       <Outputs>dummyfile</Outputs>
+      <Message>Force Rebuild Everytime</Message>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -263,6 +266,7 @@
     </CustomBuildStep>
     <CustomBuildStep>
       <Outputs>dummyfile</Outputs>
+      <Message>Force Rebuild Everytime</Message>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

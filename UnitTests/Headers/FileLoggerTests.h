@@ -412,9 +412,7 @@ namespace StreamLoggerTests
         // Logger Color Sequence Getter - const
         const std::vector<SupportedStringTuple>& GetColorSequences( ) const
         {
-            CheckForNullLogger(__FUNCTION__);
-
-            return mpLogger->mColorSequences;
+            return SLL::s_vColorSequences;
         }
 
         /// Setters \\\

@@ -26,6 +26,8 @@ namespace SLL
     using StdOutLogger = StreamLogger<StdOutStream>;
     using FileLogger = StreamLogger<FileStream>;
 
+    extern const std::vector<SupportedStringTuple> s_vColorSequences;
+
     ///
     //
     //  Class   - StreamLogger
@@ -47,9 +49,7 @@ namespace SLL
         /// Private Data Members \\\
 
         std::basic_streambuf<utf16>* mpUTF16StreamBuffer;
-        StreamType mStream;
-
-        static const std::vector<SupportedStringTuple> mColorSequences;
+        mutable StreamType mStream;
 
         /// Private Helper Methods \\\
 
@@ -57,33 +57,33 @@ namespace SLL
         bool IsStreamGood( ) const noexcept;
 
         // Initialize Stream.
-        void InitializeStream( );
+        void InitializeStream( ) const;
 
         // Restore Stream to Good State.
-        bool RestoreStream( );
+        bool RestoreStream( ) const;
 
         // Flush Buffer Contents To Stream.
-        void Flush(const VerbosityLevel&);
+        void Flush(_In_ const VerbosityLevel&) const;
 
         // Get Color String (VerbosityLevel).
         template <class T>
-        const std::basic_string<T>& GetColorSequence(const VerbosityLevel&) const;
+        const std::basic_string<T>& GetColorSequence(_In_ const VerbosityLevel&) const;
 
         // Get Color String (Color).
         template <class T>
-        const std::basic_string<T>& GetColorSequence(const Color&) const;
+        const std::basic_string<T>& GetColorSequence(_In_ const Color&) const;
 
         // Internal Logging Implementation.
         template <class T>
-        bool LogInternal(const VerbosityLevel&, const std::thread::id&, const T*, va_list);
+        bool LogInternal(_In_ const VerbosityLevel&, _In_ const std::thread::id&, _In_z_ _Printf_format_string_ const T*, _In_ va_list) const;
 
         // Log Prefixes to Stream.
         template <class T>
-        void LogPrefixes(const VerbosityLevel&, const std::thread::id&);
+        void LogPrefixes(_In_ const VerbosityLevel&, _In_ const std::thread::id&) const;
 
         // Log User Message To Stream.
         template <class T>
-        void LogMessage(const T*, va_list);
+        void LogMessage(_In_z_ _Printf_format_string_ const T*, _In_ va_list) const;
 
     protected:
         ConfigPackage& GetConfig( ) noexcept;
@@ -92,13 +92,13 @@ namespace SLL
         /// Constructors \\\
 
         // ConfigPackage Constructor [C]
-        explicit StreamLogger(const ConfigPackage&);
+        explicit StreamLogger(_In_ const ConfigPackage&);
 
         // ConfigPackage Constructor [M]
-        explicit StreamLogger(ConfigPackage&&);
+        explicit StreamLogger(_In_ ConfigPackage&&);
 
         // Move Constructor
-        StreamLogger(StreamLogger&&);
+        StreamLogger(_In_ StreamLogger&&);
 
         /// Destructor \\\
 
@@ -108,7 +108,7 @@ namespace SLL
         /// Assignment Overload \\\
 
         // Move Assignment
-        StreamLogger& operator=(StreamLogger&&);
+        StreamLogger& operator=(_In_ StreamLogger&&);
 
         /// Public Getter \\\
 
@@ -117,19 +117,19 @@ namespace SLL
         /// Public Methods \\\
 
         // Submit log message to stream(s) (variadic arguments).
-        bool Log(const VerbosityLevel& lvl, const utf8* pFormat, ...);
-        bool Log(const VerbosityLevel& lvl, const utf16* pFormat, ...);
+        bool Log(_In_ const VerbosityLevel& lvl, _In_z_ _Printf_format_string_ const utf8* pFormat, ...) const;
+        bool Log(_In_ const VerbosityLevel& lvl, _In_z_ _Printf_format_string_ const utf16* pFormat, ...) const;
 
         // Submit log message to stream(s) (va_list).
-        bool Log(const VerbosityLevel& lvl, const utf8* pFormat, va_list pArgs);
-        bool Log(const VerbosityLevel& lvl, const utf16* pFormat, va_list pArgs);
+        bool Log(_In_ const VerbosityLevel& lvl, _In_z_ _Printf_format_string_ const utf8* pFormat, _In_ va_list pArgs) const;
+        bool Log(_In_ const VerbosityLevel& lvl, _In_z_ _Printf_format_string_ const utf16* pFormat, _In_ va_list pArgs) const;
 
         // Submit log message to stream(s) (variadic arguments, explicit thread ID).
-        bool Log(const VerbosityLevel& lvl, const std::thread::id& tid, const utf8* pFormat, ...);
-        bool Log(const VerbosityLevel& lvl, const std::thread::id& tid, const utf16* pFormat, ...);
+        bool Log(_In_ const VerbosityLevel& lvl, _In_ const std::thread::id& tid, _In_z_ _Printf_format_string_ const utf8* pFormat, ...) const;
+        bool Log(_In_ const VerbosityLevel& lvl, _In_ const std::thread::id& tid, _In_z_ _Printf_format_string_ const utf16* pFormat, ...) const;
 
         // Submit log message to stream(s) (va_list, explicit thread ID).
-        bool Log(const VerbosityLevel& lvl, const std::thread::id& tid, const utf8* pFormat, va_list pArgs);
-        bool Log(const VerbosityLevel& lvl, const std::thread::id& tid, const utf16* pFormat, va_list pArgs);
+        bool Log(_In_ const VerbosityLevel& lvl, _In_ const std::thread::id& tid, _In_z_ _Printf_format_string_ const utf8* pFormat, _In_ va_list pArgs) const;
+        bool Log(_In_ const VerbosityLevel& lvl, _In_ const std::thread::id& tid, _In_z_ _Printf_format_string_ const utf16* pFormat, _In_ va_list pArgs) const;
     };
 }

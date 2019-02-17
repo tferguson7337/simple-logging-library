@@ -30,7 +30,7 @@
     <ClInclude Include="Headers\LoggerFactory.h" />
     <ClInclude Include="Headers\OptionFlag.h" />
     <ClInclude Include="Headers\StreamLogger.h" />
-    <ClInclude Include="Headers\SyncLogger.h" />
+    <ClInclude Include="Headers\AsyncLogger.h" />
     <ClInclude Include="Headers\VerbosityLevel.h" />
     <ClInclude Include="Headers\WindowsConsoleHelper.h" />
   </ItemGroup>
@@ -43,7 +43,7 @@
     <ClCompile Include="Source\LoggerFactory.cpp" />
     <ClCompile Include="Source\OptionFlag.cpp" />
     <ClCompile Include="Source\StreamLogger.cpp" />
-    <ClCompile Include="Source\SyncLogger.cpp" />
+    <ClCompile Include="Source\AsyncLogger.cpp" />
     <ClCompile Include="Source\VerbosityLevel.cpp" />
     <ClCompile Include="Source\WindowsConsoleHelper.cpp" />
   </ItemGroup>

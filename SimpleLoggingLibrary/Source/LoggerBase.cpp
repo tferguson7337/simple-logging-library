@@ -9,39 +9,36 @@
 
 namespace SLL
 {
+    /// Non-Member Static Const Format String-Tuples \\\
+
+    using SST = SupportedStringTuple;
+
+    static const SST s_TimeFormats(MAKE_STR_TUPLE("[%D - %T]  "));
+    static const SST s_ThreadIDFormats(MAKE_STR_TUPLE("TID[%08X]  "));
+    static const SST s_VerbosityLevelFormats(MAKE_STR_TUPLE("Type[%5.5s]  "));
+
+
     /// Common Private Helper Methods \\\
 
     // Prefix - Timestamp Format Getter
     template <class T>
     const std::basic_string<T>& LoggerBase::GetTimeFormat( )
     {
-        static const SupportedStringTuple timeFormats(
-            MAKE_STR_TUPLE("[%D - %T]  ")
-        );
-
-        return std::get<std::basic_string<T>>(timeFormats);
+        return std::get<std::basic_string<T>>(s_TimeFormats);
     }
 
     // Prefix - Thread ID Format Getter 
     template <class T>
     const std::basic_string<T>& LoggerBase::GetThreadIDFormat( )
     {
-        static const SupportedStringTuple threadIDFormats(
-            MAKE_STR_TUPLE("TID[%08X]  ")
-        );
-
-        return std::get<std::basic_string<T>>(threadIDFormats);
+        return std::get<std::basic_string<T>>(s_ThreadIDFormats);
     }
 
     // Prefix - VerbosityLevel Format Getter
     template <class T>
     const std::basic_string<T>& LoggerBase::GetVerbosityLevelFormat( )
     {
-        static const SupportedStringTuple verbosityLevelFormats(
-            MAKE_STR_TUPLE("Type[%5.5s]  ")
-        );
-
-        return std::get<std::basic_string<T>>(verbosityLevelFormats);
+        return std::get<std::basic_string<T>>(s_VerbosityLevelFormats);
     }
 
     // Get Local Time String
@@ -246,7 +243,7 @@ namespace SLL
 
     /// Common Protected Getter \\\
 
-    ConfigPackage& LoggerBase::GetConfig( ) noexcept
+    ConfigPackage& LoggerBase::GetConfig( ) const noexcept
     {
         return mConfig;
     }
@@ -329,13 +326,6 @@ namespace SLL
         va_end(pArgs);
 
         return str;
-    }
-
-    /// Common Getter \\\
-
-    const ConfigPackage& LoggerBase::GetConfig( ) const noexcept
-    {
-        return mConfig;
     }
 
     /// Explicit Template Instantiation \\\

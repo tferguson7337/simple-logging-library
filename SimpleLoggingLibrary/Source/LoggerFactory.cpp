@@ -2,7 +2,7 @@
 
 #include <StreamLogger.h>
 #include <DualLogger.h>
-#include <SyncLogger.h>
+#include <AsyncLogger.h>
 
 namespace SLL
 {
@@ -28,19 +28,19 @@ namespace SLL
             throw std::logic_error(__FUNCTION__" - Attempted to build logger without LogToStdout or LogToFile options enabled.");
         }
 
-        if ( (compositeMask & OptionFlag::LogSynchronous) == OptionFlag::LogSynchronous )
+        if ( (compositeMask & OptionFlag::LogAsynchronous) == OptionFlag::LogAsynchronous )
         {
             if ( (compositeMask & (OptionFlag::LogToStdout | OptionFlag::LogToFile)) == (OptionFlag::LogToStdout | OptionFlag::LogToFile) )
             {
-                return std::make_shared<SyncLogger>(stdOutConfig, fileConfig);
+                return std::make_shared<AsyncLogger>(stdOutConfig, fileConfig);
             }
             else if ( (compositeMask & (OptionFlag::LogToStdout)) == OptionFlag::LogToStdout )
             {
-                return std::make_shared<SyncLogger>(stdOutConfig);
+                return std::make_shared<AsyncLogger>(stdOutConfig);
             }
             else if ( (compositeMask & (OptionFlag::LogToFile)) == OptionFlag::LogToFile )
             {
-                return std::make_shared<SyncLogger>(fileConfig);
+                return std::make_shared<AsyncLogger>(fileConfig);
             }
         }
         else

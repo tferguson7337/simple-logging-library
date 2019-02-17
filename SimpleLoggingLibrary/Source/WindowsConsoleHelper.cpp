@@ -17,22 +17,22 @@ namespace SLL
     bool WindowsConsoleHelper::EnableVirtualTerminal( )
     {
         // Set output mode to handle virtual terminal sequences
-        HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
-        if ( !hStdOut || hStdOut == INVALID_HANDLE_VALUE )
+        HANDLE hStdOut = ::GetStdHandle(STD_OUTPUT_HANDLE);
+        if ( hStdOut == NULL || hStdOut == INVALID_HANDLE_VALUE )
         {
             return false;
         }
 
         // Get current console mode settings.
         DWORD dwMode = 0;
-        if ( !GetConsoleMode(hStdOut, &dwMode) )
+        if ( ::GetConsoleMode(hStdOut, &dwMode) == FALSE )
         {
             return false;
         }
 
         // Add virtual terminal processing to current console mode.
         dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-        if ( !SetConsoleMode(hStdOut, dwMode) )
+        if ( ::SetConsoleMode(hStdOut, dwMode) == FALSE )
         {
             return false;
         }
@@ -69,6 +69,4 @@ namespace SLL
 
         return init;
     }
-
-
 }

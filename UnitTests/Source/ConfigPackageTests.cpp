@@ -476,7 +476,7 @@ namespace ConfigPackageTests
 
             try
             {
-                config.Enable(OptionFlag::LogSynchronous | OptionFlag::MAX | static_cast<OptionFlag>(1337));
+                config.Enable(OptionFlag::LogAsynchronous | OptionFlag::MAX | static_cast<OptionFlag>(1337));
             }
             catch ( const std::invalid_argument& )
             {
@@ -523,7 +523,7 @@ namespace ConfigPackageTests
 
             try
             {
-                config.Disable(OptionFlag::LogSynchronous | OptionFlag::MAX | static_cast<OptionFlag>(1337));
+                config.Disable(OptionFlag::LogAsynchronous | OptionFlag::MAX | static_cast<OptionFlag>(1337));
             }
             catch ( const std::invalid_argument& )
             {
@@ -570,7 +570,7 @@ namespace ConfigPackageTests
 
             try
             {
-                config.OptionEnabled(OptionFlag::LogSynchronous | OptionFlag::MAX | static_cast<OptionFlag>(1337));
+                config.OptionEnabled(OptionFlag::LogAsynchronous | OptionFlag::MAX | static_cast<OptionFlag>(1337));
             }
             catch ( const std::invalid_argument& )
             {
@@ -617,7 +617,7 @@ namespace ConfigPackageTests
 
             try
             {
-                config.OptionsEnabledAny(OptionFlag::LogSynchronous | OptionFlag::MAX | static_cast<OptionFlag>(1337));
+                config.OptionsEnabledAny(OptionFlag::LogAsynchronous | OptionFlag::MAX | static_cast<OptionFlag>(1337));
             }
             catch ( const std::invalid_argument& )
             {
@@ -663,7 +663,7 @@ namespace ConfigPackageTests
 
             try
             {
-                config.OptionsEnabledAll(OptionFlag::LogSynchronous | OptionFlag::MAX | static_cast<OptionFlag>(1337));
+                config.OptionsEnabledAll(OptionFlag::LogAsynchronous | OptionFlag::MAX | static_cast<OptionFlag>(1337));
             }
             catch ( const std::invalid_argument& )
             {

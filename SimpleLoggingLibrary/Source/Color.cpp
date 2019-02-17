@@ -4,6 +4,35 @@
 
 namespace SLL
 {
+    /// Non-Member Static Const String-Tuple Vector \\\
+
+    static const std::vector<SupportedStringTuple> s_vColorStrings
+    {
+        // Basic Colors
+        MAKE_STR_TUPLE("BLACK"),
+        MAKE_STR_TUPLE("RED"),
+        MAKE_STR_TUPLE("GREEN"),
+        MAKE_STR_TUPLE("YELLOW"),
+        MAKE_STR_TUPLE("BLUE"),
+        MAKE_STR_TUPLE("MAGENTA"),
+        MAKE_STR_TUPLE("CYAN"),
+        MAKE_STR_TUPLE("WHITE"),
+
+        // Bright Colors
+        MAKE_STR_TUPLE("BRIGHT_BLACK"),
+        MAKE_STR_TUPLE("BRIGHT_RED"),
+        MAKE_STR_TUPLE("BRIGHT_GREEN"),
+        MAKE_STR_TUPLE("BRIGHT_YELLOW"),
+        MAKE_STR_TUPLE("BRIGHT_BLUE"),
+        MAKE_STR_TUPLE("BRIGHT_MAGENTA"),
+        MAKE_STR_TUPLE("BRIGHT_CYAN"),
+        MAKE_STR_TUPLE("BRIGHT_WHITE"),
+
+        // Default
+        MAKE_STR_TUPLE("DEFAULT")
+    };
+
+
     /// OptionFlag Enum Class Operator Overloads \\\
 
     // Bitwise NOT
@@ -82,43 +111,17 @@ namespace SLL
     template <class T>
     const std::basic_string<T>& ColorConverter::GetColorString(const size_t i)
     {
-        static const std::vector<SupportedStringTuple> colorStrings
-        {
-            // Basic Colors
-            MAKE_STR_TUPLE("BLACK"),
-            MAKE_STR_TUPLE("RED"),
-            MAKE_STR_TUPLE("GREEN"),
-            MAKE_STR_TUPLE("YELLOW"),
-            MAKE_STR_TUPLE("BLUE"),
-            MAKE_STR_TUPLE("MAGENTA"),
-            MAKE_STR_TUPLE("CYAN"),
-            MAKE_STR_TUPLE("WHITE"),
-
-            // Bright Colors
-            MAKE_STR_TUPLE("BRIGHT_BLACK"),
-            MAKE_STR_TUPLE("BRIGHT_RED"),
-            MAKE_STR_TUPLE("BRIGHT_GREEN"),
-            MAKE_STR_TUPLE("BRIGHT_YELLOW"),
-            MAKE_STR_TUPLE("BRIGHT_BLUE"),
-            MAKE_STR_TUPLE("BRIGHT_MAGENTA"),
-            MAKE_STR_TUPLE("BRIGHT_CYAN"),
-            MAKE_STR_TUPLE("BRIGHT_WHITE"),
-
-            // Default
-            MAKE_STR_TUPLE("DEFAULT")
-        };
-
-        if ( i >= colorStrings.size( ) )
+        if ( i >= s_vColorStrings.size( ) )
         {
             throw std::range_error(
                 __FUNCTION__" - Index argument out of bounds.  Index = " +
                 std::to_string(i) +
                 ", Max = " +
-                std::to_string(colorStrings.size( ) - 1)
+                std::to_string(s_vColorStrings.size( ) - 1)
             );
         }
 
-        return std::get<std::basic_string<T>>(colorStrings[i]);
+        return std::get<std::basic_string<T>>(s_vColorStrings[i]);
     }
 
     /// Public Methods \\\

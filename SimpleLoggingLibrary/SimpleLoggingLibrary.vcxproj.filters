@@ -62,9 +62,6 @@
     <ClInclude Include="Headers\DualLogger.h">
       <Filter>Logger\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\SyncLogger.h">
-      <Filter>Logger\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Headers\LoggerFactory.h">
       <Filter>Logger\Header Files</Filter>
     </ClInclude>
@@ -76,6 +73,9 @@
     </ClInclude>
     <ClInclude Include="Common\Headers\StringUtil.h">
       <Filter>Common\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\AsyncLogger.h">
+      <Filter>Logger\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -103,14 +103,14 @@
     <ClCompile Include="Source\DualLogger.cpp">
       <Filter>Logger\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\SyncLogger.cpp">
-      <Filter>Logger\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\LoggerFactory.cpp">
       <Filter>Logger\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Common\Source\StringUtil.cpp">
       <Filter>Common\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\AsyncLogger.cpp">
+      <Filter>Logger\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

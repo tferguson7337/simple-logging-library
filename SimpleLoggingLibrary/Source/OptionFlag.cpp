@@ -88,7 +88,7 @@ namespace SLL
             MAKE_STR_TUPLE("LogToStdout"),
             MAKE_STR_TUPLE("LogToFile"),
             MAKE_STR_TUPLE("LogInColor"),
-            MAKE_STR_TUPLE("LogSynchronous"),
+            MAKE_STR_TUPLE("LogAsynchronous"),
             MAKE_STR_TUPLE("LogTimestamp"),
             MAKE_STR_TUPLE("LogThreadID"),
             MAKE_STR_TUPLE("LogVerbosityLevel")

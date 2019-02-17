@@ -37,9 +37,6 @@ namespace SLL
         friend class ::StreamLoggerTests::Tester;
 
     private:
-        /// Common Private Data Member \\\
-
-        ConfigPackage mConfig;
 
         /// Common Static Private Helper Methods \\\
 
@@ -80,7 +77,8 @@ namespace SLL
         /// Common Protected Data Members \\\
 
         static const size_t mFlushInterval;
-        size_t mFlushCounter;
+        mutable size_t mFlushCounter;
+        mutable ConfigPackage mConfig;
 
         /// Constructors \\\
 
@@ -105,8 +103,7 @@ namespace SLL
 
         /// Common Protected Getters \\\
 
-        ConfigPackage& GetConfig( ) noexcept;
-        const ConfigPackage& GetConfig( ) const noexcept;
+        ConfigPackage& GetConfig( ) const noexcept;
 
         /// Common Protected Helper Methods \\\
 
@@ -127,42 +124,42 @@ namespace SLL
 
         /// Dummy Log Methods For Unit Tests (adhere to ILogger interface) \\\
 
-        bool Log(const VerbosityLevel&, const utf8*, ...)
+        bool Log(const VerbosityLevel&, const utf8*, ...) const
         {
             return false;
         }
 
-        bool Log(const VerbosityLevel&, const utf16*, ...)
+        bool Log(const VerbosityLevel&, const utf16*, ...) const
         {
             return false;
         }
 
-        bool Log(const VerbosityLevel&, const utf8*, va_list)
+        bool Log(const VerbosityLevel&, const utf8*, va_list) const
         {
             return false;
         }
 
-        bool Log(const VerbosityLevel&, const utf16*, va_list)
+        bool Log(const VerbosityLevel&, const utf16*, va_list) const
         {
             return false;
         }
 
-        bool Log(const VerbosityLevel&, const std::thread::id&, const utf8*, ...)
+        bool Log(const VerbosityLevel&, const std::thread::id&, const utf8*, ...) const
         {
             return false;
         }
 
-        bool Log(const VerbosityLevel&, const std::thread::id&, const utf16*, ...)
+        bool Log(const VerbosityLevel&, const std::thread::id&, const utf16*, ...) const
         {
             return false;
         }        
 
-        bool Log(const VerbosityLevel&, const std::thread::id&, const utf8*, va_list)
+        bool Log(const VerbosityLevel&, const std::thread::id&, const utf8*, va_list) const
         {
             return false;
         }
 
-        bool Log(const VerbosityLevel&, const std::thread::id&, const utf16*, va_list)
+        bool Log(const VerbosityLevel&, const std::thread::id&, const utf16*, va_list) const
         {
             return false;
         }

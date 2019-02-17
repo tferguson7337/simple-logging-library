@@ -16,7 +16,7 @@ namespace SLL
         LogToStdout         = 1 << 0,
         LogToFile           = 1 << 1,
         LogInColor          = 1 << 2,
-        LogSynchronous      = 1 << 3,
+        LogAsynchronous     = 1 << 3,
 
         // Logging Options - Prefix Behavior
         LogTimestamp        = 1 << 4,
