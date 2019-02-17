@@ -41,7 +41,7 @@ namespace SLL
 
         ConfigPackage mConfig;
 
-        /// Common Private Helper Methods \\\
+        /// Common Static Private Helper Methods \\\
 
         // Prefix - Timestamp Format Getter (std::put_time Format)
         template <class T>
@@ -71,7 +71,7 @@ namespace SLL
         template <class T>
         static size_t GetRequiredBufferLength(const T*, va_list);
 
-        // Will build format-string with arguments, filling the passed buffer.
+        // Will build format-string with arguments, returning the resulting string.
         template <class T>
         static std::unique_ptr<T[ ]> StringPrintWrapper(const size_t, const T*, va_list);
 
@@ -137,16 +137,6 @@ namespace SLL
             return false;
         }
 
-        bool Log(const VerbosityLevel&, const std::thread::id&, const utf8*, ...)
-        {
-            return false;
-        }
-
-        bool Log(const VerbosityLevel&, const std::thread::id&, const utf16*, ...)
-        {
-            return false;
-        }
-
         bool Log(const VerbosityLevel&, const utf8*, va_list)
         {
             return false;
@@ -156,6 +146,16 @@ namespace SLL
         {
             return false;
         }
+
+        bool Log(const VerbosityLevel&, const std::thread::id&, const utf8*, ...)
+        {
+            return false;
+        }
+
+        bool Log(const VerbosityLevel&, const std::thread::id&, const utf16*, ...)
+        {
+            return false;
+        }        
 
         bool Log(const VerbosityLevel&, const std::thread::id&, const utf8*, va_list)
         {

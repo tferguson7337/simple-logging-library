@@ -58,13 +58,13 @@ namespace SLL
         bool Log(const VerbosityLevel&, const utf8*, ...);
         bool Log(const VerbosityLevel&, const utf16*, ...);
 
-        // Submit log message to stream(s) (variadic arguments, explicit thread ID).
-        bool Log(const VerbosityLevel&, const std::thread::id&, const utf8*, ...);
-        bool Log(const VerbosityLevel&, const std::thread::id&, const utf16*, ...);
-
         // Submit log message to stream(s) (va_list).
         bool Log(const VerbosityLevel&, const utf8*, va_list);
         bool Log(const VerbosityLevel&, const utf16*, va_list);
+
+        // Submit log message to stream(s) (variadic arguments, explicit thread ID).
+        bool Log(const VerbosityLevel&, const std::thread::id&, const utf8*, ...);
+        bool Log(const VerbosityLevel&, const std::thread::id&, const utf16*, ...);
 
         // Submit log message to stream(s) (va_list, explicit thread ID).
         bool Log(const VerbosityLevel&, const std::thread::id&, const utf8*, va_list);

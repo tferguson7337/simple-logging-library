@@ -18,13 +18,13 @@ namespace SLL
     template <class StreamType>
     class StreamLogger;
 
-    // typedefs for supported stream types.
-    typedef std::basic_ostream<utf16> StdOutStream;
-    typedef std::basic_ofstream<utf16> FileStream;
+    // Aliases for supported stream types.
+    using StdOutStream = std::basic_ostream<utf16>;
+    using FileStream = std::basic_ofstream<utf16>;
 
-    // typedefs for logger types
-    typedef StreamLogger<StdOutStream> StdOutLogger;
-    typedef StreamLogger<FileStream> FileLogger;
+    // Aliases for logger types
+    using StdOutLogger = StreamLogger<StdOutStream>;
+    using FileLogger = StreamLogger<FileStream>;
 
     ///
     //
@@ -120,13 +120,13 @@ namespace SLL
         bool Log(const VerbosityLevel& lvl, const utf8* pFormat, ...);
         bool Log(const VerbosityLevel& lvl, const utf16* pFormat, ...);
 
-        // Submit log message to stream(s) (variadic arguments, explicit thread ID).
-        bool Log(const VerbosityLevel& lvl, const std::thread::id& tid, const utf8* pFormat, ...);
-        bool Log(const VerbosityLevel& lvl, const std::thread::id& tid, const utf16* pFormat, ...);
-
         // Submit log message to stream(s) (va_list).
         bool Log(const VerbosityLevel& lvl, const utf8* pFormat, va_list pArgs);
         bool Log(const VerbosityLevel& lvl, const utf16* pFormat, va_list pArgs);
+
+        // Submit log message to stream(s) (variadic arguments, explicit thread ID).
+        bool Log(const VerbosityLevel& lvl, const std::thread::id& tid, const utf8* pFormat, ...);
+        bool Log(const VerbosityLevel& lvl, const std::thread::id& tid, const utf16* pFormat, ...);
 
         // Submit log message to stream(s) (va_list, explicit thread ID).
         bool Log(const VerbosityLevel& lvl, const std::thread::id& tid, const utf8* pFormat, va_list pArgs);
