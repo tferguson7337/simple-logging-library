@@ -2,6 +2,8 @@
 
 #include <OptionFlagTests.h>
 
+#include <stdexcept>
+
 namespace OptionFlagTests
 {
     using SLL::OptionFlag;

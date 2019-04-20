@@ -5,11 +5,19 @@
 // using Window's Virtual Terminal
 #include <WindowsConsoleHelper.h>
 
-// STL synchronization
+// STL
+#include <stdexcept>
 #include <thread>
+
+// CC StringUtil - UTF Conversions
+#include <CCStringUtil.h>
 
 namespace SLL
 {
+	using CC::StringUtil;
+	using Base = StringUtil::NumberConversion::Base;
+	using ReturnType = StringUtil::ReturnType;
+
     /// Non-Member Static Const String-Tuple Vector \\\
 
     // Color sequences for Windows 10 (Threshold 2 and beyond) console color output.
@@ -78,14 +86,12 @@ namespace SLL
 
         if ( !IsStreamGood( ) )
         {
-            using Base = StringUtil::NumberConversion::Base;
-
             throw std::runtime_error(
                 std::string(__FUNCTION__" - Failed to initialize stream: ") +
                 "good == " +
                 std::to_string(mStream.good( )) +
                 ", buffer == " +
-                StringUtil::NumberConversion::ToString<Base::Hexadecimal, utf8>(reinterpret_cast<uintptr_t>(mStream.rdbuf( )))
+				StringUtil::NumberConversion::Convert<ReturnType::StringObj, Base::Hexadecimal, utf8>(mStream.rdbuf( ))
             );
         }
     }
@@ -123,16 +129,14 @@ namespace SLL
         // See if we successfully opened the file and the stream is in a good state.
         if ( !IsStreamGood( ) )
         {
-            using Base = StringUtil::NumberConversion::Base;
-
-            throw std::runtime_error(
-                commonThrowStr +
-                "good == " +
-                std::to_string(mStream.good( )) +
-                ", is_open == " +
-                std::to_string(mStream.is_open( )) +
-                ", buffer == " +
-                StringUtil::NumberConversion::ToString<Base::Hexadecimal, utf8>(reinterpret_cast<uintptr_t>(mStream.rdbuf( )))
+			throw std::runtime_error(
+				commonThrowStr +
+				"good == " +
+				std::to_string(mStream.good( )) +
+				", is_open == " +
+				std::to_string(mStream.is_open( )) +
+				", buffer == " +
+				StringUtil::NumberConversion::Convert<ReturnType::StringObj, Base::Hexadecimal, utf8>(mStream.rdbuf( ))
             );
         }
     }
@@ -163,7 +167,7 @@ namespace SLL
                 failFreq++;
                 std::wcerr << L"\n\n   " << __FUNCTIONW__ << L" - Failed to restore stream from bad state ";
                 std::wcerr << L"(attempt " << ++failTotalCount << "): ";
-                std::wcerr << StringUtil::UTFConversion::ToString<utf16>(e.what( )) << L"\n" << std::endl;
+                std::wcerr << StringUtil::UTFConversion<ReturnType::StringObj, utf16>(e.what( )) << L"\n" << std::endl;
             }
 
             return false;

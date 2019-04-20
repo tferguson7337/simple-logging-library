@@ -6,7 +6,7 @@
 #include "VerbosityLevel.h"
 
 // String Conversion and Macros
-#include "../Common/Headers/StringUtil.h"
+#include "../CommonCode/CommonCode/Headers/CCStringUtil.h"
 
 // STL
 #include <filesystem>

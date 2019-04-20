@@ -12,9 +12,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Common">
-      <UniqueIdentifier>{c287c8b7-f4bc-4529-a740-2b71afc9144e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Logger">
       <UniqueIdentifier>{11d51a19-5537-43c6-ab26-7ce364468537}</UniqueIdentifier>
     </Filter>
@@ -27,11 +24,11 @@
     <Filter Include="Logger\Interfaces">
       <UniqueIdentifier>{e5a7838e-4bcb-40f8-8b81-bbe37d971734}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Common\Header Files">
-      <UniqueIdentifier>{96910bee-c2cb-473a-a450-2a389f820c34}</UniqueIdentifier>
+    <Filter Include="CommonCode">
+      <UniqueIdentifier>{c287c8b7-f4bc-4529-a740-2b71afc9144e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Common\Source Files">
-      <UniqueIdentifier>{e16a4785-db16-477e-a64a-7b7c4178891e}</UniqueIdentifier>
+    <Filter Include="CommonCode\Header Files">
+      <UniqueIdentifier>{96910bee-c2cb-473a-a450-2a389f820c34}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -65,17 +62,23 @@
     <ClInclude Include="Headers\LoggerFactory.h">
       <Filter>Logger\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Common\Headers\Macros.h">
-      <Filter>Common\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Common\Headers\Types.h">
-      <Filter>Common\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Common\Headers\StringUtil.h">
-      <Filter>Common\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Headers\AsyncLogger.h">
       <Filter>Logger\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonCode\CommonCode\Headers\CCBuffer.h">
+      <Filter>CommonCode\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonCode\CommonCode\Headers\CCIBuffer.h">
+      <Filter>CommonCode\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonCode\CommonCode\Headers\CCMacros.h">
+      <Filter>CommonCode\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonCode\CommonCode\Headers\CCStringUtil.h">
+      <Filter>CommonCode\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonCode\CommonCode\Headers\CCTypes.h">
+      <Filter>CommonCode\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -105,9 +108,6 @@
     </ClCompile>
     <ClCompile Include="Source\LoggerFactory.cpp">
       <Filter>Logger\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Common\Source\StringUtil.cpp">
-      <Filter>Common\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\AsyncLogger.cpp">
       <Filter>Logger\Source Files</Filter>

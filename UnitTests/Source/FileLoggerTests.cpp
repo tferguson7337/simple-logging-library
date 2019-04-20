@@ -9,6 +9,8 @@ namespace FileLoggerTests
     using SLL::OptionFlag;
     using SLL::VerbosityLevel;
 
+	using ReturnType = CC::StringUtil::ReturnType;
+
     std::list<std::function<UnitTestResult(void)>> GetTests( )
     {
         static const std::list<std::function<UnitTestResult(void)>> testList
@@ -683,7 +685,7 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::UTFConversion::ToCString<T>("Test string #%d\n");
+                pFormat = CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string #%d\n");
             }
             catch ( const std::exception& e )
             {
@@ -736,7 +738,7 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::UTFConversion::ToCString<T>("Test string #%d\n");
+                pFormat = CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string #%d\n");
             }
             catch ( const std::exception& e )
             {
@@ -806,7 +808,7 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::UTFConversion::ToCString<T>("");
+                pFormat = CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("");
             }
             catch ( const std::exception& e )
             {
@@ -842,8 +844,8 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::UTFConversion::ToCString<T>("Test string #1\r\n");
-                pExpected = StringUtil::UTFConversion::ToCString<utf16>("Test string #1");
+                pFormat = CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string #1\r\n");
+                pExpected = CC::StringUtil::UTFConversion<ReturnType::SmartCString, utf16>("Test string #1");
             }
             catch ( const std::exception& e )
             {
@@ -880,8 +882,8 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::UTFConversion::ToCString<T>("Test string, integer specifiers %d %llu.\r\n");
-                pExpected = StringUtil::UTFConversion::ToCString<utf16>("Test string, integer specifiers -500 300000.");
+                pFormat = CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string, integer specifiers %d %llu.\r\n");
+                pExpected = CC::StringUtil::UTFConversion<ReturnType::SmartCString, utf16>("Test string, integer specifiers -500 300000.");
             }
             catch ( const std::exception& e )
             {
@@ -918,8 +920,8 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::UTFConversion::ToCString<T>("Test string, floating-point specifiers %2.2f %1.5f.\r\n");
-                pExpected = StringUtil::UTFConversion::ToCString<utf16>("Test string, floating-point specifiers -35.02 1.57779.");
+                pFormat = CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string, floating-point specifiers %2.2f %1.5f.\r\n");
+                pExpected = CC::StringUtil::UTFConversion<ReturnType::SmartCString, utf16>("Test string, floating-point specifiers -35.02 1.57779.");
             }
             catch ( const std::exception& e )
             {
@@ -958,9 +960,9 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::UTFConversion::ToCString<T>("Test string, string specifiers %s %ls.\r\n");
-                pExpected = StringUtil::UTFConversion::ToCString<utf16>("Test string, string specifiers Test string #1 \"Test %f %g string %p #2\".");
-                arg1 = StringUtil::UTFConversion::ToCString<T>("Test string #1");
+                pFormat = CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string, string specifiers %s %ls.\r\n");
+                pExpected = CC::StringUtil::UTFConversion<ReturnType::SmartCString, utf16>("Test string, string specifiers Test string #1 \"Test %f %g string %p #2\".");
+                arg1 = CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string #1");
             }
             catch ( const std::exception& e )
             {
@@ -1003,7 +1005,7 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::UTFConversion::ToCString<T>("Test string #%d\n");
+                pFormat = CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string #%d\n");
             }
             catch ( const std::exception& e )
             {
@@ -1053,7 +1055,7 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::UTFConversion::ToCString<T>("Test string #%d\n");
+                pFormat = CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string #%d\n");
             }
             catch ( const std::exception& e )
             {
@@ -1089,7 +1091,7 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::UTFConversion::ToCString<T>("Test string #%d\n");
+                pFormat = CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string #%d\n");
             }
             catch ( const std::exception& e )
             {
@@ -1152,8 +1154,8 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::UTFConversion::ToCString<T>("");
-                pExpected = StringUtil::UTFConversion::ToCString<utf16>("");
+                pFormat = CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("");
+                pExpected = CC::StringUtil::UTFConversion<ReturnType::SmartCString, utf16>("");
             }
             catch ( const std::exception& e )
             {
@@ -1210,8 +1212,8 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::UTFConversion::ToCString<T>("Test string #1\r\n");
-                pExpected = StringUtil::UTFConversion::ToCString<utf16>("Test string #1");
+                pFormat = CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string #1\r\n");
+                pExpected = CC::StringUtil::UTFConversion<ReturnType::SmartCString, utf16>("Test string #1");
             }
             catch ( const std::exception& e )
             {
@@ -1259,8 +1261,8 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::UTFConversion::ToCString<T>("Test string, integer specifiers %d %llu.\r\n");
-                pExpected = StringUtil::UTFConversion::ToCString<utf16>("Test string, integer specifiers -500 300000.");
+                pFormat = CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string, integer specifiers %d %llu.\r\n");
+                pExpected = CC::StringUtil::UTFConversion<ReturnType::SmartCString, utf16>("Test string, integer specifiers -500 300000.");
             }
             catch ( const std::exception& e )
             {
@@ -1308,8 +1310,8 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::UTFConversion::ToCString<T>("Test string, floating-point specifiers %2.2f %1.5f.\r\n");
-                pExpected = StringUtil::UTFConversion::ToCString<utf16>("Test string, floating-point specifiers -35.02 1.57779.");
+                pFormat = CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string, floating-point specifiers %2.2f %1.5f.\r\n");
+                pExpected = CC::StringUtil::UTFConversion<ReturnType::SmartCString, utf16>("Test string, floating-point specifiers -35.02 1.57779.");
             }
             catch ( const std::exception& e )
             {
@@ -1361,8 +1363,8 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::UTFConversion::ToCString<T>("Test string, string specifiers %s %ls.\r\n");
-                pExpected = StringUtil::UTFConversion::ToCString<utf16>("Test string, string specifiers Test string #1 \"Test %f %g string %p #2\".");
+                pFormat = CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string, string specifiers %s %ls.\r\n");
+                pExpected = CC::StringUtil::UTFConversion<ReturnType::SmartCString, utf16>("Test string, string specifiers Test string #1 \"Test %f %g string %p #2\".");
             }
             catch ( const std::exception& e )
             {
@@ -1373,11 +1375,11 @@ namespace FileLoggerTests
             {
                 if constexpr ( std::is_same<T, utf8>::value )
                 {
-                    arg1 = StringUtil::Copy::ToCString<T>("Test string #1");
+                    arg1 = CC::StringUtil::Copy<ReturnType::SmartCString, T>("Test string #1");
                 }
                 else
                 {
-                    arg1 = StringUtil::UTFConversion::ToCString<T>("Test string #1");
+                    arg1 = CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string #1");
                 }
 
             }
@@ -1427,8 +1429,8 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::UTFConversion::ToCString<T>("Test string #%d\n");
-                pExpected = StringUtil::UTFConversion::ToCString<utf16>("Test string #1");
+                pFormat = CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string #%d\n");
+                pExpected = CC::StringUtil::UTFConversion<ReturnType::SmartCString, utf16>("Test string #1");
             }
             catch ( const std::exception& e )
             {
@@ -1485,8 +1487,8 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::UTFConversion::ToCString<T>("Test string #%d\n");
-                pExpected = StringUtil::UTFConversion::ToCString<utf16>("Test string #1");
+                pFormat = CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string #%d\n");
+                pExpected = CC::StringUtil::UTFConversion<ReturnType::SmartCString, utf16>("Test string #1");
             }
             catch ( const std::exception& e )
             {
@@ -1535,8 +1537,8 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::UTFConversion::ToCString<T>("Test string #%d\n");
-                pExpected = StringUtil::UTFConversion::ToCString<utf16>("Test string #1");
+                pFormat = CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string #%d\n");
+                pExpected = CC::StringUtil::UTFConversion<ReturnType::SmartCString, utf16>("Test string #1");
             }
             catch ( const std::exception& e )
             {
@@ -1596,8 +1598,8 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::UTFConversion::ToCString<T>("Test string #%d\n");
-                pExpected = StringUtil::UTFConversion::ToCString<utf16>("Test string #1");
+                pFormat = CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string #%d\n");
+                pExpected = CC::StringUtil::UTFConversion<ReturnType::SmartCString, utf16>("Test string #1");
             }
             catch ( const std::exception& e )
             {
@@ -1651,9 +1653,9 @@ namespace FileLoggerTests
 
             try
             {
-                pFormat = StringUtil::UTFConversion::ToCString<T>("Test string #%d\r\n");
-                pExpected1 = StringUtil::UTFConversion::ToCString<utf16>("Test string #1");
-                pExpected2 = StringUtil::UTFConversion::ToCString<utf16>("Test string #2");
+                pFormat = CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string #%d\r\n");
+                pExpected1 = CC::StringUtil::UTFConversion<ReturnType::SmartCString, utf16>("Test string #1");
+                pExpected2 = CC::StringUtil::UTFConversion<ReturnType::SmartCString, utf16>("Test string #2");
             }
             catch ( const std::exception& e )
             {

@@ -1,5 +1,8 @@
 #pragma once
 
+// CC Types
+#include <CCTypes.h>
+
 // SLL Enum Classes
 #include "../ConfigPackage.h"
 

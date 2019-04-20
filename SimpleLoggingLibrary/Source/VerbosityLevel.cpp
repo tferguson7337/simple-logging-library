@@ -1,5 +1,6 @@
 #include <VerbosityLevel.h>
 
+#include <stdexcept>
 #include <vector>
 
 namespace SLL

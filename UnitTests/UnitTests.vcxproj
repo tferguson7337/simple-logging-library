@@ -46,32 +46,32 @@
     <ProjectGuid>{354D0627-9291-4D3D-A1F5-C62A6C9A812C}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>UnitTests</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -133,7 +133,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\SimpleLoggingLibrary\Common\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\Interfaces\;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers\Interfaces;$(ProjectDir)Headers</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\SimpleLoggingLibrary\CommonCode\CommonCode\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\Interfaces\;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers\Interfaces;$(ProjectDir)Headers</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <EnablePREfast>false</EnablePREfast>
@@ -165,7 +165,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\SimpleLoggingLibrary\Common\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\Interfaces\;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers\Interfaces;$(ProjectDir)Headers</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\SimpleLoggingLibrary\CommonCode\CommonCode\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\Interfaces\;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers\Interfaces;$(ProjectDir)Headers</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <EnablePREfast>false</EnablePREfast>
@@ -207,7 +207,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\SimpleLoggingLibrary\Common\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\Interfaces\;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers\Interfaces;$(ProjectDir)Headers</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\SimpleLoggingLibrary\CommonCode\CommonCode\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\Interfaces\;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers\Interfaces;$(ProjectDir)Headers</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <EnablePREfast>false</EnablePREfast>
@@ -243,7 +243,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\SimpleLoggingLibrary\Common\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\Interfaces\;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers\Interfaces;$(ProjectDir)Headers</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\SimpleLoggingLibrary\CommonCode\CommonCode\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\Interfaces\;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers\Interfaces;$(ProjectDir)Headers</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <EnablePREfast>false</EnablePREfast>

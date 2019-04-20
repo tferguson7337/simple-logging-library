@@ -1,5 +1,6 @@
 #include <OptionFlag.h>
 
+#include <stdexcept>
 #include <vector>
 
 namespace SLL
@@ -170,7 +171,7 @@ namespace SLL
         }
 
         // Iterate thru OptionFlag mask.
-        for ( OptionFlag f = OptionFlag::BEGIN; f < OptionFlag::MAX && flag != OptionFlag::NONE; f <<= 1, i++ )
+        for ( OptionFlag f = OptionFlag::BEGIN; f < OptionFlag::MAX && flag != OptionFlag::NONE; i++, f <<= 1 )
         {
             if ( (f & flag) == f )
             {

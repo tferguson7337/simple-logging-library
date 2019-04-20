@@ -2,3 +2,6 @@
 	path = UnitTests/SUTL
 	url = https://github.com/tferguson7337/simple-unit-test-library
 	branch = master
+[submodule "CommonCode"]
+	path = SimpleLoggingLibrary/CommonCode
+	url = https://github.com/tferguson7337/common-code

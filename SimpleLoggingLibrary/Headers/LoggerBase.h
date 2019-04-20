@@ -1,5 +1,8 @@
 #pragma once
 
+// CC Macros
+#include <CCMacros.h>
+
 // Logger Interface
 #include "Interfaces\ILogger.h"
 

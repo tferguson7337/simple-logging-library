@@ -2,8 +2,13 @@
 
 #include <LoggerFactory.h>
 
+#include <CCStringUtil.h>
+
 namespace SLL
 {
+	using Base = CC::StringUtil::NumberConversion::Base;
+	using ReturnType = CC::StringUtil::ReturnType;
+
     /// Private Worker Methods \\\
 
     // Logging loop for the worker thread.
@@ -303,7 +308,7 @@ namespace SLL
         }
 
         // Build the log message.
-        str = LoggerBase::BuildFormattedMessage<utf16>(StringUtil::UTFConversion::ToCString<utf16>(pFormat).get( ), pArgs);
+        str = LoggerBase::BuildFormattedMessage<utf16>(CC::StringUtil::UTFConversion<ReturnType::SmartCString, utf16, utf8>(pFormat).get( ), pArgs);
 
         // Push the message into the queue.
         PushMsg(LogMessage(lvl, std::move(str), std::this_thread::get_id( )));
@@ -341,7 +346,7 @@ namespace SLL
         }
 
         // Build the log message.
-        str = LoggerBase::BuildFormattedMessage<utf16>(StringUtil::UTFConversion::ToCString<utf16>(pFormat).get( ), pArgs);
+		str = LoggerBase::BuildFormattedMessage<utf16>(CC::StringUtil::UTFConversion<ReturnType::SmartCString, utf16, utf8>(pFormat).get( ), pArgs);
 
         // Push the message into the queue.
         PushMsg(LogMessage(lvl, std::move(str), tid));

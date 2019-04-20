@@ -1,5 +1,6 @@
 #include <Color.h>
 
+#include <stdexcept>
 #include <vector>
 
 namespace SLL

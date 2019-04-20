@@ -2,6 +2,8 @@
 
 #include <VerbosityLevel.h>
 
+#include <stdexcept>
+
 namespace VerbosityLevelTests
 {
     using SLL::VerbosityLevel;

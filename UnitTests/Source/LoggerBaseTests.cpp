@@ -7,6 +7,8 @@ namespace LoggerBaseTests
     using SLL::LoggerBase;
     using ::LoggerBaseTests::Tester;
 
+	using ReturnType = CC::StringUtil::ReturnType;
+
     std::list<std::function<UnitTestResult(void)>> GetTests( )
     {
         static const std::list<std::function<UnitTestResult(void)>> testList
@@ -146,8 +148,8 @@ namespace LoggerBaseTests
         SUTL_TEST_ASSERT(narrow.size( ) == wide.size( ));
 
         // Ensure that the narrow/wide strings are equivalent.
-        std::basic_string<utf16> narrowConvert = StringUtil::UTFConversion::ToString<utf16>(narrow);
-        std::basic_string<utf8> wideConvert = StringUtil::UTFConversion::ToString<utf8>(wide);
+        std::basic_string<utf16> narrowConvert = CC::StringUtil::UTFConversion<ReturnType::StringObj, utf16>(narrow);
+        std::basic_string<utf8> wideConvert = CC::StringUtil::UTFConversion<ReturnType::StringObj, utf8>(wide);
 
         SUTL_TEST_ASSERT(narrow == wideConvert);
         SUTL_TEST_ASSERT(wide == narrowConvert);
@@ -170,8 +172,8 @@ namespace LoggerBaseTests
         SUTL_TEST_ASSERT(narrow.size( ) == wide.size( ));
 
         // Ensure that the narrow/wide strings are equivalent.
-        std::basic_string<utf16> narrowConvert = StringUtil::UTFConversion::ToString<utf16>(narrow);
-        std::basic_string<utf8> wideConvert = StringUtil::UTFConversion::ToString<utf8>(wide);
+        std::basic_string<utf16> narrowConvert = CC::StringUtil::UTFConversion<ReturnType::StringObj, utf16>(narrow);
+        std::basic_string<utf8> wideConvert = CC::StringUtil::UTFConversion<ReturnType::StringObj, utf8>(wide);
 
         SUTL_TEST_ASSERT(narrow == wideConvert);
         SUTL_TEST_ASSERT(wide == narrowConvert);
@@ -194,8 +196,8 @@ namespace LoggerBaseTests
         SUTL_TEST_ASSERT(narrow.size( ) == wide.size( ));
 
         // Ensure that the narrow/wide strings are equivalent.
-        std::basic_string<utf16> narrowConvert = StringUtil::UTFConversion::ToString<utf16>(narrow);
-        std::basic_string<utf8> wideConvert = StringUtil::UTFConversion::ToString<utf8>(wide);
+        std::basic_string<utf16> narrowConvert = CC::StringUtil::UTFConversion<ReturnType::StringObj, utf16>(narrow);
+        std::basic_string<utf8> wideConvert = CC::StringUtil::UTFConversion<ReturnType::StringObj, utf8>(wide);
 
         SUTL_TEST_ASSERT(narrow == wideConvert);
         SUTL_TEST_ASSERT(wide == narrowConvert);
@@ -227,8 +229,8 @@ namespace LoggerBaseTests
         SUTL_TEST_ASSERT(narrow.size( ) == wide.size( ));
 
         // Ensure that the narrow/wide strings are equivalent.
-        std::basic_string<utf16> narrowConvert = StringUtil::UTFConversion::ToString<utf16>(narrow);
-        std::basic_string<utf8> wideConvert = StringUtil::UTFConversion::ToString<utf8>(wide);
+        std::basic_string<utf16> narrowConvert = CC::StringUtil::UTFConversion<ReturnType::StringObj, utf16>(narrow);
+        std::basic_string<utf8> wideConvert = CC::StringUtil::UTFConversion<ReturnType::StringObj, utf8>(wide);
 
         ///
         //
@@ -280,8 +282,8 @@ namespace LoggerBaseTests
         // Ensure the lengths match up.
         SUTL_TEST_ASSERT(++nLen == ++wLen);
 
-        std::unique_ptr<utf16[ ]> narrowConvert = StringUtil::UTFConversion::ToCString<utf16>(narrow.get( ), nLen);
-        std::unique_ptr<utf8[ ]> wideConvert = StringUtil::UTFConversion::ToCString<utf8>(wide.get( ), wLen);
+        std::unique_ptr<utf16[ ]> narrowConvert = CC::StringUtil::UTFConversion<ReturnType::SmartCString, utf16>(narrow.get( ), nLen);
+        std::unique_ptr<utf8[ ]> wideConvert = CC::StringUtil::UTFConversion<ReturnType::SmartCString, utf8>(wide.get( ), wLen);
 
         // Ensure the narrow and wide strings are equivalent.
         SUTL_TEST_ASSERT(memcmp(narrow.get( ), wideConvert.get( ), sizeof(utf8) * nLen) == 0);
@@ -331,11 +333,11 @@ namespace LoggerBaseTests
             {
                 if constexpr ( std::is_same<T, utf8>::value )
                 {
-                    pFormat = StringUtil::Copy::ToCString<T>("Test string, no format specifiers.");
+                    pFormat = CC::StringUtil::Copy<ReturnType::SmartCString, T>("Test string, no format specifiers.");
                 }
                 else
                 {
-                    pFormat = StringUtil::UTFConversion::ToCString<T>("Test string, no format specifiers.");
+                    pFormat = CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string, no format specifiers.");
                 }
             }
             catch ( const std::exception& e )
@@ -367,11 +369,11 @@ namespace LoggerBaseTests
             {
                 if constexpr ( std::is_same<T, utf8>::value )
                 {
-                    pFormat = StringUtil::Copy::ToCString<T>("Test string, integral specifiers %d %llu.");
+                    pFormat = CC::StringUtil::Copy<ReturnType::SmartCString, T>("Test string, integral specifiers %d %llu.");
                 }
                 else
                 {
-                    pFormat = StringUtil::UTFConversion::ToCString<T>("Test string, integral specifiers %d %llu.");
+                    pFormat = CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string, integral specifiers %d %llu.");
                 }
             }
             catch ( const std::exception& e )
@@ -396,18 +398,18 @@ namespace LoggerBaseTests
         template <class T>
         UnitTestResult FloatingArgs( )
         {
-            std::unique_ptr<T[ ]> pFormat(StringUtil::UTFConversion::ToCString<T>("Test string, floating-point specifiers %2.2f %1.5f."));
+            std::unique_ptr<T[ ]> pFormat(CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string, floating-point specifiers %2.2f %1.5f."));
             size_t len = 0;
 
             try
             {
                 if constexpr ( std::is_same<T, utf8>::value )
                 {
-                    pFormat = StringUtil::Copy::ToCString<T>("Test string, floating-point specifiers %2.2f %1.5f.");
+                    pFormat = CC::StringUtil::Copy<ReturnType::SmartCString, T>("Test string, floating-point specifiers %2.2f %1.5f.");
                 }
                 else
                 {
-                    pFormat = StringUtil::UTFConversion::ToCString<T>("Test string, floating-point specifiers %2.2f %1.5f.");
+                    pFormat = CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string, floating-point specifiers %2.2f %1.5f.");
                 }
             }
             catch ( const std::exception& e )
@@ -432,18 +434,18 @@ namespace LoggerBaseTests
         template <class T>
         UnitTestResult StringArgs( )
         {
-            std::unique_ptr<T[ ]> pFormat(StringUtil::UTFConversion::ToCString<T>("Test string, string specifier %s."));
+            std::unique_ptr<T[ ]> pFormat(CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string, string specifier %s."));
             size_t len = 0;
 
             try
             {
                 if constexpr ( std::is_same<T, utf8>::value )
                 {
-                    pFormat = StringUtil::Copy::ToCString<T>("Test string, string specifier %s.");
+                    pFormat = CC::StringUtil::Copy<ReturnType::SmartCString, T>("Test string, string specifier %s.");
                 }
                 else
                 {
-                    pFormat = StringUtil::UTFConversion::ToCString<T>("Test string, string specifier %s.");
+                    pFormat = CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string, string specifier %s.");
                 }
             }
             catch ( const std::exception& e )
@@ -453,7 +455,7 @@ namespace LoggerBaseTests
 
             try
             {
-                len = Tester::GetRequiredBufferLength<T>(pFormat.get( ), StringUtil::UTFConversion::ToCString<T>("[this is the test-string arg]").get( ));
+                len = Tester::GetRequiredBufferLength<T>(pFormat.get( ), CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("[this is the test-string arg]").get( ));
             }
             catch ( const std::exception& e )
             {
@@ -468,7 +470,7 @@ namespace LoggerBaseTests
         template <class T>
         UnitTestResult ThreadIDFormat( )
         {
-            std::unique_ptr<T[ ]> pFormat(StringUtil::UTFConversion::ToCString<T>("Test string, thread-id specifier %X."));
+            std::unique_ptr<T[ ]> pFormat(CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string, thread-id specifier %X."));
             size_t len = 0;
             std::basic_ostringstream<utf8> tidStream;
 
@@ -486,11 +488,11 @@ namespace LoggerBaseTests
             {
                 if constexpr ( std::is_same<T, utf8>::value )
                 {
-                    pFormat = StringUtil::Copy::ToCString<T>("Test string, thread-id specifier %X.");
+                    pFormat = CC::StringUtil::Copy<ReturnType::SmartCString, T>("Test string, thread-id specifier %X.");
                 }
                 else
                 {
-                    pFormat = StringUtil::UTFConversion::ToCString<T>("Test string, thread-id specifier %X.");
+                    pFormat = CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string, thread-id specifier %X.");
                 }
             }
             catch ( const std::exception& e )
@@ -515,18 +517,18 @@ namespace LoggerBaseTests
         template <class T>
         UnitTestResult VerbosityLevelFormat( )
         {
-            std::unique_ptr<T[ ]> pFormat(StringUtil::UTFConversion::ToCString<T>("Test string, verbosity-level specifier %s."));
+            std::unique_ptr<T[ ]> pFormat(CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string, verbosity-level specifier %s."));
             size_t len = 0;
 
             try
             {
                 if constexpr ( std::is_same<T, utf8>::value )
                 {
-                    pFormat = StringUtil::Copy::ToCString<T>("Test string, verbosity-level specifier %s.");
+                    pFormat = CC::StringUtil::Copy<ReturnType::SmartCString, T>("Test string, verbosity-level specifier %s.");
                 }
                 else
                 {
-                    pFormat = StringUtil::UTFConversion::ToCString<T>("Test string, verbosity-level specifier %s.");
+                    pFormat = CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string, verbosity-level specifier %s.");
                 }
             }
             catch ( const std::exception& e )
@@ -568,7 +570,7 @@ namespace LoggerBaseTests
 
             try
             {
-                buf = Tester::StringPrintWrapper<T>(0, StringUtil::UTFConversion::ToCString<T>("").get( ));
+                buf = Tester::StringPrintWrapper<T>(0, CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("").get( ));
             }
             catch ( const std::invalid_argument& )
             {
@@ -613,7 +615,7 @@ namespace LoggerBaseTests
         template <class T>
         UnitTestResult NoArgs( )
         {
-            std::unique_ptr<T[ ]> f(StringUtil::UTFConversion::ToCString<T>("Test string, no format specifiers."));
+            std::unique_ptr<T[ ]> f(CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string, no format specifiers."));
             const std::unique_ptr<T[ ]>& expected = f;
             std::unique_ptr<T[ ]> buf;
             size_t len = 0;
@@ -644,8 +646,8 @@ namespace LoggerBaseTests
         template <class T>
         UnitTestResult IntegralArgs( )
         {
-            std::unique_ptr<T[ ]> f(StringUtil::UTFConversion::ToCString<T>("Test string, integral specifiers %d %zu."));
-            const std::unique_ptr<T[ ]> expected(StringUtil::UTFConversion::ToCString<T>("Test string, integral specifiers -250 1073741824."));
+            std::unique_ptr<T[ ]> f(CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string, integral specifiers %d %zu."));
+            const std::unique_ptr<T[ ]> expected(CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string, integral specifiers -250 1073741824."));
             std::unique_ptr<T[ ]> buf;
             size_t len = 0;
 
@@ -678,8 +680,8 @@ namespace LoggerBaseTests
         template <class T>
         UnitTestResult FloatingArgs( )
         {
-            std::unique_ptr<T[ ]> f(StringUtil::UTFConversion::ToCString<T>("Test string, floating-point specifiers %2.2f %1.5f."));
-            const std::unique_ptr<T[ ]> expected(StringUtil::UTFConversion::ToCString<T>("Test string, floating-point specifiers 1.30 10000000000.00000."));
+            std::unique_ptr<T[ ]> f(CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string, floating-point specifiers %2.2f %1.5f."));
+            const std::unique_ptr<T[ ]> expected(CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string, floating-point specifiers 1.30 10000000000.00000."));
             std::unique_ptr<T[ ]> buf;
             size_t len = 0;
 
@@ -712,13 +714,13 @@ namespace LoggerBaseTests
         template <class T>
         UnitTestResult StringArgs( )
         {
-            std::unique_ptr<T[ ]> f(StringUtil::UTFConversion::ToCString<T>("Test string, string specifiers %s %ls."));
-            std::unique_ptr<T[ ]> expected(StringUtil::UTFConversion::ToCString<T>("Test string, string specifiers Test string #1 \"Test string #2\"."));
+            std::unique_ptr<T[ ]> f(CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string, string specifiers %s %ls."));
+            std::unique_ptr<T[ ]> expected(CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string, string specifiers Test string #1 \"Test string #2\"."));
             std::unique_ptr<T[ ]> buf;
             size_t len = 0;
 
-            std::unique_ptr<T[ ]> arg1(StringUtil::UTFConversion::ToCString<T>("Test string #1"));
-            std::unique_ptr<utf16[ ]> arg2(StringUtil::UTFConversion::ToCString<utf16>("\"Test string #2\""));
+            std::unique_ptr<T[ ]> arg1(CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string #1"));
+            std::unique_ptr<utf16[ ]> arg2(CC::StringUtil::UTFConversion<ReturnType::SmartCString, utf16>("\"Test string #2\""));
 
             try
             {
@@ -754,8 +756,8 @@ namespace LoggerBaseTests
                 return oss.str( );
             };
 
-            std::unique_ptr<T[ ]> f(StringUtil::UTFConversion::ToCString<T>("Test string, thread-ID specifier %X."));
-            std::unique_ptr<T[ ]> expected(StringUtil::UTFConversion::ToCString<T>(("Test string, thread-ID specifier " + HexTID( ) + ".").c_str( )));
+            std::unique_ptr<T[ ]> f(CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string, thread-ID specifier %X."));
+            std::unique_ptr<T[ ]> expected(CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>(("Test string, thread-ID specifier " + HexTID( ) + ".").c_str( )));
 
             std::unique_ptr<T[ ]> buf;
             size_t len = 0;
@@ -787,7 +789,7 @@ namespace LoggerBaseTests
         template <class T>
         UnitTestResult VerbosityLevelFormat( )
         {
-            std::unique_ptr<T[ ]> f(StringUtil::UTFConversion::ToCString<T>("Test string, verbosity-level specifier %s."));
+            std::unique_ptr<T[ ]> f(CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string, verbosity-level specifier %s."));
             std::unique_ptr<T[ ]> buf;
             size_t len = 0;
 
@@ -795,7 +797,7 @@ namespace LoggerBaseTests
             {
                 const std::basic_string<T> verbosityLevelString(SLL::VerbosityLevelConverter::ToString<T>(lvl));
                 const std::unique_ptr<T[ ]> expected(
-                    StringUtil::UTFConversion::ToCString<T>(
+                    CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>(
                     ("Test string, verbosity-level specifier " + SLL::VerbosityLevelConverter::ToString<utf8>(lvl) + ".").c_str( )));
 
                 try
@@ -1147,8 +1149,8 @@ namespace LoggerBaseTests
         template <class T>
         UnitTestResult NoArgs( )
         {
-            const std::unique_ptr<T[ ]> pFormat(StringUtil::UTFConversion::ToCString<T>("Test string, no format specifiers."));
-            const std::unique_ptr<T[ ]> expectedStr(StringUtil::UTFConversion::ToCString<T>("Test string, no format specifiers."));
+            const std::unique_ptr<T[ ]> pFormat(CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string, no format specifiers."));
+            const std::unique_ptr<T[ ]> expectedStr(CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string, no format specifiers."));
             std::unique_ptr<T[ ]> str;
 
             try
@@ -1168,8 +1170,8 @@ namespace LoggerBaseTests
         template <class T>
         UnitTestResult IntegralArgs( )
         {
-            const std::unique_ptr<T[ ]> pFormat(StringUtil::UTFConversion::ToCString<T>("Test string, integral specifiers %d %zu"));
-            const std::unique_ptr<T[ ]> expectedStr(StringUtil::UTFConversion::ToCString<T>("Test string, integral specifiers -5000 5000"));
+            const std::unique_ptr<T[ ]> pFormat(CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string, integral specifiers %d %zu"));
+            const std::unique_ptr<T[ ]> expectedStr(CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string, integral specifiers -5000 5000"));
             std::unique_ptr<T[ ]> str;
 
             try
@@ -1192,8 +1194,8 @@ namespace LoggerBaseTests
         template <class T>
         UnitTestResult FloatingArgs( )
         {
-            const std::unique_ptr<T[ ]> pFormat(StringUtil::UTFConversion::ToCString<T>("Test string, floating-point specifiers %2.2f %1.5f."));
-            const std::unique_ptr<T[ ]> expectedStr(StringUtil::UTFConversion::ToCString<T>("Test string, floating-point specifiers 12.53 -30.15021."));
+            const std::unique_ptr<T[ ]> pFormat(CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string, floating-point specifiers %2.2f %1.5f."));
+            const std::unique_ptr<T[ ]> expectedStr(CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string, floating-point specifiers 12.53 -30.15021."));
             std::unique_ptr<T[ ]> str;
 
             try
@@ -1216,13 +1218,13 @@ namespace LoggerBaseTests
         template <class T>
         UnitTestResult StringArgs( )
         {
-            const std::unique_ptr<T[ ]> pFormat(StringUtil::UTFConversion::ToCString<T>("Test string, string specifiers %s %ls."));
-            const std::unique_ptr<T[ ]> expectedStr(StringUtil::UTFConversion::ToCString<T>("Test string, string specifiers Test string #1 \"Test string #2\"."));
+            const std::unique_ptr<T[ ]> pFormat(CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string, string specifiers %s %ls."));
+            const std::unique_ptr<T[ ]> expectedStr(CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string, string specifiers Test string #1 \"Test string #2\"."));
             std::unique_ptr<T[ ]> str;
 
             try
             {
-                const std::unique_ptr<T[ ]> arg1 = StringUtil::UTFConversion::ToCString<T>("Test string #1");
+                const std::unique_ptr<T[ ]> arg1 = CC::StringUtil::UTFConversion<ReturnType::SmartCString, T>("Test string #1");
                 const utf16* arg2 = UTF16_LITERAL_STR("\"Test string #2\"");
 
                 str = Tester::BuildFormattedMessage<T>(pFormat.get( ), arg1.get( ), arg2);

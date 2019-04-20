@@ -19,9 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Common\Headers\Macros.h" />
-    <ClInclude Include="Common\Headers\Types.h" />
-    <ClInclude Include="Common\Headers\StringUtil.h" />
+    <ClInclude Include="CommonCode\CommonCode\Headers\CCBuffer.h" />
+    <ClInclude Include="CommonCode\CommonCode\Headers\CCIBuffer.h" />
+    <ClInclude Include="CommonCode\CommonCode\Headers\CCMacros.h" />
+    <ClInclude Include="CommonCode\CommonCode\Headers\CCStringUtil.h" />
+    <ClInclude Include="CommonCode\CommonCode\Headers\CCTypes.h" />
     <ClInclude Include="Headers\Color.h" />
     <ClInclude Include="Headers\ConfigPackage.h" />
     <ClInclude Include="Headers\DualLogger.h" />
@@ -35,7 +37,6 @@
     <ClInclude Include="Headers\WindowsConsoleHelper.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Common\Source\StringUtil.cpp" />
     <ClCompile Include="Source\Color.cpp" />
     <ClCompile Include="Source\ConfigPackage.cpp" />
     <ClCompile Include="Source\DualLogger.cpp" />
@@ -52,32 +53,32 @@
     <ProjectGuid>{601D2081-CEA2-4B6D-A33C-2E5E9C17D0DB}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>SimpleLoggingLibrary</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -140,7 +141,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <EnablePREfast>false</EnablePREfast>
-      <AdditionalIncludeDirectories>$(ProjectDir)Common\Headers\;$(ProjectDir)Headers\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)CommonCode\CommonCode\Headers\;$(ProjectDir)Headers\</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -159,7 +160,7 @@
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <EnablePREfast>false</EnablePREfast>
-      <AdditionalIncludeDirectories>$(ProjectDir)Common\Headers\;$(ProjectDir)Headers\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)CommonCode\CommonCode\Headers\;$(ProjectDir)Headers\</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -180,7 +181,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <EnablePREfast>false</EnablePREfast>
-      <AdditionalIncludeDirectories>$(ProjectDir)Common\Headers\;$(ProjectDir)Headers\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)CommonCode\CommonCode\Headers\;$(ProjectDir)Headers\</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -205,7 +206,7 @@
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <EnablePREfast>false</EnablePREfast>
-      <AdditionalIncludeDirectories>$(ProjectDir)Common\Headers\;$(ProjectDir)Headers\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)CommonCode\CommonCode\Headers\;$(ProjectDir)Headers\</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>

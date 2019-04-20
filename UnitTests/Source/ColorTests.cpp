@@ -2,6 +2,8 @@
 
 #include <Color.h>
 
+#include <stdexcept>
+
 namespace ColorTests
 {
     using SLL::Color;

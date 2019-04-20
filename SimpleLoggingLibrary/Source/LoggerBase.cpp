@@ -63,7 +63,7 @@ namespace SLL
     std::unique_ptr<T[ ]> LoggerBase::BuildTimePrefix( )
     {
         std::basic_string<T> str(GetLocalTime<T>( ));
-        return StringUtil::Copy::ToCString<T>(str);
+        return CC::StringUtil::Copy<CC::StringUtil::ReturnType::SmartCString, T>(str);
     }
 
     // Extract Thread ID
