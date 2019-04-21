@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../CommonCode/CommonCode/Headers/CCMacros.h"
+#include "../CommonCode/Headers/CCMacros.h"
 
 #include <string>
 

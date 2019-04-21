@@ -133,7 +133,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\SimpleLoggingLibrary\CommonCode\CommonCode\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\Interfaces\;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers\Interfaces;$(ProjectDir)Headers</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\SimpleLoggingLibrary\CommonCode\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\Interfaces\;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers\Interfaces;$(ProjectDir)Headers</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <EnablePREfast>false</EnablePREfast>
@@ -165,7 +165,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\SimpleLoggingLibrary\CommonCode\CommonCode\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\Interfaces\;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers\Interfaces;$(ProjectDir)Headers</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\SimpleLoggingLibrary\CommonCode\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\Interfaces\;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers\Interfaces;$(ProjectDir)Headers</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <EnablePREfast>false</EnablePREfast>
@@ -207,7 +207,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\SimpleLoggingLibrary\CommonCode\CommonCode\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\Interfaces\;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers\Interfaces;$(ProjectDir)Headers</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\SimpleLoggingLibrary\CommonCode\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\Interfaces\;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers\Interfaces;$(ProjectDir)Headers</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <EnablePREfast>false</EnablePREfast>
@@ -243,7 +243,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\SimpleLoggingLibrary\CommonCode\CommonCode\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\Interfaces\;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers\Interfaces;$(ProjectDir)Headers</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\SimpleLoggingLibrary\CommonCode\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\;$(ProjectDir)..\SimpleLoggingLibrary\Headers\Interfaces\;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers;$(ProjectDir)SUTL\SimpleUnitTestLibrary\Headers\Interfaces;$(ProjectDir)Headers</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <EnablePREfast>false</EnablePREfast>
